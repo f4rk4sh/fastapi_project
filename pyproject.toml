@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "fastapi_project"
+version = "0.1.0"
+description = ""
+authors = ["Yaroslav Farkash <farkashyaroslav@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pyodbc = "^4.0.34"
+fastapi = "^0.79.0"
+mssql = "^1.0.1"
+SQLAlchemy = "^1.4.39"
+email-validator = "^1.2.1"
+pydantic = "^1.9.1"
+uvicorn = "^0.18.2"
+python-dotenv = "^0.20.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core==1.1.14"]
+build-backend = "poetry.core.masonry.api"

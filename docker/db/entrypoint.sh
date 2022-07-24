@@ -1,0 +1,1 @@
+/src/docker/db/run-initialization.sh & /opt/mssql/bin/sqlservr
