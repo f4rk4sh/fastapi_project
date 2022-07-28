@@ -4,7 +4,7 @@ services:
   db:
     build:
       context: .
-      dockerfile: docker/db/Dockerfile
+      dockerfile: deployment/db/Dockerfile
       args:
         - SA_PASSWORD=$SA_PASSWORD
         - ACCEPT_EULA=$ACCEPT_EULA
@@ -15,7 +15,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: docker/web/Dockerfile
+      dockerfile: deployment/web/Dockerfile
     command: uvicorn app.main:app --host 0.0.0.0 --reload
     volumes:
       - .:/src
