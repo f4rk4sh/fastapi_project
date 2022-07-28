@@ -1,48 +1,41 @@
-from typing import Union, List
+import time
+from fastapi import FastAPI, Depends, HTTPException, status, Request
+from sqlalchemy.orm import Session
 
-import pyodbc
-from fastapi import FastAPI, Query, Path
-from pydantic import BaseModel
-
-
-class Item(BaseModel):
-    name: str = "desk"
-    description: Union[str, None] = None
-    price: float = 10.1
-    tax: Union[float, None] = None
-
+from . import models, schemas, crud
+from .database import SessionLocal, engine
 
 app = FastAPI()
 
-
-@app.post('/items/{item_id}')
-async def create_item(
-    item: Item,
-    item_id: int = Path(
-        description='some description'),
-
-    q: List[str] = Query(
-        default=['a', 'b'],
-        title='title',
-        description='description')
-):
-    result = {'id': item_id, **item.dict()}
-    if q:
-        result.update({'q': q})
-    return result
+models.Base.metadata.create_all(bind=engine)
 
 
-def connection():
-    conn = pyodbc.connect(
-        'DRIVER={SQL Server};SERVER=LWO1-LHP-A00359;DATABASE=db;UID=admin;PWD=12345'
-    )
-    return conn
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+    return response
 
 
-@app.get('/user/{user_id}')
-async def get_users(user_id: int):
-    conn = connection()
-    cursor = conn.cursor()
-    cursor.execute(f'SELECT * FROM Users where id={user_id}')
-    user = cursor.fetchone()
-    return {'user_id': user[0], 'user_name': user[1]}
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@app.post('/users/', response_model=schemas.User)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    return crud.create_user(db, user=user)
+
+
+@app.get('/users/', response_model=list[schemas.User])
+def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    users = crud.get_users(db, skip=skip, limit=limit)
+    return users

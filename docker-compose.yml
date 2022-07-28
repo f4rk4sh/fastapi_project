@@ -1,14 +1,5 @@
 version: "3.9"
 services:
-  web:
-    build:
-      context: .
-      dockerfile: docker/web/Dockerfile
-    command: uvicorn app.main:app --host 0.0.0.0 --reload
-    volumes:
-      - .:/src
-    ports:
-      - 8000:8000
 
   db:
     build:
@@ -20,3 +11,20 @@ services:
         - MSSQL_PID=$MSSQL_PID
     ports:
       - 1433:1433
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
+    command: uvicorn app.main:app --host 0.0.0.0 --reload
+    volumes:
+      - .:/src
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    links:
+      - db
+
+volumes:
+  mssqldata:
