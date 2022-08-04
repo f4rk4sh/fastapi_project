@@ -31,3 +31,5 @@ RUN poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
 
 COPY . /src
+
+CMD ["/bin/bash", "./deployment/api/entrypoint.sh"]

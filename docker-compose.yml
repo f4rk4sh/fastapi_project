@@ -15,15 +15,12 @@ services:
   api:
     build:
       context: .
-      dockerfile: deployment/web/Dockerfile
-    command: uvicorn app.main:app --host 0.0.0.0 --reload
+      dockerfile: deployment/api/Dockerfile
     volumes:
       - .:/src
     ports:
       - 8000:8000
     depends_on:
-      - db
-    links:
       - db
 
 volumes:
