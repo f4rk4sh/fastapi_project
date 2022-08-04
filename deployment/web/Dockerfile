@@ -1,4 +1,4 @@
-FROM python:3.10.5
+FROM tiangolo/uvicorn-gunicorn-fastapi
 
 
 ENV PYTHONFAULTHANDLER=1 \
@@ -31,3 +31,5 @@ RUN poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
 
 COPY . /src
+
+ENTRYPOINT /bin/bash ./deployment/db/entrypoint.sh

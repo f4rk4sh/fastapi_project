@@ -11,4 +11,4 @@ ENV MSSQL_PID $MSSQL_PID
 WORKDIR /src
 COPY . /src
 
-CMD ["/bin/bash", "./deployment/db/entrypoint.sh"]
+#ENTRYPOINT /bin/bash ./deployment/db/entrypoint.sh

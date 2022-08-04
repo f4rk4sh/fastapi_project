@@ -9,8 +9,18 @@ services:
         - SA_PASSWORD=$SA_PASSWORD
         - ACCEPT_EULA=$ACCEPT_EULA
         - MSSQL_PID=$MSSQL_PID
+        - MSSQL_TCP_PORT=1433
     ports:
-      - 1433:1433
+      - "1433:1433"
+#  db:
+#    image: microsoft/mssql-server-ubuntu
+#    container_name: db
+#    environment:
+#      - ACCEPT_EULA=Y
+#      - MSSQL_SA_PASSWORD=password123
+#      - MSSQL_TCP_PORT=1433
+#    ports:
+#      - "1400:1433"
 
   api:
     build:
@@ -20,7 +30,7 @@ services:
     volumes:
       - .:/src
     ports:
-      - 8000:8000
+      - "8000:8000"
     depends_on:
       - db
     links:

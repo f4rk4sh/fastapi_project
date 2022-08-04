@@ -1,1 +1,2 @@
-/src/deployment/db/run-initialization.sh & /opt/mssql/bin/sqlservr
+#!/usr/bin/env bash
+/opt/mssql/bin/sqlservr & /src/deployment/db/setup_sql_server.sh
