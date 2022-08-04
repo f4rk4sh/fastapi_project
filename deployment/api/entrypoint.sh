@@ -1,4 +1,4 @@
-echo  "Waiting for database initialization..."
+echo  "=== Waiting for database initialization... ==="
 
 sleep 20
 

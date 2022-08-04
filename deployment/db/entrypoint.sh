@@ -1,3 +1,3 @@
-echo "Starting up MSSQL Server..."
+echo "=== Starting up MSSQL Server... ==="
 
-/src/deployment/db/run-initialization.sh & /opt/mssql/bin/sqlservr
+/src/deployment/db/setup_sql_server.sh & /opt/mssql/bin/sqlservr

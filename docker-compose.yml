@@ -5,12 +5,10 @@ services:
     build:
       context: .
       dockerfile: deployment/db/Dockerfile
-      args:
-        - SA_PASSWORD=$SA_PASSWORD
-        - ACCEPT_EULA=$ACCEPT_EULA
-        - MSSQL_PID=$MSSQL_PID
+    env_file:
+      - .env
     ports:
-      - 1433:1433
+      - "1433:1433"
 
   api:
     build:
@@ -18,8 +16,10 @@ services:
       dockerfile: deployment/api/Dockerfile
     volumes:
       - .:/src
+    env_file:
+      - .env
     ports:
-      - 8000:8000
+      - "8000:8000"
     depends_on:
       - db
 
