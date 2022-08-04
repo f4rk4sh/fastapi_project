@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Date
 from sqlalchemy.orm import relationship
 
-from .init_db import Base
+from app.db.base import Base
 
 
 class User(Base):
@@ -16,10 +16,8 @@ class User(Base):
     role_id = Column(Integer, ForeignKey("role.id"))
     status_type_id = Column(Integer, ForeignKey("status_type.id"))
 
-    role = relationship("Role", back_populates="users")
-    status_type = relationship("StatusType", back_populates="users")
-    employers = relationship("Employer", back_populates="user")
-    employees = relationship("Employee", back_populates="user")
+    employers = relationship("Employer", backref="user")
+    employees = relationship("Employee", backref="user")
 
 
 class StatusType(Base):
@@ -28,7 +26,7 @@ class StatusType(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50))
 
-    users = relationship("User", back_populates="status_type")
+    users = relationship("User", backref="status_type")
 
 
 class Role(Base):
@@ -37,7 +35,7 @@ class Role(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50))
 
-    users = relationship("User", back_populates="role")
+    users = relationship("User", backref="role")
 
 
 class Employer(Base):
@@ -52,9 +50,7 @@ class Employer(Base):
     user_id = Column(Integer, ForeignKey("user.id"))
     employer_type_id = Column(Integer, ForeignKey("employer_type.id"))
 
-    user = relationship("User", back_populates="employers")
-    employer_type = relationship("EmployerType", back_populates="employers")
-    employees = relationship("Employee", back_populates="employer")
+    employees = relationship("Employee", backref="employer")
 
 
 class EmployerType(Base):
@@ -63,7 +59,7 @@ class EmployerType(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50))
 
-    employers = relationship("Employer", back_populates="employer_type")
+    employers = relationship("Employer", backref="employer_type")
 
 
 class Employee(Base):
@@ -76,9 +72,6 @@ class Employee(Base):
     birth_date = Column(Date)
     user_id = Column(Integer, ForeignKey("user.id"))
     employer_id = Column(Integer, ForeignKey("employer.id"))
-
-    user = relationship("User", back_populates="employees")
-    employer = relationship("Employer", back_populates="employees")
 
 
 class Session(Base):
