@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from pydantic import BaseModel, Field, PositiveInt
 
 
@@ -9,13 +11,16 @@ class InstanceCreate(InstanceBase):
     pass
 
 
-class Instance(InstanceCreate):
+class InstanceUpdate(InstanceBase):
+    id: PositiveInt
+
+
+class InstanceResponse(InstanceBase):
     id: PositiveInt
 
     class Config:
         orm_mode = True
 
 
-class InstanceUpdate(InstanceBase):
-    class Config:
-        orm_mode = True
+class InstanceSearchResults(BaseModel):
+    results: Sequence[InstanceResponse]
