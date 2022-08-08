@@ -1,9 +1,9 @@
 import logging
 from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
-import pyodbc
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.db.base import Base
@@ -35,11 +35,10 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def create(self, *, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data)
+        self.db.add(db_obj)
         try:
-            self.db.add(db_obj)
             self.db.commit()
-            self.db.refresh(db_obj)
-        except pyodbc.Error as err:
+        except SQLAlchemyError as err:
             logging.exception(err)
             self.db.rollback()
         return db_obj
@@ -53,21 +52,20 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         for field in obj_data:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
+        self.db.add(db_obj)
         try:
-            self.db.add(db_obj)
             self.db.commit()
-            self.db.refresh(db_obj)
-        except pyodbc.Error as err:
+        except SQLAlchemyError as err:
             logging.exception(err)
             self.db.rollback()
         return db_obj
 
     def delete(self, *, id: int) -> ModelType:
         obj = self.db.query(self.model).get(id)
+        self.db.delete(obj)
         try:
-            self.db.delete(obj)
             self.db.commit()
-        except pyodbc.Error as err:
+        except SQLAlchemyError as err:
             logging.exception(err)
             self.db.rollback()
         return obj

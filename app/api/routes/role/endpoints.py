@@ -1,26 +1,17 @@
-from typing import Any, Optional
+from typing import Optional
 
-from fastapi import APIRouter, status, HTTPException, Query
+from fastapi import status, HTTPException, Query
+from fastapi.responses import Response
+from fastapi_utils.inferring_router import InferringRouter
 
 from app import crud
 from app.schemas.role import RoleResponse, RolesResponse, RoleSearchResults, RoleCreate, RoleUpdate
 
-router = APIRouter(tags=["roles"])
+router = InferringRouter(tags=["roles"])
 
 
-@router.get("/role/{role_id}", status_code=status.HTTP_200_OK, response_model=RoleResponse)
-def fetch_role(*, role_id: int) -> Any:
-    """
-    Fetch a single role from the database by ID
-    """
-    role = crud.role.get(id=role_id)
-    if not role:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Role with ID {role_id} not found")
-    return RoleResponse.from_orm(role)
-
-
-@router.get("/role/all/", status_code=status.HTTP_200_OK, response_model=RolesResponse)
-def fetch_roles():
+@router.get("/role", status_code=status.HTTP_200_OK)
+def fetch_roles() -> RolesResponse:
     """
     Fetch all roles from the database
     """
@@ -30,24 +21,22 @@ def fetch_roles():
     return RolesResponse(roles=roles)
 
 
-@router.get("/role/search/", status_code=status.HTTP_200_OK, response_model=RoleSearchResults)
+@router.get("/role/search", status_code=status.HTTP_200_OK)
 def search_roles(
-    *,
-    keyword: Optional[str] = Query(None, min_length=3, example="admin"),
-    max_results: Optional[int] = Query(None, gt=0, example=10),
-):
+    q: Optional[str] = Query(None, min_length=3, example="admin"),
+    max_results: Optional[int] = Query(None, gt=0),
+) -> RoleSearchResults:
     """
     Search for roles in the database based on name keyword
     """
-    roles = crud.role.get_multi(limit=max_results)
-    if not keyword:
-        return RoleSearchResults(results=roles)
-    results = list(filter(lambda role: keyword.lower() in role.name.lower(), roles))[:max_results]
+    results = crud.role.search_by_name(q=q, limit=max_results)
+    if not results:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No results found")
     return RoleSearchResults(results=results)
 
 
-@router.post("/role/add/", status_code=status.HTTP_201_CREATED, response_model=RoleResponse)
-def create_role(*, role_in: RoleCreate):
+@router.post("/role", status_code=status.HTTP_201_CREATED)
+def create_role(role_in: RoleCreate) -> RoleResponse:
     """
     Create a new role in the database
     """
@@ -55,8 +44,8 @@ def create_role(*, role_in: RoleCreate):
     return RoleResponse.from_orm(role)
 
 
-@router.put("/role/update/", status_code=status.HTTP_201_CREATED, response_model=RoleResponse)
-def update_role(*, recipe_in: RoleUpdate):
+@router.put("/role", status_code=status.HTTP_200_OK)
+def update_role(recipe_in: RoleUpdate) -> RoleResponse:
     """
     Update role in the database
     """
@@ -67,13 +56,24 @@ def update_role(*, recipe_in: RoleUpdate):
     return RoleResponse.from_orm(updated_role)
 
 
-@router.delete("/role/{role_id}/delete/", status_code=status.HTTP_200_OK, response_model=RoleResponse)
-def delete_role(*, role_id: int):
+@router.get("/role/{role_id}", status_code=status.HTTP_200_OK)
+def fetch_role(role_id: int) -> RoleResponse:
     """
-    Delete role from the database
+    Fetch a single role from the database by ID
     """
-    # ToDo ?checking the existence of the role requested for deletion
-    role = crud.role.delete(id=role_id)
+    role = crud.role.get(id=role_id)
+    if not role:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Role with ID {role_id} not found")
     return RoleResponse.from_orm(role)
 
 
+@router.delete("/role/{role_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_role(role_id: int):
+    """
+    Delete role from the database
+    """
+    role = crud.role.get(id=role_id)
+    if not role:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Role with ID {role_id} not found")
+    crud.role.delete(id=role_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
