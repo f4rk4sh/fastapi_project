@@ -1,83 +1,79 @@
 from typing import Any, Optional
 
-from fastapi import APIRouter, status, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, status, HTTPException, Query
 
 from app import crud
-from app.db.get_database import get_db
 from app.schemas.role import RoleResponse, RolesResponse, RoleSearchResults, RoleCreate, RoleUpdate
 
-router = APIRouter()
+router = APIRouter(tags=["roles"])
 
 
-@router.get("/{role_id}", status_code=status.HTTP_200_OK, response_model=RoleResponse)
-def fetch_role(*, role_id: int, db: Session = Depends(get_db)) -> Any:
+@router.get("/role/{role_id}", status_code=status.HTTP_200_OK, response_model=RoleResponse)
+def fetch_role(*, role_id: int) -> Any:
     """
     Fetch a single role from the database by ID
     """
-    role = crud.role.get(db=db, id=role_id)
+    role = crud.role.get(id=role_id)
     if not role:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Role with ID {role_id} not found")
-    return role
+    return RoleResponse.from_orm(role)
 
 
-@router.get("/all/", status_code=status.HTTP_200_OK, response_model=RolesResponse)
-def fetch_roles(*, db: Session = Depends(get_db)):
+@router.get("/role/all/", status_code=status.HTTP_200_OK, response_model=RolesResponse)
+def fetch_roles():
     """
     Fetch all roles from the database
     """
-    roles = crud.role.get_multi(db=db)
+    roles = crud.role.get_multi()
     if not roles:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Roles not found")
-    return {"roles": roles}
+    return RolesResponse(roles=roles)
 
 
-@router.get("/search/", status_code=status.HTTP_200_OK, response_model=RoleSearchResults)
+@router.get("/role/search/", status_code=status.HTTP_200_OK, response_model=RoleSearchResults)
 def search_roles(
     *,
     keyword: Optional[str] = Query(None, min_length=3, example="admin"),
     max_results: Optional[int] = Query(None, gt=0, example=10),
-    db: Session = Depends(get_db),
-) -> dict:
+):
     """
     Search for roles in the database based on name keyword
     """
-    roles = crud.role.get_multi(db=db, limit=max_results)
+    roles = crud.role.get_multi(limit=max_results)
     if not keyword:
-        return {"results": roles}
+        return RoleSearchResults(results=roles)
+    results = list(filter(lambda role: keyword.lower() in role.name.lower(), roles))[:max_results]
+    return RoleSearchResults(results=results)
 
-    results = filter(lambda recipe: keyword.lower() in recipe.name.lower(), roles)
-    return {"results": list(results)[:max_results]}
 
-
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=RoleResponse)
-def create_role(*, role_in: RoleCreate, db: Session = Depends(get_db)):
+@router.post("/role/add/", status_code=status.HTTP_201_CREATED, response_model=RoleResponse)
+def create_role(*, role_in: RoleCreate):
     """
     Create a new role in the database
     """
-    role = crud.role.create(db=db, obj_in=role_in)
-    return role
+    role = crud.role.create(obj_in=role_in)
+    return RoleResponse.from_orm(role)
 
 
-@router.put("/", status_code=status.HTTP_201_CREATED, response_model=RoleResponse)
-def update_role(*, recipe_in: RoleUpdate, db: Session = Depends(get_db)):
+@router.put("/role/update/", status_code=status.HTTP_201_CREATED, response_model=RoleResponse)
+def update_role(*, recipe_in: RoleUpdate):
     """
     Update role in the database
     """
-    role = crud.role.get(db=db, id=recipe_in.id)
+    role = crud.role.get(id=recipe_in.id)
     if not role:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Role with ID {recipe_in.id} not found")
-    updated_role = crud.role.update(db=db, db_obj=role, obj_in=recipe_in)
-    return updated_role
+    updated_role = crud.role.update(db_obj=role, obj_in=recipe_in)
+    return RoleResponse.from_orm(updated_role)
 
 
-@router.delete("/{role_id}", status_code=status.HTTP_200_OK, response_model=RoleResponse)
-def delete_role(*, role_id: int, db: Session = Depends(get_db)):
+@router.delete("/role/{role_id}/delete/", status_code=status.HTTP_200_OK, response_model=RoleResponse)
+def delete_role(*, role_id: int):
     """
     Delete role from the database
     """
     # ToDo ?checking the existence of the role requested for deletion
-    role = crud.role.delete(db=db, id=role_id)
-    return role
+    role = crud.role.delete(id=role_id)
+    return RoleResponse.from_orm(role)
 
 

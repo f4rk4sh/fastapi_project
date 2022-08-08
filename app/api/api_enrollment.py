@@ -6,7 +6,7 @@ from app.api.routes.role.endpoints import router as role_router
 
 
 router = APIRouter()
-router.include_router(employee_router, prefix="/employers", tags=["employers"])
-router.include_router(employer_router, prefix="/employees", tags=["employees"])
-router.include_router(health_router, prefix="/health", tags=["health"])
-router.include_router(role_router, prefix="/roles", tags=["roles"])
+router.include_router(employee_router)
+router.include_router(employer_router)
+router.include_router(health_router)
+router.include_router(role_router)

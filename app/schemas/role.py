@@ -1,8 +1,8 @@
-from typing import Sequence
+from typing import List
 
 from pydantic import BaseModel
 
-from app.schemas.base import InstanceBase, InstanceCreate, InstanceResponse, InstanceUpdate, InstanceSearchResults
+from app.schemas.base import InstanceBase, InstanceCreate, InstanceResponse, InstanceUpdate
 
 
 class RoleBase(InstanceBase):
@@ -22,8 +22,8 @@ class RoleResponse(RoleBase, InstanceResponse):
 
 
 class RolesResponse(BaseModel):
-    roles: Sequence[RoleResponse]
+    roles: List[RoleResponse]
 
 
 class RoleSearchResults(BaseModel):
-    results: Sequence[RoleResponse]
+    results: List[RoleResponse]
