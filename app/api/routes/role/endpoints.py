@@ -23,13 +23,13 @@ def fetch_roles() -> RolesResponse:
 
 @router.get("/role/search", status_code=status.HTTP_200_OK)
 def search_roles(
-    q: Optional[str] = Query(None, min_length=3, example="admin"),
+    role_name: Optional[str] = Query(None, min_length=3, example="admin"),
     max_results: Optional[int] = Query(None, gt=0),
 ) -> RoleSearchResults:
     """
     Search for roles in the database based on name keyword
     """
-    results = crud.role.search_by_name(q=q, limit=max_results)
+    results = crud.role.search_by_name(role_name=role_name, limit=max_results)
     if not results:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No results found")
     return RoleSearchResults(results=results)
