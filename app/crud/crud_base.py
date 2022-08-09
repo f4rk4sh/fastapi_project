@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
+from app.core.exceptions import HTTPNotFoundException
 from app.db.base import Base
 from app.db.get_database import get_db
 
@@ -27,10 +28,16 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         self.db = db
 
     def get(self, id: Any) -> Optional[ModelType]:
-        return self.db.query(self.model).filter(self.model.id == id).first()
+        obj = self.db.query(self.model).filter(self.model.id == id).first()
+        if not obj:
+            raise HTTPNotFoundException(self.model.__name__, id)
+        return obj
 
     def get_multi(self, *, skip: int = 0, limit: int = 100) -> List[ModelType]:
-        return self.db.query(self.model).order_by(self.model.id).offset(skip).limit(limit).all()
+        obj_list = self.db.query(self.model).order_by(self.model.id).offset(skip).limit(limit).all()
+        if not obj_list:
+            raise HTTPNotFoundException(self.model.__name__)
+        return obj_list
 
     def create(self, *, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
@@ -62,6 +69,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def delete(self, *, id: int) -> ModelType:
         obj = self.db.query(self.model).get(id)
+        if not obj:
+            raise HTTPNotFoundException(self.model.__name__, id)
         self.db.delete(obj)
         try:
             self.db.commit()
