@@ -1,0 +1,3 @@
+fullname,passport,tax_id,birth_date,employer_id,email,phone,role_id,status_type_id
+John Doe,MM123456,12345678,1999/1/1,1,example@mail.com,+380123456789,3,1
+Lora Palmer,MT123456,12345678,2000/1/1,2,example2@mail.com,+380987654321,3,1
