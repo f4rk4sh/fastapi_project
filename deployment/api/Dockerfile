@@ -1,5 +1,7 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi
 
+WORKDIR /src/
+
 RUN apt-get install curl
 RUN apt-get install apt-transport-https
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
@@ -8,18 +10,14 @@ RUN apt-get update
 ENV ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive
 RUN apt-get install mssql-tools unixodbc-dev -y
 
-
 RUN pip install --ignore-installed "poetry==1.1.14"
 
-WORKDIR /src
-COPY poetry.lock pyproject.toml /src/
-
-ADD . /src
-WORKDIR /src
+COPY pyproject.toml poetry.lock /src/
 
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi
+    && poetry install --no-root
 
 COPY . /src
+ENV PYTHONPATH=/src
 
 ENTRYPOINT /bin/bash /src/deployment/api/entrypoint.sh
