@@ -1,12 +1,8 @@
-from fastapi import FastAPI, APIRouter, status
+from fastapi import FastAPI
 
 from app.api.api_enrollment import router
-from app.db import models
-from app.db.session import engine
 
 app = FastAPI(title="Fastapi project")
-
-models.Base.metadata.create_all(bind=engine)  # will be removed after adding flyway
 
 app.include_router(router)
 
