@@ -1,3 +1,3 @@
-address,edrpou,expire_contract_date,salary_date,prepayment_date,user_id,employer_type_id
-43 Sumska st. Kharkiv, 1234567890,2023-01-01,2022-09-25,2022-09-05,1,1
-43 Pushkinska st. Kharkiv, 0987654321,2023-12-01,2022-09-25,2022-09-05,2,2
+id,address,edrpou,expire_contract_date,salary_date,prepayment_date,user_id,employer_type_id
+1,43 Sumska st. Kharkiv, 1234567890,2023-01-01,2022-09-25,2022-09-05,1,1
+2,43 Pushkinska st. Kharkiv, 0987654321,2023-12-01,2022-09-25,2022-09-05,2,2

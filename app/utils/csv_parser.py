@@ -18,8 +18,7 @@ def parsing():
         file_path = f"app/db/data/{model.__name__}.csv"
         with open(file_path, 'r') as csv_file:
             csv_reader = csv.DictReader(csv_file)
-            header = csv_reader.fieldnames
-            column_types = {column.key: column.type for column in model.__table__.columns if column.key in header}
+            column_types = {column.key: column.type for column in model.__table__.columns}
             for data in csv_reader:
                 converted_data = convert_data_types(column_types, data)
                 obj = model(**converted_data)
