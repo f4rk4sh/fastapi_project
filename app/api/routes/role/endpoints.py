@@ -5,7 +5,7 @@ from fastapi.responses import Response
 from fastapi_utils.inferring_router import InferringRouter
 
 from app import crud
-from app.core.exceptions import ExceptionRouteHandler
+from app.core.exceptions.exception_route_handler import ExceptionRouteHandler
 from app.schemas.role import RoleResponse, RolesResponse, RoleSearchResults, RoleCreate, RoleUpdate
 
 router = InferringRouter(route_class=ExceptionRouteHandler, tags=["roles"])

@@ -1,6 +1,6 @@
 from typing import List
 
-from app.core.exceptions import HTTPNotFoundException
+from app.core.exceptions.common_exceptions import HTTPNotFoundException
 from app.crud.crud_base import CRUDBase, ModelType
 from app.db.models import Role
 from app.schemas.role import RoleCreate, RoleUpdate

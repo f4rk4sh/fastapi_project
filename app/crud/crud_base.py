@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import HTTPNotFoundException
+from app.core.exceptions.common_exceptions import HTTPNotFoundException
 from app.db.base import Base
 from app.db.get_database import get_db
 
