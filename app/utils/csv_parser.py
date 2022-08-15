@@ -5,17 +5,15 @@ from datetime import datetime
 from sqlalchemy import Date, DateTime, Boolean
 from sqlalchemy.orm import Session
 
-from app.db import models
 from app.db.models import User, Employee, Employer, EmployerType, Role, StatusType
 from app.db.get_database import get_db
-from app.db.session import engine
 
 db: Session = next(get_db())
 
 
 def parsing():
     for model in [Role, StatusType,  EmployerType, User, Employer, Employee]:
-        file_path = f"app/db/data/{model.__name__}.csv"
+        file_path = f"/src/app/db/data/{model.__name__}.csv"
         with open(file_path, 'r') as csv_file:
             csv_reader = csv.DictReader(csv_file)
             column_types = {column.key: column.type for column in model.__table__.columns}
@@ -45,6 +43,4 @@ def convert_data_types(column_types: dict, data: dict):
 
 
 if __name__ == '__main__':
-    models.Base.metadata.drop_all(bind=engine)
-    models.Base.metadata.create_all(bind=engine)
     parsing()

@@ -1,10 +1,6 @@
 echo  "=== Waiting for database initialization... ==="
 
-sleep 10
-
-echo  "=== Inserting basic data to the database... ==="
-
-python /src/app/utils/csv_parser.py
+sleep 20
 
 echo "=== Starting up project... ==="
 

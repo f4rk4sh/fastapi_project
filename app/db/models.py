@@ -12,12 +12,12 @@ class User(Base):
     password = Column(String(100))
     phone = Column(String(50))
     creation_date = Column(DateTime)
-    activation_date = Column(DateTime)
+    activation_date = Column(DateTime, nullable=True)
     role_id = Column(Integer, ForeignKey("role.id"))
     status_type_id = Column(Integer, ForeignKey("status_type.id"))
 
-    employers = relationship("Employer", backref="user")
-    employees = relationship("Employee", backref="user")
+    employer = relationship("Employer", uselist=False, single_parent=True, backref="user", passive_deletes=True)
+    employee = relationship("Employee", uselist=False, single_parent=True, backref="user", passive_deletes=True)
 
 
 class StatusType(Base):
@@ -42,12 +42,13 @@ class Employer(Base):
     __tablename__ = "employer"
 
     id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(100))
     address = Column(String(100))
     edrpou = Column(String(50), index=True)
-    expire_contract_date = Column(Date)
-    salary_date = Column(Date)
-    prepayment_date = Column(Date)
-    user_id = Column(Integer, ForeignKey("user.id"))
+    expire_contract_date = Column(Date, nullable=True)
+    salary_date = Column(Date, nullable=True)
+    prepayment_date = Column(Date, nullable=True)
+    user_id = Column(Integer, ForeignKey("user.id", ondelete='CASCADE'))
     employer_type_id = Column(Integer, ForeignKey("employer_type.id"))
 
     employees = relationship("Employee", backref="employer")
@@ -67,10 +68,10 @@ class Employee(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     fullname = Column(String(100))
-    passport = Column(String(50), index=True)
-    tax_id = Column(String(50), index=True)
-    birth_date = Column(Date)
-    user_id = Column(Integer, ForeignKey("user.id"))
+    passport = Column(String(50), index=True, nullable=True)
+    tax_id = Column(String(50), index=True, nullable=True)
+    birth_date = Column(Date, nullable=True)
+    user_id = Column(Integer, ForeignKey("user.id", ondelete='CASCADE'))
     employer_id = Column(Integer, ForeignKey("employer.id"))
 
 
