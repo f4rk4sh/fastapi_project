@@ -4,7 +4,7 @@ CREATE TABLE [dbo].[role]
 [name] [varchar] (50) NULL
 )
 GO
-ALTER TABLE [dbo].[role] ADD CONSTRAINT [PK__role__3213E83F63EB5C83] PRIMARY KEY CLUSTERED ([id])
+ALTER TABLE [dbo].[role] ADD CONSTRAINT [PK__role__id] PRIMARY KEY CLUSTERED ([id])
 GO
 CREATE NONCLUSTERED INDEX [ix_role_id] ON [dbo].[role] ([id])
 GO
@@ -15,7 +15,7 @@ CREATE TABLE [dbo].[status_type]
 [name] [varchar] (50) NULL
 )
 GO
-ALTER TABLE [dbo].[status_type] ADD CONSTRAINT [PK__status_t__3213E83F8AE383FD] PRIMARY KEY CLUSTERED ([id])
+ALTER TABLE [dbo].[status_type] ADD CONSTRAINT [PK__status_type__id] PRIMARY KEY CLUSTERED ([id])
 GO
 CREATE NONCLUSTERED INDEX [ix_status_type_id] ON [dbo].[status_type] ([id])
 GO
@@ -26,7 +26,7 @@ CREATE TABLE [dbo].[employer_type]
 [name] [varchar] (50) NULL
 )
 GO
-ALTER TABLE [dbo].[employer_type] ADD CONSTRAINT [PK__employer__3213E83F217C961A] PRIMARY KEY CLUSTERED ([id])
+ALTER TABLE [dbo].[employer_type] ADD CONSTRAINT [PK__employer_type__id] PRIMARY KEY CLUSTERED ([id])
 GO
 CREATE NONCLUSTERED INDEX [ix_employer_type_id] ON [dbo].[employer_type] ([id])
 GO
@@ -43,15 +43,15 @@ CREATE TABLE [dbo].[user]
 [status_type_id] [int] NULL
 )
 GO
-ALTER TABLE [dbo].[user] ADD CONSTRAINT [PK__user__3213E83F0B6C9234] PRIMARY KEY CLUSTERED ([id])
+ALTER TABLE [dbo].[user] ADD CONSTRAINT [PK__user__id] PRIMARY KEY CLUSTERED ([id])
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [ix_user_email] ON [dbo].[user] ([email])
 GO
 CREATE NONCLUSTERED INDEX [ix_user_id] ON [dbo].[user] ([id])
 GO
-ALTER TABLE [dbo].[user] ADD CONSTRAINT [FK__user__role_id__2EB0D91F] FOREIGN KEY ([role_id]) REFERENCES [dbo].[role] ([id])
+ALTER TABLE [dbo].[user] ADD CONSTRAINT [FK__user__role__id] FOREIGN KEY ([role_id]) REFERENCES [dbo].[role] ([id])
 GO
-ALTER TABLE [dbo].[user] ADD CONSTRAINT [FK__user__status_typ__2FA4FD58] FOREIGN KEY ([status_type_id]) REFERENCES [dbo].[status_type] ([id])
+ALTER TABLE [dbo].[user] ADD CONSTRAINT [FK__user__status_type__id] FOREIGN KEY ([status_type_id]) REFERENCES [dbo].[status_type] ([id])
 GO
 
 CREATE TABLE [dbo].[employer]
@@ -67,15 +67,15 @@ CREATE TABLE [dbo].[employer]
 [employer_type_id] [int] NULL
 )
 GO
-ALTER TABLE [dbo].[employer] ADD CONSTRAINT [PK__employer__3213E83FC1B8210B] PRIMARY KEY CLUSTERED ([id])
+ALTER TABLE [dbo].[employer] ADD CONSTRAINT [PK__employer__id] PRIMARY KEY CLUSTERED ([id])
 GO
 CREATE NONCLUSTERED INDEX [ix_employer_edrpou] ON [dbo].[employer] ([edrpou])
 GO
 CREATE NONCLUSTERED INDEX [ix_employer_id] ON [dbo].[employer] ([id])
 GO
-ALTER TABLE [dbo].[employer] ADD CONSTRAINT [FK__employer__employ__33758E3C] FOREIGN KEY ([employer_type_id]) REFERENCES [dbo].[employer_type] ([id])
+ALTER TABLE [dbo].[employer] ADD CONSTRAINT [FK__employer__employer_type__id] FOREIGN KEY ([employer_type_id]) REFERENCES [dbo].[employer_type] ([id])
 GO
-ALTER TABLE [dbo].[employer] ADD CONSTRAINT [FK__employer__user_i__32816A03] FOREIGN KEY ([user_id]) REFERENCES [dbo].[user] ([id]) ON DELETE CASCADE
+ALTER TABLE [dbo].[employer] ADD CONSTRAINT [FK__employer__user__id] FOREIGN KEY ([user_id]) REFERENCES [dbo].[user] ([id]) ON DELETE CASCADE
 GO
 
 CREATE TABLE [dbo].[employee]
@@ -89,7 +89,7 @@ CREATE TABLE [dbo].[employee]
 [employer_id] [int] NULL
 )
 GO
-ALTER TABLE [dbo].[employee] ADD CONSTRAINT [PK__employee__3213E83F08D51DC3] PRIMARY KEY CLUSTERED ([id])
+ALTER TABLE [dbo].[employee] ADD CONSTRAINT [PK__employee__id] PRIMARY KEY CLUSTERED ([id])
 GO
 CREATE NONCLUSTERED INDEX [ix_employee_id] ON [dbo].[employee] ([id])
 GO
@@ -97,9 +97,9 @@ CREATE NONCLUSTERED INDEX [ix_employee_passport] ON [dbo].[employee] ([passport]
 GO
 CREATE NONCLUSTERED INDEX [ix_employee_tax_id] ON [dbo].[employee] ([tax_id])
 GO
-ALTER TABLE [dbo].[employee] ADD CONSTRAINT [FK__employee__employ__37461F20] FOREIGN KEY ([employer_id]) REFERENCES [dbo].[employer] ([id])
+ALTER TABLE [dbo].[employee] ADD CONSTRAINT [FK__employee__employer__id] FOREIGN KEY ([employer_id]) REFERENCES [dbo].[employer] ([id])
 GO
-ALTER TABLE [dbo].[employee] ADD CONSTRAINT [FK__employee__user_i__3651FAE7] FOREIGN KEY ([user_id]) REFERENCES [dbo].[user] ([id]) ON DELETE CASCADE
+ALTER TABLE [dbo].[employee] ADD CONSTRAINT [FK__employee__user__id] FOREIGN KEY ([user_id]) REFERENCES [dbo].[user] ([id]) ON DELETE CASCADE
 GO
 
 CREATE TABLE [dbo].[session]
@@ -109,7 +109,7 @@ CREATE TABLE [dbo].[session]
 [creation_date] [datetime] NULL
 )
 GO
-ALTER TABLE [dbo].[session] ADD CONSTRAINT [PK__session__3213E83F51D5D72D] PRIMARY KEY CLUSTERED ([id])
+ALTER TABLE [dbo].[session] ADD CONSTRAINT [PK__session__id] PRIMARY KEY CLUSTERED ([id])
 GO
 CREATE NONCLUSTERED INDEX [ix_session_id] ON [dbo].[session] ([id])
 GO
