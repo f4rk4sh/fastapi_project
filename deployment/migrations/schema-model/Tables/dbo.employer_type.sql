@@ -4,7 +4,7 @@ CREATE TABLE [dbo].[employer_type]
 [name] [varchar] (50) NULL
 )
 GO
-ALTER TABLE [dbo].[employer_type] ADD CONSTRAINT [PK__employer__3213E83FA2970D0C] PRIMARY KEY CLUSTERED ([id])
+ALTER TABLE [dbo].[employer_type] ADD CONSTRAINT [PK__employer_type__id] PRIMARY KEY CLUSTERED ([id])
 GO
 CREATE NONCLUSTERED INDEX [ix_employer_type_id] ON [dbo].[employer_type] ([id])
 GO

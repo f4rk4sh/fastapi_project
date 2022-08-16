@@ -9,7 +9,7 @@ CREATE TABLE [dbo].[employee]
 [employer_id] [int] NULL
 )
 GO
-ALTER TABLE [dbo].[employee] ADD CONSTRAINT [PK__employee__3213E83FD35367B1] PRIMARY KEY CLUSTERED ([id])
+ALTER TABLE [dbo].[employee] ADD CONSTRAINT [PK__employee__id] PRIMARY KEY CLUSTERED ([id])
 GO
 CREATE NONCLUSTERED INDEX [ix_employee_id] ON [dbo].[employee] ([id])
 GO
@@ -17,7 +17,7 @@ CREATE NONCLUSTERED INDEX [ix_employee_passport] ON [dbo].[employee] ([passport]
 GO
 CREATE NONCLUSTERED INDEX [ix_employee_tax_id] ON [dbo].[employee] ([tax_id])
 GO
-ALTER TABLE [dbo].[employee] ADD CONSTRAINT [FK__employee__employ__735B0927] FOREIGN KEY ([employer_id]) REFERENCES [dbo].[employer] ([id])
+ALTER TABLE [dbo].[employee] ADD CONSTRAINT [FK__employee__employer__id] FOREIGN KEY ([employer_id]) REFERENCES [dbo].[employer] ([id])
 GO
-ALTER TABLE [dbo].[employee] ADD CONSTRAINT [FK__employee__user_i__7266E4EE] FOREIGN KEY ([user_id]) REFERENCES [dbo].[user] ([id]) ON DELETE CASCADE
+ALTER TABLE [dbo].[employee] ADD CONSTRAINT [FK__employee__user__id] FOREIGN KEY ([user_id]) REFERENCES [dbo].[user] ([id]) ON DELETE CASCADE
 GO

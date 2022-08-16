@@ -10,13 +10,13 @@ CREATE TABLE [dbo].[user]
 [status_type_id] [int] NULL
 )
 GO
-ALTER TABLE [dbo].[user] ADD CONSTRAINT [PK__user__3213E83FEDC8883A] PRIMARY KEY CLUSTERED ([id])
+ALTER TABLE [dbo].[user] ADD CONSTRAINT [PK__user__id] PRIMARY KEY CLUSTERED ([id])
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [ix_user_email] ON [dbo].[user] ([email])
 GO
 CREATE NONCLUSTERED INDEX [ix_user_id] ON [dbo].[user] ([id])
 GO
-ALTER TABLE [dbo].[user] ADD CONSTRAINT [FK__user__role_id__6AC5C326] FOREIGN KEY ([role_id]) REFERENCES [dbo].[role] ([id])
+ALTER TABLE [dbo].[user] ADD CONSTRAINT [FK__user__role__id] FOREIGN KEY ([role_id]) REFERENCES [dbo].[role] ([id])
 GO
-ALTER TABLE [dbo].[user] ADD CONSTRAINT [FK__user__status_typ__6BB9E75F] FOREIGN KEY ([status_type_id]) REFERENCES [dbo].[status_type] ([id])
+ALTER TABLE [dbo].[user] ADD CONSTRAINT [FK__user__status_type__id] FOREIGN KEY ([status_type_id]) REFERENCES [dbo].[status_type] ([id])
 GO
