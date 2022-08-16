@@ -1,6 +1,15 @@
 version: "3.9"
 services:
 
+  migrations:
+    build:
+      context: .
+      dockerfile: deployment/migrations/Dockerfile
+    volumes:
+      - ./deployment/migrations/versions:/flyway/sql
+    depends_on:
+      - db
+
   db:
     build:
       context: .
