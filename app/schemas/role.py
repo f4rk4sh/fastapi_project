@@ -1,7 +1,10 @@
 from typing import List, Optional
 
 from fastapi import Path, Query
-from pydantic import BaseModel, Field, PositiveInt
+from pydantic import BaseModel, Field, PositiveInt, validator
+
+from app import crud
+from app.core.exceptions.common_exceptions import HTTPBadRequestException
 
 
 class RoleBase(BaseModel):
@@ -15,7 +18,12 @@ class RoleBase(BaseModel):
 
 
 class RoleCreate(RoleBase):
-    pass
+    @validator("name")
+    def unique_name(cls, role_name: str) -> str:
+        role = crud.role.get_by_name(role_name)
+        if role:
+            raise HTTPBadRequestException(detail="Role with this name already exists")
+        return role_name
 
 
 class RoleUpdate(RoleBase):

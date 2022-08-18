@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from app.core.exceptions.common_exceptions import HTTPNotFoundException
 from app.crud.crud_base import CRUDBase, ModelType
@@ -12,6 +12,10 @@ class CRUDRole(CRUDBase[Role, RoleCreate, RoleUpdate]):
         if not results:
             raise HTTPNotFoundException(self.model.__name__)
         return results
+
+    def get_by_name(self, role_name: str) -> Optional[ModelType]:
+        obj = self.db.query(self.model).filter(self.model.name == role_name).first()
+        return obj
 
 
 role = CRUDRole(Role)
