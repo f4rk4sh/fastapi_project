@@ -6,6 +6,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.core.exceptions.common_exceptions import HTTPNotFoundException
+from app.core.security import get_password_hash
 from app.crud.crud_base import CRUDBase, ModelType, CreateSchemaType, UpdateSchemaType
 from app.db.models import Employer, User
 from app.schemas.employer import EmployerCreate, EmployerUpdate
@@ -14,13 +15,18 @@ from app.schemas.employer import EmployerCreate, EmployerUpdate
 class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
     def create(self, *, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
-        user_data = {key: value for key, value in obj_in_data.items() if key in User.__table__.columns.keys()}
-        employer_data = {key: value for key, value in obj_in_data.items() if key in Employer.__table__.columns.keys()}
+        user_password = obj_in_data.pop("password")
+        user_data = {}
+        for key in User.__table__.columns.keys():
+            if key in obj_in_data.keys():
+                user_data[key] = obj_in_data[key]
+                obj_in_data.pop(key)
         user = User(creation_date=datetime.utcnow(), **user_data)
+        user.password = get_password_hash(user_password)
         self.db.add(user)
         try:
             self.db.flush()
-            db_obj = self.model(user_id=user.id, **employer_data)
+            db_obj = self.model(user=user, **obj_in_data)
             self.db.add(db_obj)
             self.db.commit()
             return db_obj
@@ -37,11 +43,10 @@ class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
         else:
             update_data = obj_in.dict(exclude_unset=True)
         update_data.pop("id")
-        for field in user_data:
-            if field in update_data:
+        for field in update_data:
+            if field in user_data:
                 setattr(user, field, update_data[field])
-        for field in obj_data:
-            if field in update_data:
+            elif field in obj_data:
                 setattr(db_obj, field, update_data[field])
         self.db.add(user, db_obj)
         try:

@@ -7,7 +7,6 @@ from pydantic import BaseModel, EmailStr, Field, PositiveInt
 
 class EmployerBase(BaseModel):
     name: str = Field(
-        ...,
         title="The NAME of the employer",
         description="Note: must be a string with a length of less than 100 characters",
         example="Example Company",
@@ -15,13 +14,11 @@ class EmployerBase(BaseModel):
     )
 
     email: EmailStr = Field(
-        ...,
         title="The EMAIL of the employer",
         description="Note: must be a valid e-mail address with format: [account name]@[domain name].[domain extension]",
         example="example@mail.com"
     )
     phone: str = Field(
-        ...,
         title="The PHONE NUMBER of the employer",
         description="Note: must be a valid phone number with format: +[country code][phone number]",
         example="+380123456789",
@@ -29,27 +26,23 @@ class EmployerBase(BaseModel):
     )
     # ToDo ?setting role automatically in the corresponding endpoint
     role_id: PositiveInt = Field(
-        ...,
         title="The ID of the role of the employer",
         description="Note: must be a positive integer",
         example="1",
     )
     # ToDo ?setting status type automatically in the corresponding endpoint
     status_type_id: PositiveInt = Field(
-        ...,
         title="The ID of the status type of the employer",
         description="Note: must be a positive integer",
         example="1",
     )
     address: str = Field(
-        ...,
         title="The ADDRESS of the employer",
         description="Note: must be a string with a length of less than 100 characters",
         example="1 STREET st LOCALITY",
         max_length=100
     )
     edrpou: str = Field(
-        ...,
         title="The EDRPOU of the employer",
         description="Note: must be a string with a length of less than 50 characters",
         example="12345678",
@@ -71,7 +64,6 @@ class EmployerBase(BaseModel):
         example="2022-01-01",
     )
     employer_type_id: PositiveInt = Field(
-        ...,
         title="The ID of the employer type",
         description="Note: must be a positive integer",
         example="1",
@@ -86,22 +78,66 @@ class EmployerCreate(EmployerBase):
                     "containing at least 1 uppercase character, 1 number and 1 special symbol",
         example="Password1!",
     )
-    pass
     # ToDo email, phone number, password, dates validators
 
 
 class EmployerUpdate(EmployerBase):
     id: PositiveInt = Field(
-        ...,
         title="The ID of the employer",
         description="Note: must be a positive integer",
         example=1
+    )
+    name: Optional[str] = Field(
+        title="The NAME of the employer",
+        description="Note: must be a string with a length of less than 100 characters",
+        example="Example Company",
+        max_length=100
+    )
+
+    email: Optional[EmailStr] = Field(
+        title="The EMAIL of the employer",
+        description="Note: must be a valid e-mail address with format: [account name]@[domain name].[domain extension]",
+        example="example@mail.com"
+    )
+    phone: Optional[str] = Field(
+        title="The PHONE NUMBER of the employer",
+        description="Note: must be a valid phone number with format: +[country code][phone number]",
+        example="+380123456789",
+        max_length=50
+    )
+    # ToDo ?setting role automatically in the corresponding endpoint
+    role_id: Optional[PositiveInt] = Field(
+        title="The ID of the role of the employer",
+        description="Note: must be a positive integer",
+        example="1",
+    )
+    # ToDo ?setting status type automatically in the corresponding endpoint
+    status_type_id: Optional[PositiveInt] = Field(
+        title="The ID of the status type of the employer",
+        description="Note: must be a positive integer",
+        example="1",
+    )
+    address: Optional[str] = Field(
+        title="The ADDRESS of the employer",
+        description="Note: must be a string with a length of less than 100 characters",
+        example="1 STREET st LOCALITY",
+        max_length=100
+    )
+    edrpou: Optional[str] = Field(
+        title="The EDRPOU of the employer",
+        description="Note: must be a string with a length of less than 50 characters",
+        example="12345678",
+        max_length=50
+    )
+    employer_type_id: Optional[PositiveInt] = Field(
+        title="The ID of the employer type",
+        description="Note: must be a positive integer",
+        example="1",
     )
 
 
 class EmployerResponse(EmployerBase):
     id: PositiveInt = Field(
-        ...,
         title="The ID of the employer",
         description="Note: must be a positive integer",
         example=1
