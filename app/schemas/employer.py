@@ -1,8 +1,8 @@
-from datetime import date
 from typing import Optional, List
 
 from fastapi import Path, Query
-from pydantic import BaseModel, EmailStr, Field, PositiveInt
+from pydantic import BaseModel, EmailStr, Field, PositiveInt, FutureDate
+from app.schemas.validators import UserValidators
 
 
 class EmployerBase(BaseModel):
@@ -22,6 +22,7 @@ class EmployerBase(BaseModel):
         title="The PHONE NUMBER of the employer",
         description="Note: must be a valid phone number with format: +[country code][phone number]",
         example="+380123456789",
+        min_length=13,
         max_length=50
     )
     # ToDo ?setting role automatically in the corresponding endpoint
@@ -48,17 +49,17 @@ class EmployerBase(BaseModel):
         example="12345678",
         max_length=50
     )
-    expire_contract_date: Optional[date] = Field(
+    expire_contract_date: Optional[FutureDate] = Field(
         title="The DATE of the contract expiration",
         description="Note: must be a date in future with format: yyyy-mm-dd",
         example="2022-01-01",
     )
-    salary_date: Optional[date] = Field(
+    salary_date: Optional[FutureDate] = Field(
         title="The DATE of the salary",
         description="Note: must be a date in future with format: yyyy-mm-dd",
         example="2022-01-01",
     )
-    prepayment_date: Optional[date] = Field(
+    prepayment_date: Optional[FutureDate] = Field(
         title="The DATE of the prepayment",
         description="Note: must be a date in future with format: yyyy-mm-dd",
         example="2022-01-01",
@@ -70,18 +71,20 @@ class EmployerBase(BaseModel):
     )
 
 
-class EmployerCreate(EmployerBase):
+class EmployerCreate(EmployerBase, UserValidators):
     password: str = Field(
         ...,
         title="The PASSWORD of employer account",
-        description="Note: must be a string with a length of more than 10 and less than 100 characters, "
-                    "containing at least 1 uppercase character, 1 number and 1 special symbol",
+        description="Note: must be a string with a length of more than 8 and less than 100 characters, "
+                    "containing at least 1 uppercase character, "
+                    "1 number and 1 special symbol (e.g. !@#$%^&*()-_=+|\\)",
         example="Password1!",
+        min_length=8,
+        max_length=100
     )
-    # ToDo email, phone number, password, dates validators
 
 
-class EmployerUpdate(EmployerBase):
+class EmployerUpdate(EmployerBase, UserValidators):
     id: PositiveInt = Field(
         title="The ID of the employer",
         description="Note: must be a positive integer",
