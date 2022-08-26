@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 
-from app.core.documentation.openapi_tags import metadata_tags
+from app.core.documentation.openapi_tags import generate_metadata_tags
 
 
 class OpenAPISchema:
@@ -15,7 +15,7 @@ class OpenAPISchema:
             description="The project is intended to be helpful in relationship between employers and employees",
             routes=app.routes,
         )
-        openapi_schema["tags"] = metadata_tags()
+        openapi_schema["tags"] = generate_metadata_tags()
         app.openapi_schema = openapi_schema
         return app.openapi_schema
 
