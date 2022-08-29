@@ -18,7 +18,7 @@ class RoleBase(BaseModel):
 class RoleCreate(RoleBase):
     @validator("name")
     def unique_name(cls, value: str) -> str:
-        role = crud.role.get_by_attribute(attribute="name", value=value)
+        role = crud.role.get_by_attribute(attributes=["name"], value=value)
         if role:
             raise HTTPBadRequestException(detail="Role with this name already exists")
         return value
