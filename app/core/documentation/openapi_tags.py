@@ -1,7 +1,7 @@
 import re
 from typing import List, Dict, Any
 
-from app.db.models import Base, Role, StatusType
+from app.db.models import Base, Role, StatusType, EmployerType, Employer
 from app.schemas.tag import MetadataTag
 
 
@@ -9,7 +9,7 @@ def generate_metadata_tags() -> List[Dict[str, Any]]:
     """
     Get OpenAPI tags
     """
-    return [tag.dict(by_alias=True) for tag in [get_crud_tag(model) for model in [Role, StatusType]]]
+    return [tag.dict(by_alias=True) for tag in [get_crud_tag(model) for model in [Role, StatusType, EmployerType, Employer]]]
 
 
 class GetCRUDTag:
