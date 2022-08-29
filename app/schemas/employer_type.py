@@ -1,14 +1,13 @@
-from typing import List, Optional
+from typing import List
 
-from fastapi import Path, Query
 from pydantic import BaseModel, Field, PositiveInt, validator
 
 from app import crud
+from app.core.exceptions.common_exceptions import HTTPBadRequestException
 
 
 class EmployerTypeBase(BaseModel):
     name: str = Field(
-        ...,
         title="The NAME of the employer type",
         description="Note: must be a string with a length of less than 50 characters",
         example="AT",
@@ -17,18 +16,16 @@ class EmployerTypeBase(BaseModel):
 
 
 class EmployerTypeCreate(EmployerTypeBase):
-    # @validator("name")
-    # def unique_name(cls, employer_type_name: str) -> str:
-    #     employer_type = crud.employer_type.get_by_name(employer_type_name)
-    #     if employer_type:
-    #         raise HTTPBadRequestException(detail="Employer type with this name already exists")
-    #     return employer_type_name
-    pass
+    @validator("name")
+    def unique_name(cls, value: str) -> str:
+        employer_type = crud.employer_type.get_by_attribute(attributes=["name"], value=value)
+        if employer_type:
+            raise HTTPBadRequestException(detail="Employer type with this name already exists")
+        return value
 
 
 class EmployerTypeUpdate(EmployerTypeBase):
     id: PositiveInt = Field(
-        ...,
         title="The ID of the employer type",
         description="Note: must be a positive integer",
         example=1
@@ -37,7 +34,6 @@ class EmployerTypeUpdate(EmployerTypeBase):
 
 class EmployerTypeResponse(EmployerTypeBase):
     id: PositiveInt = Field(
-        ...,
         title="The ID of the employer type",
         description="Note: must be a positive integer",
         example=1
@@ -59,38 +55,3 @@ class EmployerTypeSearchResults(BaseModel):
         title="The list of the roles matching search parameters",
         alias="results",
     )
-
-
-class EmployerTypeGet:
-    def __init__(self,
-                 employer_type_id: PositiveInt = Path(
-                     description="The ID of the employer type to fetch\n\n"
-                                 "**Note:** must be a positive integer")
-                 ):
-        self.employer_type_id = employer_type_id
-
-
-class EmployerTypeDelete:
-    def __init__(self,
-                 employer_type_id: PositiveInt = Path(
-                     description="The ID of the employer type to delete\n\n"
-                                 "**Note:** must be a positive integer")
-                 ):
-        self.employer_type_id = employer_type_id
-
-
-class EmployerTypeSearch:
-    def __init__(self,
-                 employer_type_name: str = Query(
-                     ...,
-                     description="The NAME of the employer type to search\n\n"
-                                 "**Note:** must be a string with a length of more than 3 characters",
-                     min_length=3
-                 ),
-                 max_results: Optional[PositiveInt] = Query(
-                     None,
-                     description="The total amount of the employer types matching search parameters to fetch\n\n"
-                                 "**Note:** must be a positive integer",
-                 )):
-        self.employer_type_name = employer_type_name
-        self.max_results = max_results
