@@ -3,6 +3,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
+from sqlalchemy import and_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -39,8 +40,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             raise HTTPNotFoundException(self.model.__name__)
         return obj_list
 
-    def get_by_attribute(self, attribute: str, value: str) -> ModelType:
-        return self.db.query(self.model).filter(getattr(self.model, attribute) == value).first()
+    def get_by_attribute(self, attributes: List[str], value: str) -> ModelType:
+        filter_args = [getattr(self.model, attribute) == value for attribute in attributes]
+        return self.db.query(self.model).filter(and_(*filter_args)).first()
 
     def search_by_parameter(self, parameter: str, keyword: str, skip: int = 0, limit: int = 100) -> List[ModelType]:
         try:

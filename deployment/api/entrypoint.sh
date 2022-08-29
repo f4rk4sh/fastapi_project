@@ -1,6 +1,6 @@
 echo  "=== Waiting for database initialization... ==="
 
-sleep 20
+sleep 10
 
 echo "=== Starting up project... ==="
 
