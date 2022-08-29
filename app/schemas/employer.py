@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from fastapi import Path, Query
 from pydantic import BaseModel, EmailStr, Field, PositiveInt, FutureDate
-from app.schemas.validators import UserValidators
+from app.schemas.validators import EmailValidator, PasswordValidator, PhoneNumberValidator
 
 
 class EmployerBase(BaseModel):
@@ -71,7 +71,7 @@ class EmployerBase(BaseModel):
     )
 
 
-class EmployerCreate(EmployerBase, UserValidators):
+class EmployerCreate(EmployerBase, EmailValidator, PasswordValidator, PhoneNumberValidator):
     password: str = Field(
         ...,
         title="The PASSWORD of employer account",
@@ -84,7 +84,7 @@ class EmployerCreate(EmployerBase, UserValidators):
     )
 
 
-class EmployerUpdate(EmployerBase, UserValidators):
+class EmployerUpdate(EmployerBase, EmailValidator, PasswordValidator, PhoneNumberValidator):
     id: PositiveInt = Field(
         title="The ID of the employer",
         description="Note: must be a positive integer",
