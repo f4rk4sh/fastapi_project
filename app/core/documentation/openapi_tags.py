@@ -2,6 +2,7 @@ import re
 from typing import List, Dict, Any
 
 from app.db.models import Base, Role, StatusType, EmployerType, Employer
+
 from app.schemas.tag import MetadataTag
 
 
