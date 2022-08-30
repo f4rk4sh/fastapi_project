@@ -3,6 +3,7 @@ from typing import Optional, List
 from pydantic import BaseModel, Field, PositiveInt, FutureDate
 
 from app.schemas.user import UserBase, UserCreate, UserUpdate, UserResponse
+from app.schemas.validators import EmailValidator
 
 
 class EmployerBase(BaseModel):
@@ -47,11 +48,11 @@ class EmployerBase(BaseModel):
     )
 
 
-class EmployerCreate(EmployerBase):
+class EmployerCreate(EmployerBase, EmailValidator):
     user: UserCreate
 
 
-class EmployerUpdate(EmployerBase):
+class EmployerUpdate(EmployerBase, EmailValidator):
     id: PositiveInt = Field(
         title="The ID of the employer",
         description="Note: must be a positive integer",

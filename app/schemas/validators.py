@@ -1,6 +1,6 @@
 import re
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, root_validator
 from sqlalchemy.orm import Session
 
 from app.core.exceptions.common_exceptions import HTTPBadRequestException
@@ -9,13 +9,21 @@ from app.db.models import User
 
 
 class EmailValidator(BaseModel):
-    @validator("email", check_fields=False)
-    def email_validator(cls, email: str) -> str:
+    @root_validator()
+    def email_validator(cls, values) -> str:
         db: Session = next(get_db())
-        user = db.query(User).filter(User.email == email).first()
+        user_data = values.get("user")
+        obj_id = values.get("id")
+        user = db.query(User).filter(User.email == user_data.email).first()
         if user:
+            if user.employer:
+                if user.employer.id == obj_id:
+                    return values
+            elif user.employee:
+                if user.employee.id == obj_id:
+                    return values
             raise HTTPBadRequestException(detail="Account with this email already exists")
-        return email
+        return values
 
 
 class PasswordValidator(BaseModel):

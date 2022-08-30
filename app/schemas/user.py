@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field, PositiveInt
 
-from app.schemas.validators import EmailValidator, PasswordValidator, PhoneNumberValidator
+from app.schemas.validators import PasswordValidator, PhoneNumberValidator
 
 
 class UserBase(BaseModel):
@@ -18,7 +18,7 @@ class UserBase(BaseModel):
     )
 
 
-class UserCreate(UserBase, EmailValidator, PasswordValidator, PhoneNumberValidator):
+class UserCreate(UserBase, PasswordValidator, PhoneNumberValidator):
     password: str = Field(
         title="The PASSWORD of the user account",
         description="Note: must be a string with a length of more than 8 and less than 100 characters, "
@@ -30,7 +30,7 @@ class UserCreate(UserBase, EmailValidator, PasswordValidator, PhoneNumberValidat
     )
 
 
-class UserUpdate(UserBase, EmailValidator, PasswordValidator, PhoneNumberValidator):
+class UserUpdate(UserBase, PasswordValidator, PhoneNumberValidator):
     role_id: PositiveInt = Field(
         title="The ID of the role of the user",
         description="Note: must be a positive integer",
