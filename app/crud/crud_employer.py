@@ -16,12 +16,8 @@ from app.schemas.employer import EmployerCreate, EmployerUpdate
 class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
     def create(self, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
-        user_password = obj_in_data.pop("password")
-        user_data = {}
-        for key in User.__table__.columns.keys():
-            if key in obj_in_data.keys():
-                user_data[key] = obj_in_data[key]
-                obj_in_data.pop(key)
+        user_data = obj_in_data.pop("user")
+        user_password = user_data.pop("password")
         role_employer = crud.role.get_by_attribute(attributes=["name"], value="employer")
         status_not_activated = crud.status_type.get_by_attribute(attributes=["name"], value="not active")
         user = User(
@@ -49,11 +45,12 @@ class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
             update_data = obj_in
         else:
             update_data = obj_in.dict(exclude_unset=True)
-        update_data.pop("id")
-        for field in update_data:
+        update_user_data = update_data.pop("user")
+        for field in update_user_data:
             if field in user_data:
-                setattr(user, field, update_data[field])
-            elif field in obj_data:
+                setattr(user, field, update_user_data[field])
+        for field in update_data:
+            if field in obj_data:
                 setattr(db_obj, field, update_data[field])
         self.db.add(user, db_obj)
         try:

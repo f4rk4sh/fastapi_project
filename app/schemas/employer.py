@@ -1,28 +1,17 @@
 from typing import Optional, List
 
-from pydantic import BaseModel, EmailStr, Field, PositiveInt, FutureDate
-from app.schemas.validators import EmailValidator, PasswordValidator, PhoneNumberValidator
+from pydantic import BaseModel, Field, PositiveInt, FutureDate
+
+from app.schemas.user import UserBase, UserCreate, UserUpdate, UserResponse
 
 
 class EmployerBase(BaseModel):
+    user: UserBase
     name: str = Field(
         title="The NAME of the employer",
         description="Note: must be a string with a length of less than 100 characters",
         example="Example Company",
         max_length=100
-    )
-
-    email: EmailStr = Field(
-        title="The EMAIL of the employer",
-        description="Note: must be a valid e-mail address with format: [account name]@[domain name].[domain extension]",
-        example="example@mail.com"
-    )
-    phone: str = Field(
-        title="The PHONE NUMBER of the employer",
-        description="Note: must be a valid phone number with format: +[country code][phone number]",
-        example="+380123456789",
-        min_length=13,
-        max_length=50
     )
     address: str = Field(
         title="The ADDRESS of the employer",
@@ -58,35 +47,17 @@ class EmployerBase(BaseModel):
     )
 
 
-class EmployerCreate(EmployerBase, EmailValidator, PasswordValidator, PhoneNumberValidator):
-    password: str = Field(
-        ...,
-        title="The PASSWORD of employer account",
-        description="Note: must be a string with a length of more than 8 and less than 100 characters, "
-                    "containing at least 1 uppercase character, "
-                    "1 number and 1 special symbol (e.g. !@#$%^&*()-_=+|\\)",
-        example="Password1!",
-        min_length=8,
-        max_length=100
-    )
+class EmployerCreate(EmployerBase):
+    user: UserCreate
 
 
-class EmployerUpdate(EmployerBase, EmailValidator, PasswordValidator, PhoneNumberValidator):
+class EmployerUpdate(EmployerBase):
     id: PositiveInt = Field(
         title="The ID of the employer",
         description="Note: must be a positive integer",
         example=1
     )
-    role_id: PositiveInt = Field(
-        title="The ID of the role of the employer",
-        description="Note: must be a positive integer",
-        example="1",
-    )
-    status_type_id: PositiveInt = Field(
-        title="The ID of the status type of the employer",
-        description="Note: must be a positive integer",
-        example="1",
-    )
+    user: UserUpdate
 
 
 class EmployerResponse(EmployerBase):
@@ -95,16 +66,7 @@ class EmployerResponse(EmployerBase):
         description="Note: must be a positive integer",
         example=1
     )
-    role_id: PositiveInt = Field(
-        title="The ID of the role of the employer",
-        description="Note: must be a positive integer",
-        example="1",
-    )
-    status_type_id: PositiveInt = Field(
-        title="The ID of the status type of the employer",
-        description="Note: must be a positive integer",
-        example="1",
-    )
+    user: UserResponse
 
     class Config:
         orm_mode = True
