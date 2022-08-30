@@ -5,6 +5,7 @@ from typing import Union, Dict, Any
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.exc import SQLAlchemyError
 
+from app import crud
 from app.core.exceptions.common_exceptions import HTTPNotFoundException
 from app.core.security import get_password_hash
 from app.crud.crud_base import CRUDBase, ModelType, CreateSchemaType, UpdateSchemaType
@@ -21,7 +22,13 @@ class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
             if key in obj_in_data.keys():
                 user_data[key] = obj_in_data[key]
                 obj_in_data.pop(key)
-        user = User(creation_date=datetime.utcnow(), **user_data)
+        role_employer = crud.role.get_by_attribute(attributes=["name"], value="employer")
+        status_not_activated = crud.status_type.get_by_attribute(attributes=["name"], value="not active")
+        user = User(
+            creation_date=datetime.utcnow(),
+            role_id=role_employer.id,
+            status_type_id=status_not_activated.id,
+            **user_data)
         user.password = get_password_hash(user_password)
         self.db.add(user)
         try:

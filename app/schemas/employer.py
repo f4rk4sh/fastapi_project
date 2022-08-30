@@ -24,18 +24,6 @@ class EmployerBase(BaseModel):
         min_length=13,
         max_length=50
     )
-    # ToDo ?setting role automatically in the corresponding endpoint
-    role_id: PositiveInt = Field(
-        title="The ID of the role of the employer",
-        description="Note: must be a positive integer",
-        example="1",
-    )
-    # ToDo ?setting status type automatically in the corresponding endpoint
-    status_type_id: PositiveInt = Field(
-        title="The ID of the status type of the employer",
-        description="Note: must be a positive integer",
-        example="1",
-    )
     address: str = Field(
         title="The ADDRESS of the employer",
         description="Note: must be a string with a length of less than 100 characters",
@@ -89,6 +77,16 @@ class EmployerUpdate(EmployerBase, EmailValidator, PasswordValidator, PhoneNumbe
         description="Note: must be a positive integer",
         example=1
     )
+    role_id: PositiveInt = Field(
+        title="The ID of the role of the employer",
+        description="Note: must be a positive integer",
+        example="1",
+    )
+    status_type_id: PositiveInt = Field(
+        title="The ID of the status type of the employer",
+        description="Note: must be a positive integer",
+        example="1",
+    )
 
 
 class EmployerResponse(EmployerBase):
@@ -96,6 +94,16 @@ class EmployerResponse(EmployerBase):
         title="The ID of the employer",
         description="Note: must be a positive integer",
         example=1
+    )
+    role_id: PositiveInt = Field(
+        title="The ID of the role of the employer",
+        description="Note: must be a positive integer",
+        example="1",
+    )
+    status_type_id: PositiveInt = Field(
+        title="The ID of the status type of the employer",
+        description="Note: must be a positive integer",
+        example="1",
     )
 
     class Config:
@@ -105,12 +113,10 @@ class EmployerResponse(EmployerBase):
 class EmployersResponse(BaseModel):
     employers: List[EmployerResponse] = Field(
         title="The list of the employers",
-        alias="employers"
     )
 
 
 class EmployerSearchResponse(BaseModel):
     results: List[EmployerResponse] = Field(
         title="The list of the employers matching search parameters",
-        alias="results"
     )
