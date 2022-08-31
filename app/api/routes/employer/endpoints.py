@@ -13,7 +13,7 @@ from app.schemas.employer import EmployersResponse, EmployerSearchResponse, Empl
     EmployerResponse, EmployerUpdate
 
 router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Employers"])
-descriptions = CRUDDescriptions(model=Employer, search_parameters=["name", "address", "edrpou"])
+descriptions = CRUDDescriptions(model=Employer, search_parameters=["email", "phone", "name", "address", "edrpou"])
 
 
 @router.get("/employer", status_code=status.HTTP_200_OK, description=descriptions.fetch_all)

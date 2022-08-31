@@ -18,7 +18,7 @@ class EmployerTypeBase(BaseModel):
 class EmployerTypeCreate(EmployerTypeBase):
     @validator("name")
     def unique_name(cls, value: str) -> str:
-        employer_type = crud.employer_type.get_by_attribute(attributes=["name"], value=value)
+        employer_type = crud.employer_type.get_by_attribute(name=value)
         if employer_type:
             raise HTTPBadRequestException(detail="Employer type with this name already exists")
         return value

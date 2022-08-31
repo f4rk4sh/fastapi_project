@@ -40,16 +40,16 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             raise HTTPNotFoundException(self.model.__name__)
         return obj_list
 
-    def get_by_attribute(self, attributes: List[str], value: str) -> ModelType:
-        filter_args = [getattr(self.model, attribute) == value for attribute in attributes]
+    def get_by_attribute(self, **kwargs) -> ModelType:
+        filter_args = []
+        for key, value in kwargs.items():
+            filter_args.append(getattr(self.model, key) == value)
         return self.db.query(self.model).filter(and_(*filter_args)).first()
 
     def search_by_parameter(self, parameter: str, keyword: str, skip: int = 0, limit: int = 100) -> List[ModelType]:
-        try:
-            attribute = getattr(self.model, parameter)
-        except AttributeError:
+        if not hasattr(self.model, parameter):
             raise HTTPBadRequestException(detail="Invalid search parameter")
-        results = self.db.query(self.model).filter(attribute.contains(keyword)).order_by(self.model.id).offset(
+        results = self.db.query(self.model).filter(getattr(self.model, parameter).contains(keyword)).order_by(self.model.id).offset(
             skip).limit(limit).all()
         if not results:
             raise HTTPNotFoundException(self.model.__name__)
