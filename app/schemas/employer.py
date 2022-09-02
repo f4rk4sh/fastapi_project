@@ -1,9 +1,8 @@
-from typing import Optional, List
+from typing import Optional
 
 from pydantic import BaseModel, Field, PositiveInt, FutureDate
 
 from app.schemas.user import UserBase, UserCreate, UserUpdate, UserResponse
-from app.schemas.validators import EmailValidator
 
 
 class EmployerBase(BaseModel):
@@ -48,11 +47,11 @@ class EmployerBase(BaseModel):
     )
 
 
-class EmployerCreate(EmployerBase, EmailValidator):
+class EmployerCreate(EmployerBase):
     user: UserCreate
 
 
-class EmployerUpdate(EmployerBase, EmailValidator):
+class EmployerUpdate(EmployerBase):
     id: PositiveInt = Field(
         title="The ID of the employer",
         description="Note: must be a positive integer",
@@ -71,15 +70,3 @@ class EmployerResponse(EmployerBase):
 
     class Config:
         orm_mode = True
-
-
-class EmployersResponse(BaseModel):
-    employers: List[EmployerResponse] = Field(
-        title="The list of the employers",
-    )
-
-
-class EmployerSearchResponse(BaseModel):
-    results: List[EmployerResponse] = Field(
-        title="The list of the employers matching search parameters",
-    )

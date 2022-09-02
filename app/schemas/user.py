@@ -34,12 +34,12 @@ class UserUpdate(UserBase, PasswordValidator, PhoneNumberValidator):
     role_id: PositiveInt = Field(
         title="The ID of the role of the user",
         description="Note: must be a positive integer",
-        example="1",
+        example="1"
     )
     status_type_id: PositiveInt = Field(
         title="The ID of the status type of the user",
         description="Note: must be a positive integer",
-        example="1",
+        example="1"
     )
 
 
@@ -47,12 +47,12 @@ class UserResponse(UserBase):
     role_id: PositiveInt = Field(
         title="The ID of the role of the user",
         description="Note: must be a positive integer",
-        example="1",
+        example="1"
     )
     status_type_id: PositiveInt = Field(
         title="The ID of the status type of the user",
         description="Note: must be a positive integer",
-        example="1",
+        example="1"
     )
 
     class Config:

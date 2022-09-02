@@ -55,18 +55,24 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             raise HTTPNotFoundException(self.model.__name__)
         return results
 
-    def create(self, obj_in: CreateSchemaType) -> ModelType:
-        obj_in_data = jsonable_encoder(obj_in)
+    def create(self, obj_in: Union[CreateSchemaType, Dict[str, Any]], is_flush: bool = False) -> ModelType:
+        if isinstance(obj_in, dict):
+            obj_in_data = obj_in
+        else:
+            obj_in_data = obj_in.dict(exclude_unset=True)
         db_obj = self.model(**obj_in_data)
         self.db.add(db_obj)
         try:
-            self.db.commit()
+            if is_flush:
+                self.db.flush()
+            else:
+                self.db.commit()
         except SQLAlchemyError as err:
             logging.exception(err)
             self.db.rollback()
         return db_obj
 
-    def update(self, db_obj: ModelType, obj_in: Union[UpdateSchemaType, Dict[str, Any]]) -> ModelType:
+    def update(self, db_obj: ModelType, obj_in: Union[UpdateSchemaType, Dict[str, Any]], is_flush: bool = False) -> ModelType:
         obj_data = jsonable_encoder(db_obj)
         if isinstance(obj_in, dict):
             update_data = obj_in
@@ -77,19 +83,25 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
                 setattr(db_obj, field, update_data[field])
         self.db.add(db_obj)
         try:
-            self.db.commit()
+            if is_flush:
+                self.db.flush()
+            else:
+                self.db.commit()
         except SQLAlchemyError as err:
             logging.exception(err)
             self.db.rollback()
         return db_obj
 
-    def delete(self, id: int) -> ModelType:
+    def delete(self, id: int, is_flush: bool = False) -> ModelType:
         obj = self.db.query(self.model).get(id)
         if not obj:
             raise HTTPNotFoundException(self.model.__name__, id)
         self.db.delete(obj)
         try:
-            self.db.commit()
+            if is_flush:
+                self.db.flush()
+            else:
+                self.db.commit()
         except SQLAlchemyError as err:
             logging.exception(err)
             self.db.rollback()
