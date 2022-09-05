@@ -1,11 +1,11 @@
 from fastapi import APIRouter
+
 from app.api.routes.employee.endpoints import router as employee_router
 from app.api.routes.employer.endpoints import router as employer_router
+from app.api.routes.employer_type.endpoints import router as employer_type_router
 from app.api.routes.health.endpoints import router as health_router
 from app.api.routes.role.endpoints import router as role_router
 from app.api.routes.status_type.endpoints import router as status_type_router
-from app.api.routes.employer_type.endpoints import router as employer_type_router
-
 
 router = APIRouter()
 router.include_router(employee_router)

@@ -1,7 +1,7 @@
-from typing import Generic, TypeVar, Type, List
+from typing import Generic, List, Type, TypeVar
 
-from pydantic import BaseModel
 from fastapi import Response, status
+from pydantic import BaseModel
 
 from app.crud.crud_base import CRUDBase
 from app.db.base import Base
@@ -14,7 +14,7 @@ UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 class ManagerBase(Generic[ModelType, CRUDType, CreateSchemaType, UpdateSchemaType]):
     def __init__(self, model: Type[ModelType], crud: Type[CRUDType]):
-        self.executor = crud(model)
+        self.executor: CRUDType = crud(model)
 
     def fetch_one(self, id: int) -> ModelType:
         return self.executor.get(id)

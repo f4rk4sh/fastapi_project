@@ -2,16 +2,18 @@ import re
 
 from pydantic import BaseModel, validator
 
-from app.core.exceptions.common_exceptions import HTTPBadRequestException
+from app.utils.exceptions.common_exceptions import HTTPBadRequestException
 
 
 class PasswordValidator(BaseModel):
     @validator("password", check_fields=False)
     def password_validator(cls, password: str) -> str:
-        if not re.match(r"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+|\\])[\s\S]{8,100}$", password):
+        if not re.match(
+            r"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+|\\])[\s\S]{8,100}$", password
+        ):
             raise HTTPBadRequestException(
                 detail="Password must contain at least 1 uppercase letter, "
-                       "1 number and 1 special symbol (e.g. !@#$%^&*()-_=+|\\)"
+                "1 number and 1 special symbol (e.g. !@#$%^&*()-_=+|\\)"
             )
         return password
 

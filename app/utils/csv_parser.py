@@ -2,21 +2,23 @@ import csv
 import logging
 from datetime import datetime
 
-from sqlalchemy import Date, DateTime, Boolean
+from sqlalchemy import Boolean, Date, DateTime
 from sqlalchemy.orm import Session
 
-from app.db.models import User, Employee, Employer, EmployerType, Role, StatusType
 from app.db.get_database import get_db
+from app.db.models import Employee, Employer, EmployerType, Role, StatusType, User
 
 db: Session = next(get_db())
 
 
 def parsing():
-    for model in [Role, StatusType,  EmployerType, User, Employer, Employee]:
+    for model in [Role, StatusType, EmployerType, User, Employer, Employee]:
         file_path = f"/src/app/db/data/{model.__name__}.csv"
-        with open(file_path, 'r') as csv_file:
+        with open(file_path, "r") as csv_file:
             csv_reader = csv.DictReader(csv_file)
-            column_types = {column.key: column.type for column in model.__table__.columns}
+            column_types = {
+                column.key: column.type for column in model.__table__.columns
+            }
             for data in csv_reader:
                 converted_data = convert_data_types(column_types, data)
                 obj = model(**converted_data)
@@ -42,5 +44,5 @@ def convert_data_types(column_types: dict, data: dict):
     return data
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parsing()
