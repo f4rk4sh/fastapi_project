@@ -18,7 +18,7 @@ class StatusTypeBase(BaseModel):
 class StatusTypeCreate(StatusTypeBase):
     @validator("name")
     def unique_name(cls, value: str) -> str:
-        status_type = crud.status_type.get_by_attribute(attributes=["name"], value=value)
+        status_type = crud.status_type.get_by_attribute(name=value)
         if status_type:
             raise HTTPBadRequestException(detail="Status type with this name already exists")
         return value

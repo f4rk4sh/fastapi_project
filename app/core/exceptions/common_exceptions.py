@@ -1,4 +1,5 @@
 from fastapi import HTTPException, status, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 
 
@@ -14,7 +15,7 @@ class HTTPUnprocessableEntityException(HTTPException):
     def __init__(self, exception: RequestValidationError, body: Request.body = None):
         super().__init__(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail={"errors": exception.errors(), "body": body} if body else {"errors": exception.errors()}
+            detail={"errors": exception.errors(), "body": str(body)} if body else {"errors": exception.errors()}
         )
 
 

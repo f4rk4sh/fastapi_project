@@ -1,4 +1,5 @@
 id,name
-1,adminius
-2,moderator
-3,regular
+1,superuser
+2,admin
+3,employer
+4,employee
