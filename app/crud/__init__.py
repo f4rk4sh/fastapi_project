@@ -1,3 +1,4 @@
+from .crud_employee import employee
 from .crud_employer import employer
 from .crud_employer_type import employer_type
 from .crud_role import role

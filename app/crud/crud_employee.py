@@ -2,35 +2,35 @@ from typing import List
 
 from sqlalchemy import and_
 
-from app.crud.crud_base import CRUDBase, ModelType
-from app.db.models import Employer, User
-from app.schemas.employer import EmployerCreate, EmployerUpdate
 from app.utils.exceptions.common_exceptions import HTTPBadRequestException, HTTPNotFoundException
+from app.crud.crud_base import CRUDBase, ModelType
+from app.db.models import Employee, User
+from app.schemas.employee import EmployeeCreate, EmployeeUpdate
 
 
-class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
+class CRUDEmployee(CRUDBase[Employee, EmployeeCreate, EmployeeUpdate]):
     def get_by_attribute(self, **kwargs) -> ModelType:
         filter_user_args = []
-        filter_employer_args = []
+        filter_employee_args = []
         for key, value in kwargs.items():
             if hasattr(User, key):
                 filter_user_args.append(getattr(User, key) == value)
             else:
-                filter_employer_args.append(getattr(self.model, key) == value)
+                filter_employee_args.append(getattr(self.model, key) == value)
         obj = (
             self.db.query(self.model)
             .join(User)
             .filter(and_(*filter_user_args))
-            .filter(and_(*filter_employer_args))
+            .filter(and_(*filter_employee_args))
             .first()
         )
         if isinstance(obj, User):
-            if obj.employer:
-                return obj.employer
+            if obj.employee:
+                return obj.employee
         return obj
 
     def search_by_parameter(
-        self, parameter: str, keyword: str, skip: int = 0, limit: int = 100
+            self, parameter: str, keyword: str, skip: int = 0, limit: int = 100
     ) -> List[ModelType]:
         if hasattr(User, parameter):
             filter_arg = getattr(User, parameter)
@@ -42,7 +42,7 @@ class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
                 .limit(limit)
                 .all()
             )
-            results = [user.employer for user in users if user.employer]
+            results = [user.employee for user in users if user.employee]
         elif hasattr(self.model, parameter):
             filter_arg = getattr(self.model, parameter)
             results = (
@@ -60,4 +60,4 @@ class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
         return results
 
 
-employer: CRUDEmployer = CRUDEmployer(Employer)
+employee: CRUDEmployee = CRUDEmployee(Employee)
