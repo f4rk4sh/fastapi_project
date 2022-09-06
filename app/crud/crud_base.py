@@ -7,9 +7,9 @@ from sqlalchemy import and_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from app.core.exceptions.common_exceptions import HTTPNotFoundException, HTTPBadRequestException
 from app.db.base import Base
 from app.db.get_database import get_db
+from app.utils.exceptions.common_exceptions import HTTPBadRequestException, HTTPNotFoundException
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
@@ -35,7 +35,13 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return obj
 
     def get_multi(self, skip: int = 0, limit: int = 100) -> List[ModelType]:
-        obj_list = self.db.query(self.model).order_by(self.model.id).offset(skip).limit(limit).all()
+        obj_list = (
+            self.db.query(self.model)
+            .order_by(self.model.id)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
         if not obj_list:
             raise HTTPNotFoundException(self.model.__name__)
         return obj_list
@@ -46,16 +52,26 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             filter_args.append(getattr(self.model, key) == value)
         return self.db.query(self.model).filter(and_(*filter_args)).first()
 
-    def search_by_parameter(self, parameter: str, keyword: str, skip: int = 0, limit: int = 100) -> List[ModelType]:
+    def search_by_parameter(
+        self, parameter: str, keyword: str, skip: int = 0, limit: int = 100
+    ) -> List[ModelType]:
         if not hasattr(self.model, parameter):
             raise HTTPBadRequestException(detail="Invalid search parameter")
-        results = self.db.query(self.model).filter(getattr(self.model, parameter).contains(keyword)).order_by(self.model.id).offset(
-            skip).limit(limit).all()
+        results = (
+            self.db.query(self.model)
+            .filter(getattr(self.model, parameter).contains(keyword))
+            .order_by(self.model.id)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
         if not results:
             raise HTTPNotFoundException(self.model.__name__)
         return results
 
-    def create(self, obj_in: Union[CreateSchemaType, Dict[str, Any]], is_flush: bool = False) -> ModelType:
+    def create(
+        self, obj_in: Union[CreateSchemaType, Dict[str, Any]], is_flush: bool = False
+    ) -> ModelType:
         if isinstance(obj_in, dict):
             obj_in_data = obj_in
         else:
@@ -72,7 +88,12 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             self.db.rollback()
         return db_obj
 
-    def update(self, db_obj: ModelType, obj_in: Union[UpdateSchemaType, Dict[str, Any]], is_flush: bool = False) -> ModelType:
+    def update(
+        self,
+        db_obj: ModelType,
+        obj_in: Union[UpdateSchemaType, Dict[str, Any]],
+        is_flush: bool = False,
+    ) -> ModelType:
         obj_data = jsonable_encoder(db_obj)
         if isinstance(obj_in, dict):
             update_data = obj_in

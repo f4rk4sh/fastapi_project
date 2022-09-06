@@ -1,57 +1,51 @@
-from typing import Optional
+from typing import List, Optional
 
+from fastapi import status
 from fastapi_utils.inferring_router import InferringRouter
-from fastapi import status, Response
 from pydantic import PositiveInt
 
-from app import crud
-from app.api.routes.descriptions.employer_type_params_description import employer_type_params
-from app.core.documentation.openapi_descriptions import CRUDDescriptions
-from app.core.exceptions.exception_route_handler import ExceptionRouteHandler
-from app.db.models import EmployerType
-from app.schemas.employer_type import EmployerTypesResponse, EmployerTypeCreate, \
-    EmployerTypeResponse, EmployerTypeUpdate
+from app.api.docs.api_endpoints import CRUDEndpointsDescriptions
+from app.api.docs.api_params import CRUDParamsDescriptions
+from app.manager.manager_employer_type import employer_type
+from app.schemas.employer_type import EmployerTypeCreate, EmployerTypeResponse, EmployerTypeUpdate
+from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
 router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Employer Types"])
-descriptions = CRUDDescriptions(model=EmployerType, search_parameters=["name"])
+descriptions = CRUDEndpointsDescriptions(model_name="Employer Type", search_parameters=["name"])
+parameters = CRUDParamsDescriptions(obj_name="Employer Type")
 
 
 @router.get("/employer_type", status_code=status.HTTP_200_OK, description=descriptions.fetch_all)
-def fetch_employer_types() -> EmployerTypesResponse:
-    employer_types = crud.employer_type.get_multi()
-    return EmployerTypesResponse(employer_types=employer_types)
+def fetch_employer_types() -> List[EmployerTypeResponse]:
+    return employer_type.fetch_all()
 
 
 @router.get("/employer_type/search", status_code=status.HTTP_200_OK, description=descriptions.search)
 def search_employer_types(
-        parameter: str = employer_type_params.search_parameter,
-        keyword: str = employer_type_params.search_keyword,
-        max_results: Optional[PositiveInt] = employer_type_params.max_results_search
-) -> EmployerTypesResponse:
-    employer_types = crud.employer_type.search_by_parameter(parameter=parameter, keyword=keyword, limit=max_results)
-    return EmployerTypesResponse(employer_types=employer_types)
+    parameter: str = parameters.search_parameter,
+    keyword: str = parameters.search_keyword,
+    max_results: Optional[PositiveInt] = parameters.max_results_search,
+) -> List[EmployerTypeResponse]:
+    return employer_type.search(parameter, keyword, max_results)
 
 
 @router.post("/employer_type", status_code=status.HTTP_201_CREATED, description=descriptions.create)
 def create_employer_type(employer_type_in: EmployerTypeCreate) -> EmployerTypeResponse:
-    employer_type = crud.employer_type.create(obj_in=employer_type_in)
-    return EmployerTypeResponse.from_orm(employer_type)
+    return employer_type.create(employer_type_in)
 
 
 @router.put("/employer_type", status_code=status.HTTP_200_OK, description=descriptions.update)
 def update_employer_type(employer_type_in: EmployerTypeUpdate) -> EmployerTypeResponse:
-    employer_type = crud.employer_type.get(id=employer_type_in.id)
-    updated_employer_type = crud.employer_type.update(db_obj=employer_type, obj_in=employer_type_in)
-    return EmployerTypeResponse.from_orm(updated_employer_type)
+    return employer_type.update(employer_type_in)
 
 
 @router.get("/employer_type/{employer_type_id}", status_code=status.HTTP_200_OK, description=descriptions.fetch_one)
-def fetch_employer_type(employer_type_id: PositiveInt = employer_type_params.get_id) -> EmployerTypeResponse:
-    employer_type = crud.employer_type.get(id=employer_type_id)
-    return EmployerTypeResponse.from_orm(employer_type)
+def fetch_employer_type(
+    employer_type_id: PositiveInt = parameters.get_id,
+) -> EmployerTypeResponse:
+    return employer_type.fetch_one(employer_type_id)
 
 
 @router.delete("/employer_type/{employer_type_id}", status_code=status.HTTP_204_NO_CONTENT, description=descriptions.delete)
-def delete_employer_type(employer_type_id: PositiveInt = employer_type_params.delete_id):
-    crud.employer_type.delete(id=employer_type_id)
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+def delete_employer_type(employer_type_id: PositiveInt = parameters.delete_id):
+    return employer_type.delete(employer_type_id)

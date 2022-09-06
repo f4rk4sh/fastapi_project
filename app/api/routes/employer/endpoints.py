@@ -1,18 +1,21 @@
-from typing import Optional, List
+from typing import List, Optional
 
-from fastapi_utils.inferring_router import InferringRouter
 from fastapi import status
+from fastapi_utils.inferring_router import InferringRouter
 from pydantic import PositiveInt
 
-from app.api.routes.descriptions.employer_params_description import employer_params
-from app.core.documentation.openapi_descriptions import CRUDDescriptions
-from app.core.exceptions.exception_route_handler import ExceptionRouteHandler
-from app.db.models import Employer
+from app.api.docs.api_endpoints import CRUDEndpointsDescriptions
+from app.api.docs.api_params import CRUDParamsDescriptions
 from app.manager.manager_employer import employer
 from app.schemas.employer import EmployerCreate, EmployerResponse, EmployerUpdate
+from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
 router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Employers"])
-descriptions = CRUDDescriptions(model=Employer, search_parameters=["email", "phone", "name", "address", "edrpou"])
+descriptions = CRUDEndpointsDescriptions(
+    model_name="Employer",
+    search_parameters=["email", "phone", "name", "address", "edrpou"]
+)
+parameters = CRUDParamsDescriptions(obj_name="Employer")
 
 
 @router.get("/employer", status_code=status.HTTP_200_OK, description=descriptions.fetch_all)
@@ -22,9 +25,9 @@ def fetch_employers() -> List[EmployerResponse]:
 
 @router.get("/employer/search", status_code=status.HTTP_200_OK, description=descriptions.search)
 def search_employers(
-        parameter: str = employer_params.search_parameter,
-        keyword: str = employer_params.search_keyword,
-        max_results: Optional[PositiveInt] = employer_params.max_results_search
+    parameter: str = parameters.search_parameter,
+    keyword: str = parameters.search_keyword,
+    max_results: Optional[PositiveInt] = parameters.max_results_search,
 ) -> List[EmployerResponse]:
     return employer.search(parameter, keyword, max_results)
 
@@ -40,10 +43,10 @@ def update_employer(employer_in: EmployerUpdate) -> EmployerResponse:
 
 
 @router.get("/employer/{employer_id}", status_code=status.HTTP_200_OK, description=descriptions.fetch_one)
-def fetch_employer(employer_id: PositiveInt = employer_params.get_id) -> EmployerResponse:
+def fetch_employer(employer_id: PositiveInt = parameters.get_id) -> EmployerResponse:
     return employer.fetch_one(employer_id)
 
 
 @router.delete("/employer/{employer_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_employer(employer_id: PositiveInt = employer_params.delete_id):
+def delete_employer(employer_id: PositiveInt = parameters.delete_id):
     return employer.delete(employer_id)
