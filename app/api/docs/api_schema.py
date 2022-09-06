@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 
-from app.core.documentation.openapi_tags import generate_metadata_tags
+from app.api.docs.api_tags import generate_metadata_tags
 
 
 class OpenAPISchema:

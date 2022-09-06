@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Date
+from sqlalchemy import Column, Date, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.db.base import Base
@@ -16,8 +16,20 @@ class User(Base):
     role_id = Column(Integer, ForeignKey("role.id"))
     status_type_id = Column(Integer, ForeignKey("status_type.id"))
 
-    employer = relationship("Employer", uselist=False, single_parent=True, backref="user", passive_deletes=True)
-    employee = relationship("Employee", uselist=False, single_parent=True, backref="user", passive_deletes=True)
+    employer = relationship(
+        "Employer",
+        uselist=False,
+        single_parent=True,
+        backref="user",
+        passive_deletes=True,
+    )
+    employee = relationship(
+        "Employee",
+        uselist=False,
+        single_parent=True,
+        backref="user",
+        passive_deletes=True,
+    )
 
 
 class StatusType(Base):
@@ -48,7 +60,7 @@ class Employer(Base):
     expire_contract_date = Column(Date, nullable=True)
     salary_date = Column(Date, nullable=True)
     prepayment_date = Column(Date, nullable=True)
-    user_id = Column(Integer, ForeignKey("user.id", ondelete='CASCADE'))
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
     employer_type_id = Column(Integer, ForeignKey("employer_type.id"))
 
     employees = relationship("Employee", backref="employer")
@@ -71,7 +83,7 @@ class Employee(Base):
     passport = Column(String(50), index=True, nullable=True)
     tax_id = Column(String(50), index=True, nullable=True)
     birth_date = Column(Date, nullable=True)
-    user_id = Column(Integer, ForeignKey("user.id", ondelete='CASCADE'))
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
     employer_id = Column(Integer, ForeignKey("employer.id"))
 
 

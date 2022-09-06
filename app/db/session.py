@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.core.config.db_config import DBConfig
+
+from app.config.db_config import DBConfig
 
 # for local connection
 

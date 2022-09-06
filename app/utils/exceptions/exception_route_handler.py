@@ -1,11 +1,14 @@
+import logging
 from typing import Callable
 
-from fastapi import Request, Response, HTTPException
+from fastapi import HTTPException, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.routing import APIRoute
-import logging
 
-from app.core.exceptions.common_exceptions import HTTPUnprocessableEntityException, HTTPInternalServerException
+from app.utils.exceptions.common_exceptions import (
+    HTTPInternalServerException,
+    HTTPUnprocessableEntityException,
+)
 
 
 class ExceptionRouteHandler(APIRoute):
@@ -19,7 +22,9 @@ class ExceptionRouteHandler(APIRoute):
                 if isinstance(exc, HTTPException):
                     raise HTTPException(status_code=exc.status_code, detail=exc.detail)
                 if isinstance(exc, RequestValidationError):
-                    raise HTTPUnprocessableEntityException(exception=exc, body=await request.body())
+                    raise HTTPUnprocessableEntityException(
+                        exception=exc, body=await request.body()
+                    )
                 logging.exception(exc)
                 raise HTTPInternalServerException()
 
