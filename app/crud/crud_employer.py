@@ -60,4 +60,4 @@ class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
         return results
 
 
-employer = CRUDEmployer(Employer)
+employer: CRUDEmployer = CRUDEmployer(Employer)

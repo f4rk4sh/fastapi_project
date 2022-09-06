@@ -1,57 +1,52 @@
-from typing import Optional
+from typing import Optional, List
 
 from fastapi_utils.inferring_router import InferringRouter
-from fastapi import status, Response
+from fastapi import status
 from pydantic.types import PositiveInt
 
-from app import crud
-from app.api.routes.descriptions.employee_params_description import employee_params
-from app.core.documentation.openapi_descriptions import CRUDDescriptions
-from app.core.exceptions.exception_route_handler import ExceptionRouteHandler
-from app.db.models import Employee
-from app.schemas.employee import EmployeesResponse, EmployeeSearchResponse, EmployeeCreate, EmployeeResponse, \
-    EmployeeUpdate
+from app.api.docs.api_endpoints import CRUDEndpointsDescriptions
+from app.api.docs.api_params import CRUDParamsDescriptions
+from app.manager.manager_employee import employee
+from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
+from app.schemas.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate
 
 router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Employees"])
-descriptions = CRUDDescriptions(model=Employee, search_parameters=["fullname", "passport", "tax_id", "birth_date"])
+descriptions = CRUDEndpointsDescriptions(
+    model_name="Employee",
+    search_parameters=["email", "phone", "fullname", "passport", "tax_id", "birth_date"]
+)
+params = CRUDParamsDescriptions(obj_name="Employee")
 
 
 @router.get("/employee", status_code=status.HTTP_200_OK, description=descriptions.fetch_all)
-def fetch_employees() -> EmployeesResponse:
-    employees = crud.employee.get_multi()
-    return EmployeesResponse(employees=employees)
+def fetch_employees() -> List[EmployeeResponse]:
+    return employee.fetch_all()
 
 
 @router.get("/employee/search", status_code=status.HTTP_200_OK, description=descriptions.search)
 def search_employees(
-        parameter: str = employee_params.search_parameter,
-        keyword: str = employee_params.search_keyword,
-        max_results: Optional[PositiveInt] = employee_params.max_results_search
-) -> EmployeeSearchResponse:
-    results = crud.employee.search_by_parameter(parameter=parameter, keyword=keyword, limit=max_results)
-    return EmployeeSearchResponse(results=results)
+        parameter: str = params.search_parameter,
+        keyword: str = params.search_keyword,
+        max_results: Optional[PositiveInt] = params.max_results_search
+) -> List[EmployeeResponse]:
+    return employee.search(parameter, keyword, max_results)
 
 
 @router.post("/employee", status_code=status.HTTP_201_CREATED, description=descriptions.create)
 def create_employee(employee_in: EmployeeCreate) -> EmployeeResponse:
-    employee = crud.employee.create(obj_in=employee_in)
-    return EmployeeResponse.from_orm(employee)
+    return employee.create(employee_in)
 
 
 @router.put("/employee", status_code=status.HTTP_200_OK, description=descriptions.update)
 def update_employee(employee_in: EmployeeUpdate) -> EmployeeResponse:
-    employee = crud.employee.get(id=employee_in.id)
-    updated_employee = crud.employee.update(db_obj=employee, obj_in=employee_in)
-    return EmployeeResponse.from_orm(updated_employee)
+    return employee.update(employee_in)
 
 
 @router.get("/employee/{employee_id}", status_code=status.HTTP_200_OK, description=descriptions.fetch_one)
-def fetch_employee(employee_id: PositiveInt = employee_params.get_id) -> EmployeeResponse:
-    employee = crud.employee.get(id=employee_id)
-    return EmployeeResponse.from_orm(employee)
+def fetch_employee(employee_id: PositiveInt = params.get_id) -> EmployeeResponse:
+    return employee.fetch_one(employee_id)
 
 
 @router.delete("/employee/{employee_id}", status_code=status.HTTP_204_NO_CONTENT, description=descriptions.delete)
-def delete_employee(employee_id: PositiveInt = employee_params.delete_id):
-    crud.employee.delete(id=employee_id)
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+def delete_employee(employee_id: PositiveInt = params.delete_id):
+    return employee.delete(employee_id)
