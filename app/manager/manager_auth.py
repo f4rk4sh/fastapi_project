@@ -11,8 +11,13 @@ class AuthManager:
     def login(cls, response: Response, data: OAuth2PasswordRequestForm, session: Session):
         user = crud.user.authenticate(data.username, data.password)
         access_token = create_jwt(data={"sub": user.email}, expire=True)
-        session.add({"access_token": access_token})
         response.set_cookie(key="s_id", value=session.s_id)
+        response.set_cookie(key="access_token", value=access_token)
+        return {"access_token": access_token, "token_type": "bearer"}
+
+    @classmethod
+    def logout(cls, response: Response):
+        response.delete_cookie("access_token")
 
 
 auth: AuthManager = AuthManager()

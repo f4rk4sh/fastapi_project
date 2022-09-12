@@ -1,17 +1,17 @@
-from datetime import date
+from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel, PositiveInt, Field
 
-from app.schemas.token import Token
-
 
 class SessionBase(BaseModel):
-    token: Token
-    creation_date: date
+    token: str
+    creation_date: datetime
+    expiration_date: datetime
 
 
 class SessionCreate(SessionBase):
-    pass
+    user_id: Optional[PositiveInt] = None
 
 
 class SessionUpdate(SessionBase):
@@ -20,3 +20,7 @@ class SessionUpdate(SessionBase):
         description="Note: must be a positive integer",
         example=1,
     )
+    token: Optional[str] = None
+    creation_date: Optional[datetime] = None
+    expiration_date: Optional[datetime] = None
+    user_id: Optional[PositiveInt] = None
