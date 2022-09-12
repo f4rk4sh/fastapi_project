@@ -8,7 +8,7 @@ from app.db.models import Employee
 from app.manager.manager_base import ManagerBase, ModelType
 from app.schemas.employee import EmployeeCreate, EmployeeUpdate
 from app.utils.exceptions.common_exceptions import HTTPBadRequestException
-from app.utils.security import hash_password
+from app.security.passwords import hash_password
 
 
 class EmployeeManager(
