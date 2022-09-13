@@ -12,4 +12,7 @@ class HealthEndpoints:
     @router.get("/health/ping")
     @permission(["employee", "employer"])
     def ping(session: AuthSession = Depends()):
+        print(session.data)  # -> {}
+        session.add({"test1": "test", "test2": "test"})
+        print(session.data)  # -> {"test1": "test", "test2": "test"}
         return Response(status_code=status.HTTP_200_OK, content="Pong")

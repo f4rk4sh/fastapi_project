@@ -16,7 +16,7 @@ class Session:
             if session:
                 if session.expiration_date > datetime.utcnow():
                     self.s_id = s_id
-                    self.data = decode_jwt(session.token)["data"]
+                    self.data = decode_jwt(session.token)
                     self._session = session
         else:
             self._session = self._create_new()
@@ -27,7 +27,7 @@ class Session:
     def _create_new(cls):
         return crud.session.create(
             SessionCreate(
-                token=create_jwt(data={"data": {}}),
+                token=create_jwt(data={}),
                 creation_date=datetime.utcnow(),
                 expiration_date=datetime.utcnow() + timedelta(minutes=120),
             )
@@ -41,7 +41,7 @@ class Session:
             expiration_date=datetime.utcnow() + timedelta(minutes=120)
         )
         if data:
-            session_data["data"].update(data)
+            session_data.update(data)
             update_session.token = create_jwt(data=session_data)
         if user_id:
             update_session.user_id = user_id

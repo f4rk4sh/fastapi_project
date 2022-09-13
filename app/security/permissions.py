@@ -9,7 +9,7 @@ def permission(roles: List = None):
     def inner(func):
         @functools.wraps(func)
         def wrapper(session: AuthSession, *args, **kwargs):
-            if session._user_role not in roles:
+            if roles and session._user_role not in roles:
                 raise HTTPForbiddenException()
             return func(session, *args, **kwargs)
         return wrapper
