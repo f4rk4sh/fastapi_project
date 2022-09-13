@@ -17,4 +17,7 @@ def create_jwt(data: dict, expire: bool = False):
 
 
 def decode_jwt(token: str):
-    return jwt.decode(token, JWTConfig.JWT_SECRET_KEY, algorithms=JWTConfig.JWT_ALGORITHM)
+    try:
+        return jwt.decode(token, JWTConfig.JWT_SECRET_KEY, algorithms=JWTConfig.JWT_ALGORITHM)
+    except jwt.JWTError:
+        return None

@@ -11,6 +11,6 @@ def permission(roles: List = None):
         def wrapper(session: AuthSession, *args, **kwargs):
             if session._user_role not in roles:
                 raise HTTPForbiddenException()
-            return func(*args, **kwargs)
+            return func(session, *args, **kwargs)
         return wrapper
     return inner

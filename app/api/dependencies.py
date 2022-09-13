@@ -12,7 +12,6 @@ from app.utils.exceptions.common_exceptions import HTTPUnauthorizedException
 class Session:
     def __init__(self, s_id: Union[int, None] = Cookie(default=None)):
         if s_id:
-            print(s_id)
             session = crud.session.get(s_id)
             if session:
                 if session.expiration_date > datetime.utcnow():
@@ -20,8 +19,8 @@ class Session:
                     self.data = decode_jwt(session.token)["data"]
                     self._session = session
         else:
-            self.session = self._create_new()
-            self.s_id = self.session.id
+            self._session = self._create_new()
+            self.s_id = self._session.id
             self.data = {}
 
     @classmethod
@@ -63,8 +62,7 @@ class AuthSession(Session):
         super().__init__(self.s_id)
         if access_token:
             decoded_token = decode_jwt(access_token)
-            expire_time = decoded_token.get("exp")
-            if datetime.fromtimestamp(expire_time) > datetime.utcnow():
+            if decoded_token:
                 user_email = decoded_token["sub"]
                 user = crud.user.get_by_attribute(email=user_email)
                 self._update(user_id=user.id)

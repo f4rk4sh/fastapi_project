@@ -11,5 +11,5 @@ class HealthEndpoints:
     @staticmethod
     @router.get("/health/ping")
     @permission(["employee", "employer"])
-    def ping(session: AuthSession = Depends(AuthSession)):
+    def ping(session: AuthSession = Depends()):
         return Response(status_code=status.HTTP_200_OK, content="Pong")
