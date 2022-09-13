@@ -60,12 +60,14 @@ class AuthSession(Session):
     ):
         self.s_id = s_id
         super().__init__(self.s_id)
-        if access_token:
-            decoded_token = decode_jwt(access_token)
-            if decoded_token:
-                user_email = decoded_token["sub"]
-                user = crud.user.get_by_attribute(email=user_email)
-                self._update(user_id=user.id)
-                self._user_role = user.role.name
-        else:
+        if not access_token:
             raise HTTPUnauthorizedException()
+        decoded_token = decode_jwt(access_token)
+        if not decoded_token:
+            raise HTTPUnauthorizedException()
+        user_email = decoded_token["sub"]
+        user = crud.user.get_by_attribute(email=user_email)
+        if not user:
+            raise HTTPUnauthorizedException()
+        self._update(user_id=user.id)
+        self._user_role = user.role.name

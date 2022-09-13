@@ -10,7 +10,7 @@ router = APIRouter(tags=["health"])
 class HealthEndpoints:
     @staticmethod
     @router.get("/health/ping")
-    @permission(["employee", "employer"])
+    @permission(["employee", "employer", "superuser"])
     def ping(session: AuthSession = Depends()):
         print(session.data)  # -> {}
         session.add({"test1": "test", "test2": "test"})
