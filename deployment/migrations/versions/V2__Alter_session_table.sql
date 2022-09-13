@@ -1,3 +1,12 @@
+CREATE UNIQUE NONCLUSTERED INDEX [ix_role_name] ON [dbo].[role] ([name])
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX [ix_status_type_name] ON [dbo].[status_type] ([name])
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX [ix_employer_type_name] ON [dbo].[employer_type] ([name])
+GO
+
 ALTER TABLE [dbo].[session] ALTER COLUMN [token] [varchar] (500) NULL
 GO
 

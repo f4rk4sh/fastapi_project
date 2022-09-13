@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr, Field, PositiveInt
 
 from app.schemas.validators import PasswordValidator, PhoneNumberValidator
@@ -9,7 +10,7 @@ class UserBase(BaseModel):
         description="Note: must be a valid e-mail address with format: [account name]@[domain name].[domain extension]",
         example="example@mail.com",
     )
-    phone: str = Field(
+    phone: Optional[str] = Field(
         title="The PHONE NUMBER of the user",
         description="Note: must be a valid phone number with format: +[country code][phone number]",
         example="+380123456789",

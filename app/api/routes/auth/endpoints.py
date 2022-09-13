@@ -1,4 +1,4 @@
-from fastapi import status, Depends, Response
+from fastapi import status, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_utils.inferring_router import InferringRouter
 

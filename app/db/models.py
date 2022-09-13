@@ -38,7 +38,7 @@ class StatusType(Base):
     __tablename__ = "status_type"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50))
+    name = Column(String(50), unique=True)
 
     users = relationship("User", backref="status_type")
 
@@ -47,7 +47,7 @@ class Role(Base):
     __tablename__ = "role"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50))
+    name = Column(String(50), unique=True)
 
     users = relationship("User", backref="role")
 
@@ -72,7 +72,7 @@ class EmployerType(Base):
     __tablename__ = "employer_type"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50))
+    name = Column(String(50), unique=True)
 
     employers = relationship("Employer", backref="employer_type")
 
