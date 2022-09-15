@@ -7,7 +7,7 @@ from pydantic import BaseModel, PositiveInt, Field
 class SessionBase(BaseModel):
     token: str
     creation_date: datetime
-    expiration_date: datetime
+    status: str
 
 
 class SessionCreate(SessionBase):
@@ -15,12 +15,8 @@ class SessionCreate(SessionBase):
 
 
 class SessionUpdate(SessionBase):
-    id: PositiveInt = Field(
-        title="The ID of the session",
-        description="Note: must be a positive integer",
-        example=1,
-    )
+    id: PositiveInt
     token: Optional[str] = None
     creation_date: Optional[datetime] = None
-    expiration_date: Optional[datetime] = None
+    status: Optional[str] = None
     user_id: Optional[PositiveInt] = None

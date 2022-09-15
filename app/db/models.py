@@ -31,7 +31,11 @@ class User(Base):
         passive_deletes=True,
     )
 
-    sessions = relationship("Session", backref="user")
+    sessions = relationship(
+        "Session",
+        backref="user",
+        passive_deletes=True,
+    )
 
 
 class StatusType(Base):
@@ -93,8 +97,8 @@ class Session(Base):
     __tablename__ = "session"
 
     id = Column(Integer, primary_key=True, index=True)
-    token = Column(String(500))
+    token = Column(String(400))
     creation_date = Column(DateTime)
-    expiration_date = Column(DateTime)
+    status = Column(String(50))
 
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))

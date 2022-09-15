@@ -5,8 +5,10 @@ from jose import jwt
 from app.config.jwt_config import JWTConfig
 
 
-def create_jwt(data: dict, expire: bool = False):
-    if expire:
+def create_jwt(data: dict = None, set_expire: bool = False):
+    if not data:
+        data = {}
+    if set_expire:
         data.update(
             {
                 "exp": datetime.utcnow() + timedelta(minutes=int(JWTConfig.JWT_TOKEN_EXPIRE_TIME))

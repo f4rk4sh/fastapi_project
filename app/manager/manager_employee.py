@@ -3,6 +3,8 @@ from datetime import datetime
 from fastapi import Response, status
 
 from app import crud
+from app.constansts.constants_role import ConstantRole
+from app.constansts.constants_status_type import ConstantStatusType
 from app.crud.crud_employee import CRUDEmployee
 from app.db.models import Employee
 from app.manager.manager_base import ManagerBase, ModelType
@@ -19,8 +21,8 @@ class EmployeeManager(
             raise HTTPBadRequestException(
                 detail="Account with this email already exists"
             )
-        role_employee = crud.role.get_by_attribute(name="employee")
-        status_not_activated = crud.status_type.get_by_attribute(name="not active")
+        role_employee = crud.role.get_by_attribute(name=ConstantRole.employee)
+        status_inactive = crud.status_type.get_by_attribute(name=ConstantStatusType.inactive)
         obj_in_data = obj_in.dict()
         user_data = obj_in_data.pop("user")
         user_data.update(
@@ -28,7 +30,7 @@ class EmployeeManager(
                 "creation_date": datetime.utcnow(),
                 "password": hash_password(obj_in.user.password),
                 "role_id": role_employee.id,
-                "status_type_id": status_not_activated.id,
+                "status_type_id": status_inactive.id,
             }
         )
         user = crud.user.create(user_data, is_flush=True)

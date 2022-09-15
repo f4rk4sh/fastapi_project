@@ -7,12 +7,12 @@ GO
 CREATE UNIQUE NONCLUSTERED INDEX [ix_employer_type_name] ON [dbo].[employer_type] ([name])
 GO
 
-ALTER TABLE [dbo].[session] ALTER COLUMN [token] [varchar] (500) NULL
+ALTER TABLE [dbo].[session] ALTER COLUMN [token] [varchar] (400) NULL
 GO
 
 ALTER TABLE [dbo].[session]
 ADD
-    [expiration_date] [datetime] NULL,
+    [status] [varchar] (50) NULL,
     [user_id] [int] NULL;
 GO
 

@@ -1,26 +1,30 @@
-from fastapi import Response
+from datetime import datetime
+
+from fastapi import Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app import crud
-from app.api.dependencies import Session
+from app.constansts.constants_session import ConstantSessionStatus
+from app.schemas.session import SessionCreate, SessionUpdate
 from app.security.tokens import create_jwt
 
 
 class AuthManager:
     @classmethod
-    def login(cls, data: OAuth2PasswordRequestForm, session: Session):
+    def login(cls, data: OAuth2PasswordRequestForm):
         user = crud.user.authenticate(data.username, data.password)
-        access_token = create_jwt(data={"sub": user.email}, expire=True)
-        response: Response = Response()
-        response.set_cookie(key="s_id", value=session.s_id)
-        response.set_cookie(key="access_token", value=access_token)
-        return response
+        access_token = create_jwt(data={"user_id": user.id}, set_expire=True)
+        crud.session.create(
+            SessionCreate(
+                token=access_token,
+                creation_date=datetime.utcnow(),
+                status=ConstantSessionStatus.logged_in,
+                user_id=user.id,
+            )
+        )
+        return {"access_token": access_token, "token_type": "bearer"}
 
     @classmethod
-    def logout(cls):
-        response: Response = Response()
-        response.delete_cookie("access_token")
-        return response
-
-
-auth: AuthManager = AuthManager()
+    def logout(cls, session):
+        crud.session.update(session, SessionUpdate(id=session.id, status=ConstantSessionStatus.logged_out))
+        return Response(status_code=status.HTTP_200_OK)
