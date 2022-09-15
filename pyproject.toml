@@ -18,6 +18,8 @@ python-multipart = "^0.0.5"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 fastapi-utils = "^0.2.1"
+azure-identity = "^1.10.0"
+azure-keyvault-secrets = "^4.5.1"
 
 [tool.poetry.dev-dependencies]
 
