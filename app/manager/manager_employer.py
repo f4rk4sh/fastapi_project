@@ -6,7 +6,7 @@ from app import crud
 from app.constansts.constants_role import ConstantRole
 from app.constansts.constants_status_type import ConstantStatusType
 from app.crud.crud_employer import CRUDEmployer
-from app.db.models import Employer
+from app.db.models import Employer, Session
 from app.manager.manager_base import ManagerBase, ModelType
 from app.schemas.employer import EmployerCreate, EmployerUpdate
 from app.utils.exceptions.common_exceptions import HTTPBadRequestException
@@ -16,7 +16,7 @@ from app.security.passwords import hash_password
 class EmployerManager(
     ManagerBase[Employer, CRUDEmployer, EmployerCreate, EmployerUpdate]
 ):
-    def create(self, obj_in: EmployerCreate) -> ModelType:
+    def create(self, obj_in: EmployerCreate, session: Session) -> ModelType:
         if crud.user.get_by_attribute(email=obj_in.user.email):
             raise HTTPBadRequestException(
                 detail="Account with this email already exists"
@@ -37,7 +37,7 @@ class EmployerManager(
         obj_in_data["user_id"] = user.id
         return self.executor.create(obj_in_data)
 
-    def update(self, obj_in: EmployerUpdate) -> ModelType:
+    def update(self, obj_in: EmployerUpdate, session: Session) -> ModelType:
         obj = self.executor.get(obj_in.id)
         user = crud.user.get_by_attribute(email=obj_in.user.email)
         if user:
@@ -49,7 +49,7 @@ class EmployerManager(
         crud.user.update(user, obj_in.user, is_flush=True)
         return self.executor.update(obj, obj_in)
 
-    def delete(self, id: int) -> Response:
+    def delete(self, id: int, session: Session) -> Response:
         obj = self.executor.get(id)
         crud.user.delete(obj.user_id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)

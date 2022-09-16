@@ -20,53 +20,53 @@ parameters = CRUDParamsDescriptions(obj_name="Role")
 
 
 @router.get("/role", status_code=status.HTTP_200_OK, description=descriptions.fetch_all)
-@permission([ConstantRole.admin])
+@permission({ConstantRole.admin})
 def fetch_roles(session: Session = Depends(get_session)) -> List[RoleResponse]:
-    return role.fetch_all()
+    return role.fetch_all(session)
 
 
 @router.get("/role/search", status_code=status.HTTP_200_OK, description=descriptions.search)
-@permission([ConstantRole.admin])
+@permission({ConstantRole.admin})
 def search_roles(
     parameter: str = parameters.search_parameter,
     keyword: str = parameters.search_keyword,
     max_results: Optional[PositiveInt] = parameters.max_results_search,
     session: Session = Depends(get_session),
 ) -> List[RoleResponse]:
-    return role.search(parameter, keyword, max_results)
+    return role.search(parameter, keyword, session, max_results)
 
 
 @router.post("/role", status_code=status.HTTP_201_CREATED, description=descriptions.create)
-@permission([ConstantRole.admin])
+@permission({ConstantRole.admin})
 def create_role(
     role_in: RoleCreate,
     session: Session = Depends(get_session),
 ) -> RoleResponse:
-    return role.create(role_in)
+    return role.create(role_in, session)
 
 
 @router.put("/role", status_code=status.HTTP_200_OK, description=descriptions.update)
-@permission([ConstantRole.admin])
+@permission({ConstantRole.admin})
 def update_role(
     recipe_in: RoleUpdate,
     session: Session = Depends(get_session),
 ) -> RoleResponse:
-    return role.update(recipe_in)
+    return role.update(recipe_in, session)
 
 
 @router.get("/role/{role_id}", status_code=status.HTTP_200_OK, description=descriptions.fetch_one)
-@permission([ConstantRole.admin])
+@permission({ConstantRole.admin})
 def fetch_role(
     role_id: PositiveInt = parameters.get_id,
     session: Session = Depends(get_session),
 ) -> RoleResponse:
-    return role.fetch_one(role_id)
+    return role.fetch_one(role_id, session)
 
 
 @router.delete("/role/{role_id}", status_code=status.HTTP_204_NO_CONTENT, description=descriptions.delete)
-@permission([ConstantRole.admin])
+@permission({ConstantRole.admin})
 def delete_role(
     role_id: PositiveInt = parameters.delete_id,
     session: Session = Depends(get_session),
 ):
-    return role.delete(role_id)
+    return role.delete(role_id, session)

@@ -14,11 +14,7 @@ def get_session(token: str = Depends(oauth2_schema)):
     data = decode_jwt(token)
     if not data:
         raise HTTPUnauthorizedException()
-    session = crud.session.get_one_ordered_by_creation_date(user_id=data.get("user_id"))
-    if not session:
-        raise HTTPUnauthorizedException()
-    if session.token != token:
-        raise HTTPUnauthorizedException()
-    if session.status == ConstantSessionStatus.logged_out:
+    session = crud.session.get_by_attribute(order_by="creation_date", desc=True, user_id=data.get("user_id"))
+    if not session or session.token != token or session.status == ConstantSessionStatus.logged_out:
         raise HTTPUnauthorizedException()
     return session

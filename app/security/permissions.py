@@ -1,11 +1,11 @@
 import functools
-from typing import List
+from typing import Set
 
 from app.constansts.constants_role import ConstantRole
 from app.utils.exceptions.common_exceptions import HTTPForbiddenException
 
 
-def permission(allowed_roles: List[str]):
+def permission(allowed_roles: Set[str]):
     def inner(func):
         @functools.wraps(func)
         def wrapper(session, *args, **kwargs):
