@@ -31,12 +31,18 @@ class User(Base):
         passive_deletes=True,
     )
 
+    sessions = relationship(
+        "Session",
+        backref="user",
+        passive_deletes=True,
+    )
+
 
 class StatusType(Base):
     __tablename__ = "status_type"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50))
+    name = Column(String(50), unique=True)
 
     users = relationship("User", backref="status_type")
 
@@ -45,7 +51,7 @@ class Role(Base):
     __tablename__ = "role"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50))
+    name = Column(String(50), unique=True)
 
     users = relationship("User", backref="role")
 
@@ -70,7 +76,7 @@ class EmployerType(Base):
     __tablename__ = "employer_type"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50))
+    name = Column(String(50), unique=True)
 
     employers = relationship("Employer", backref="employer_type")
 
@@ -91,5 +97,8 @@ class Session(Base):
     __tablename__ = "session"
 
     id = Column(Integer, primary_key=True, index=True)
-    token = Column(String(100))
+    token = Column(String(400))
     creation_date = Column(DateTime)
+    status = Column(String(50))
+
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))

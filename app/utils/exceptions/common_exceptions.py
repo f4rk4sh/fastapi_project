@@ -1,5 +1,4 @@
 from fastapi import HTTPException, Request, status
-from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 
 
@@ -31,3 +30,19 @@ class HTTPInternalServerException(HTTPException):
 class HTTPBadRequestException(HTTPException):
     def __init__(self, detail: str):
         super().__init__(status_code=status.HTTP_400_BAD_REQUEST, detail=detail)
+
+
+class HTTPUnauthorizedException(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+class HTTPForbiddenException(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied",
+        )

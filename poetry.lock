@@ -181,6 +181,14 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "itsdangerous"
+version = "2.1.2"
+description = "Safely pass data to untrusted environments and back."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "mssql"
 version = "1.0.1"
 description = "python sqlalchemy MsSQL utility"
@@ -389,7 +397,7 @@ standard = ["websockets (>=10.0)", "httptools (>=0.4.0)", "watchfiles (>=0.13)",
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "8eaeb098c33bd2a0fe367eacbbc9037e63d3af27c80fae2bb190a9b1ebfe2f45"
+content-hash = "b71af49e78e68e832e3eccd2bd318140ca0b2a9ccb9d71b338003eb9860a1b14"
 
 [metadata.files]
 anyio = [
@@ -591,6 +599,10 @@ h11 = [
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
     {file = "idna-3.3.tar.gz", hash = "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"},
+]
+itsdangerous = [
+    {file = "itsdangerous-2.1.2-py3-none-any.whl", hash = "sha256:2c2349112351b88699d8d4b6b075022c0808887cb7ad10069318a8b0bc88db44"},
+    {file = "itsdangerous-2.1.2.tar.gz", hash = "sha256:5dbbc68b317e5e42f327f9021763545dc3fc3bfe22e6deb96aaf1fc38874156a"},
 ]
 mssql = [
     {file = "mssql-1.0.1-py3-none-any.whl", hash = "sha256:bd9e42b63ef1582bd133825538529f31bfccb6b13e7874b222af92697c1adbde"},
