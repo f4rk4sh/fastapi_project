@@ -244,6 +244,19 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "mock"
+version = "4.0.3"
+description = "Rolling backport of unittest.mock for all Pythons"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+build = ["twine", "wheel", "blurb"]
+docs = ["sphinx"]
+test = ["pytest (<5.4)", "pytest-cov"]
+
+[[package]]
 name = "mssql"
 version = "1.0.1"
 description = "python sqlalchemy MsSQL utility"
@@ -387,6 +400,20 @@ pytest = ">=4.6"
 
 [package.extras]
 testing = ["virtualenv", "pytest-xdist", "six", "process-tests", "hunter", "fields"]
+
+[[package]]
+name = "pytest-mock"
+version = "3.8.2"
+description = "Thin-wrapper around the mock package for easier use with pytest"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+pytest = ">=5.0"
+
+[package.extras]
+dev = ["pre-commit", "tox", "pytest-asyncio"]
 
 [[package]]
 name = "python-dotenv"
@@ -568,7 +595,7 @@ standard = ["websockets (>=10.0)", "httptools (>=0.4.0)", "watchfiles (>=0.13)",
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "e9b22c7004586d335a3c39d4d05618a3e87458a0e1f34ed8d1ebb7db5ee9dc96"
+content-hash = "a3d8f04418e538dbef816402c55c68694e0352c2763b2d33bac084635d5f7b80"
 
 [metadata.files]
 anyio = [
@@ -843,6 +870,10 @@ itsdangerous = [
     {file = "itsdangerous-2.1.2-py3-none-any.whl", hash = "sha256:2c2349112351b88699d8d4b6b075022c0808887cb7ad10069318a8b0bc88db44"},
     {file = "itsdangerous-2.1.2.tar.gz", hash = "sha256:5dbbc68b317e5e42f327f9021763545dc3fc3bfe22e6deb96aaf1fc38874156a"},
 ]
+mock = [
+    {file = "mock-4.0.3-py3-none-any.whl", hash = "sha256:122fcb64ee37cfad5b3f48d7a7d51875d7031aaf3d8be7c42e2bee25044eee62"},
+    {file = "mock-4.0.3.tar.gz", hash = "sha256:7d3fbbde18228f4ff2f1f119a45cdffa458b4c0dee32eb4d2bb2f82554bac7bc"},
+]
 mssql = [
     {file = "mssql-1.0.1-py3-none-any.whl", hash = "sha256:bd9e42b63ef1582bd133825538529f31bfccb6b13e7874b222af92697c1adbde"},
 ]
@@ -947,6 +978,10 @@ pytest = [
 pytest-cov = [
     {file = "pytest-cov-3.0.0.tar.gz", hash = "sha256:e7f0f5b1617d2210a2cabc266dfe2f4c75a8d32fb89eafb7ad9d06f6d076d470"},
     {file = "pytest_cov-3.0.0-py3-none-any.whl", hash = "sha256:578d5d15ac4a25e5f961c938b85a05b09fdaae9deef3bb6de9a6e766622ca7a6"},
+]
+pytest-mock = [
+    {file = "pytest-mock-3.8.2.tar.gz", hash = "sha256:77f03f4554392558700295e05aed0b1096a20d4a60a4f3ddcde58b0c31c8fca2"},
+    {file = "pytest_mock-3.8.2-py3-none-any.whl", hash = "sha256:8a9e226d6c0ef09fcf20c94eb3405c388af438a90f3e39687f84166da82d5948"},
 ]
 python-dotenv = [
     {file = "python-dotenv-0.20.0.tar.gz", hash = "sha256:b7e3b04a59693c42c36f9ab1cc2acc46fa5df8c78e178fc33a8d4cd05c8d498f"},
