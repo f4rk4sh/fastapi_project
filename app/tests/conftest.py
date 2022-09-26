@@ -1,17 +1,23 @@
-from typing import Generator
+from datetime import datetime
+from typing import Generator, Dict
 
 import pytest
 from fastapi import FastAPI
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
 from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, Session as SQLAlchemySession
 
 from app.api.api_enrollment import router
+from app.api.dependencies import get_session
 from app.config.db_config import DBConfig
+from app.constansts.constants_session import ConstantSessionStatus
 from app.crud.crud_role import CRUDRole
+from app.crud.crud_session import CRUDSession
 from app.db.base import Base
-from app.db.models import Role
+from app.db.models import Role, Session
 from app.manager.manager_role import RoleManager
+from app.schemas.session import SessionCreate
+from app.tests.utils.base import get_su_token_headers
 
 engine = create_engine(DBConfig.SQLALCHEMY_DATABASE_URL_TEST)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -24,7 +30,7 @@ def app() -> FastAPI:
     return app
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def db() -> Generator:
     Base.metadata.create_all(engine)
     yield TestingSessionLocal()
@@ -32,13 +38,31 @@ def db() -> Generator:
 
 
 @pytest.fixture(scope="module")
-def client(app) -> Generator:
+def get_test_session(override_crud_session):
+    session = override_crud_session.create(
+        SessionCreate(
+            token="token",
+            creation_date=datetime.utcnow(),
+            status=ConstantSessionStatus.logged_in,
+        )
+    )
+    yield session
+
+
+@pytest.fixture(scope="module")
+def client_as_su(app: FastAPI, db: SQLAlchemySession) -> Generator:
     with TestClient(app) as client:
+        app.dependency_overrides[get_session] = get_test_session
         yield client
 
 
 @pytest.fixture(scope="module")
-def override_crud_role(db: Session):
+def su_token_headers(client_as_su: TestClient) -> Dict[str, str]:
+    return get_su_token_headers(client_as_su)
+
+
+@pytest.fixture(scope="module")
+def override_crud_role(db: SQLAlchemySession):
     return CRUDRole(Role, db)
 
 
@@ -47,5 +71,6 @@ def override_manager_role(override_crud_role):
     return RoleManager(Role, override_crud_role)
 
 
-
-
+@pytest.fixture(scope="module")
+def override_crud_session(db: SQLAlchemySession):
+    return CRUDSession(Session, db)

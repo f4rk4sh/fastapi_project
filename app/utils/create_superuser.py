@@ -1,30 +1,34 @@
-import os
+import logging
 from datetime import datetime
 
-from dotenv import load_dotenv
+from sqlalchemy.orm import Session
 
-from app import crud
+from app.config.su_config import SUConfig
 from app.constansts.constants_role import ConstantRole
 from app.constansts.constants_status_type import ConstantStatusType
+from app.db.get_database import get_db
+from app.db.models import Role, StatusType, User
 from app.security.passwords import hash_password
 
-load_dotenv()
 
-
-def create_superuser():
-    role_su = crud.role.get_by_attribute(name=ConstantRole.su)
-    status_active = crud.status_type.get_by_attribute(name=ConstantStatusType.active)
-    crud.user.create(
-        {
-            "email": os.getenv("SU_EMAIL"),
-            "phone": os.getenv("SU_PHONE"),
-            "password": hash_password(os.getenv("SU_PASSWORD")),
-            "creation_date": datetime.utcnow(),
-            "activation_date": datetime.utcnow(),
-            "role_id": role_su.id,
-            "status_type_id": status_active.id,
-        }
+def create_superuser(db: Session = next(get_db())):
+    role_su = db.query(Role).filter(Role.name == ConstantRole.su).first()
+    status_active = db.query(StatusType).filter(StatusType.name == ConstantStatusType.active).first()
+    su = User(
+        email=SUConfig.SU_EMAIL,
+        phone=SUConfig.SU_PHONE,
+        password=hash_password(SUConfig.SU_PASSWORD),
+        creation_date=datetime.utcnow(),
+        activation_date=datetime.utcnow(),
+        role_id=role_su.id,
+        status_type_id=status_active.id,
     )
+    db.add(su)
+    try:
+        db.commit()
+    except Exception as exc:
+        logging.exception(exc)
+        db.rollback()
 
 
 if __name__ == '__main__':

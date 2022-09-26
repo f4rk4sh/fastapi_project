@@ -17,7 +17,7 @@ class TestCreateRole:
         name = random_string()
         role = override_crud_role.create(RoleCreate(name=name))
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(RoleCreate(name=name))
         assert role
         assert role.name == name
 
@@ -31,7 +31,7 @@ class TestCreateRole:
         name = random_string()
         role = override_crud_role.create({"name": name})
 
-        spy.assert_called_once()
+        spy.assert_called_once_with({"name": name})
         assert role
         assert role.name == name
 
@@ -43,13 +43,14 @@ class TestCreateRole:
     ) -> None:
         spy = mocker.spy(override_crud_role, "create")
 
-        role = override_crud_role.create(RoleCreate(name=random_string()), is_flush=True)
+        name = random_string()
+        role = override_crud_role.create(RoleCreate(name=name), is_flush=True)
 
         db.rollback()
 
         roles_in_db = override_crud_role.get_multi()
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(RoleCreate(name=name), is_flush=True)
         assert role not in roles_in_db
 
     @pytest.mark.xfail(strict=True)
@@ -63,7 +64,7 @@ class TestCreateRole:
         role = override_crud_role.create({"name": random_string(51)})
         role_in_db = override_crud_role.get(role.id)
 
-        spy.assert_called_once()
+        spy.assert_called_once_with({"name": random_string(51)})
         assert not role_in_db
 
 
@@ -78,7 +79,7 @@ class TestGetRole:
         role = override_crud_role.create(RoleCreate(name=random_string()))
         role_in_db = override_crud_role.get(role.id)
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(role.id)
         assert role_in_db
         assert role_in_db.id == role.id
         assert role_in_db.name == role.name
@@ -94,7 +95,7 @@ class TestGetRole:
         role = override_crud_role.create(RoleCreate(name=random_string()))
         role_in_db = override_crud_role.get(role.name)
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(role.name)
         assert not role_in_db
 
 
@@ -125,7 +126,7 @@ class TestGetMultipleRoles:
         roles = [override_crud_role.create(RoleCreate(name=random_string())) for _ in range(3)]
         roles_in_db = override_crud_role.get_multi(limit=-1)
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(limit=-1)
         assert not roles_in_db
         for role in roles:
             assert role not in roles_in_db
@@ -142,7 +143,7 @@ class TestGetRoleByAttribute:
         role = override_crud_role.create(RoleCreate(name=random_string()))
         role_in_db = override_crud_role.get_by_attribute(name=role.name)
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(name=role.name)
         assert role_in_db
         assert role_in_db.id == role.id
         assert role_in_db.name == role.name
@@ -158,7 +159,7 @@ class TestGetRoleByAttribute:
         role = override_crud_role.create(RoleCreate(name=random_string()))
         role_in_db = override_crud_role.get_by_attribute(name=role.id)
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(name=role.id)
         assert not role_in_db
 
 
@@ -173,7 +174,7 @@ class TestSearchRoleByParameter:
         role = override_crud_role.create(RoleCreate(name=random_string()))
         roles_in_db = override_crud_role.search_by_parameter(parameter="name", keyword=role.name)
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(parameter="name", keyword=role.name)
         assert roles_in_db
         assert role in roles_in_db
 
@@ -188,7 +189,7 @@ class TestSearchRoleByParameter:
         role = override_crud_role.create(RoleCreate(name=random_string()))
         roles_in_db = override_crud_role.search_by_parameter(parameter=None, keyword=role.name)
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(parameter=None, keyword=role.name)
         assert not roles_in_db
 
 
@@ -206,7 +207,7 @@ class TestUpdateRole:
         new_name = random_string()
         updated_role = override_crud_role.update(role_in_db, RoleUpdate(id=role.id, name=new_name))
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(role_in_db, RoleUpdate(id=role.id, name=new_name))
         assert updated_role
         assert updated_role.name == new_name
 
@@ -223,7 +224,7 @@ class TestUpdateRole:
         new_name = random_string()
         updated_role = override_crud_role.update(role_in_db, {"id": role.id, "name": new_name})
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(role_in_db, {"id": role.id, "name": new_name})
         assert updated_role
         assert updated_role.name == new_name
 
@@ -243,7 +244,7 @@ class TestUpdateRole:
 
         role_in_db = override_crud_role.get(role.id)
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(role_in_db, RoleUpdate(id=role.id, new_name=new_name))
         assert role_in_db.name != new_name
 
 
@@ -259,7 +260,7 @@ class TestDeleteRole:
         override_crud_role.delete(role.id)
         role_in_db = override_crud_role.get_by_attribute(id=role.id)
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(role.id)
         assert not role_in_db
 
     @pytest.mark.xfail(strict=True)
@@ -274,5 +275,5 @@ class TestDeleteRole:
         override_crud_role.delete(role.id)
         role_in_db = override_crud_role.get_by_attribute(id=role.name)
 
-        spy.assert_called_once()
+        spy.assert_called_once_with(role.id)
         assert role_in_db
