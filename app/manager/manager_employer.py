@@ -5,7 +5,7 @@ from fastapi import Response, status
 from app import crud
 from app.constansts.constants_role import ConstantRole
 from app.constansts.constants_status_type import ConstantStatusType
-from app.crud.crud_employer import CRUDEmployer
+from app.crud.crud_employer import CRUDEmployer, employer as employer_crud
 from app.db.models import Employer, Session
 from app.manager.manager_base import ManagerBase, ModelType
 from app.schemas.employer import EmployerCreate, EmployerUpdate
@@ -35,10 +35,10 @@ class EmployerManager(
         )
         user = crud.user.create(user_data, is_flush=True)
         obj_in_data["user_id"] = user.id
-        return self.executor.create(obj_in_data)
+        return self.crud.create(obj_in_data)
 
     def update(self, obj_in: EmployerUpdate, session: Session) -> ModelType:
-        obj = self.executor.get(obj_in.id)
+        obj = self.crud.get(obj_in.id)
         user = crud.user.get_by_attribute(email=obj_in.user.email)
         if user:
             if obj.user_id != user.id:
@@ -47,12 +47,12 @@ class EmployerManager(
                 )
         user = crud.user.get(obj.user_id)
         crud.user.update(user, obj_in.user, is_flush=True)
-        return self.executor.update(obj, obj_in)
+        return self.crud.update(obj, obj_in)
 
     def delete(self, id: int, session: Session) -> Response:
-        obj = self.executor.get(id)
+        obj = self.crud.get(id)
         crud.user.delete(obj.user_id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-employer: EmployerManager = EmployerManager(Employer, CRUDEmployer)
+employer: EmployerManager = EmployerManager(employer_crud)

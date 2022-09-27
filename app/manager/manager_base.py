@@ -14,25 +14,25 @@ UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 
 class ManagerBase(Generic[ModelType, CRUDType, CreateSchemaType, UpdateSchemaType]):
-    def __init__(self, model: Type[ModelType], crud: Type[CRUDType]):
-        self.executor: CRUDType = crud(model)
+    def __init__(self, crud: CRUDType):
+        self.crud = crud
 
     def fetch_one(self, id: int, session: Session) -> ModelType:
-        return self.executor.get(id)
+        return self.crud.get(id)
 
     def fetch_all(self, session: Session) -> List[ModelType]:
-        return self.executor.get_multi()
+        return self.crud.get_multi()
 
     def search(self, parameter: str, keyword: str, session: Session, max_results: int = 100) -> List[ModelType]:
-        return self.executor.search_by_parameter(parameter, keyword, max_results)
+        return self.crud.search_by_parameter(parameter, keyword, max_results)
 
     def create(self, obj_in: CreateSchemaType, session: Session) -> ModelType:
-        return self.executor.create(obj_in)
+        return self.crud.create(obj_in)
 
     def update(self, obj_in: UpdateSchemaType, session: Session) -> ModelType:
-        db_obj = self.executor.get(obj_in.id)
-        return self.executor.update(db_obj, obj_in)
+        db_obj = self.crud.get(obj_in.id)
+        return self.crud.update(db_obj, obj_in)
 
     def delete(self, id: int, session: Session) -> Response:
-        self.executor.delete(id)
+        self.crud.delete(id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)

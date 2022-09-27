@@ -15,7 +15,6 @@ from app.crud.crud_role import CRUDRole
 from app.crud.crud_session import CRUDSession
 from app.db.base import Base
 from app.db.models import Role, Session
-from app.manager.manager_role import RoleManager
 from app.schemas.session import SessionCreate
 from app.tests.utils.base import get_su_token_headers
 
@@ -64,11 +63,6 @@ def su_token_headers(client: TestClient) -> Dict[str, str]:
 @pytest.fixture(scope="module")
 def override_crud_role(db: SQLAlchemySession):
     return CRUDRole(Role, db)
-
-
-@pytest.fixture(scope="module")
-def override_manager_role(override_crud_role):
-    return RoleManager(Role, override_crud_role)
 
 
 @pytest.fixture(scope="module")
