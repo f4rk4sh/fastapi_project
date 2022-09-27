@@ -8,7 +8,6 @@ from pytest_mock import MockerFixture
 
 from app.api.routes.role import endpoints
 from app.db.models import Session, Role
-from app.manager.manager_role import role
 from app.schemas.role import RoleCreate, RoleUpdate
 from app.security import permissions
 from app.tests.utils.base import random_string, random_integer
@@ -28,13 +27,14 @@ class TestEndpointCreateRole:
 
         name = random_string()
         expected_result = Role(id=random_integer(), name=name)
-        mocker.patch("app.manager.manager_role.role.create", return_value=expected_result)
-
-        spy = mocker.spy(role, "create")
+        mocked_role_create = mocker.patch(
+            "app.manager.manager_role.role.create",
+            return_value=expected_result,
+        )
 
         actual_result = endpoints.create_role(RoleCreate(name=name), get_test_session)
 
-        spy.assert_called_once_with(RoleCreate(name=name), get_test_session)
+        mocked_role_create.assert_called_once_with(RoleCreate(name=name), get_test_session)
         assert actual_result.name == expected_result.name
 
     @pytest.mark.xfail(strict=True)
@@ -49,16 +49,14 @@ class TestEndpointCreateRole:
         reload(endpoints)
 
         name = random_string()
-        mocker.patch(
+        mocked_role_create = mocker.patch(
             "app.manager.manager_role.role.create",
-            return_value=Role(id=random_integer(), name=name)
+            return_value=Role(id=random_integer(), name=name),
         )
-
-        spy = mocker.spy(role, "create")
 
         actual_result = endpoints.create_role({"name": name}, get_test_session)  # noqa
 
-        spy.assert_called_once_with({"name": name}, get_test_session)
+        mocked_role_create.assert_called_once_with({"name": name}, get_test_session)
         assert not actual_result
 
 
@@ -75,13 +73,14 @@ class TestEndpointGetRole:
 
         id = random_integer()
         expected_result = Role(id=id, name=random_string())
-        mocker.patch("app.manager.manager_role.role.fetch_one", return_value=expected_result)
-
-        spy = mocker.spy(role, "fetch_one")
+        mocked_role_fetch_one = mocker.patch(
+            "app.manager.manager_role.role.fetch_one",
+            return_value=expected_result,
+        )
 
         actual_result = endpoints.fetch_role(id, get_test_session)
 
-        spy.assert_called_once_with(id, get_test_session)
+        mocked_role_fetch_one.assert_called_once_with(id, get_test_session)
         assert actual_result.id == expected_result.id
 
     @pytest.mark.xfail(strict=True)
@@ -95,16 +94,14 @@ class TestEndpointGetRole:
         reload(endpoints)
 
         id = random_integer()
-        mocker.patch(
+        mocked_role_fetch_one = mocker.patch(
             "app.manager.manager_role.role.fetch_one",
-            return_value=Role(id=id, name=random_string())
+            return_value=Role(id=id, name=random_string()),
         )
-
-        spy = mocker.spy(role, "fetch_one")
 
         actual_result = endpoints.fetch_role(id)
 
-        spy.assert_called_once_with(id)
+        mocked_role_fetch_one.assert_called_once_with(id)
         assert not actual_result
 
 
@@ -120,13 +117,14 @@ class TestEndpointGetMultipleRoles:
         reload(endpoints)
 
         expected_result = [Role(id=random_integer(), name=random_string()) for _ in range(3)]
-        mocker.patch("app.manager.manager_role.role.fetch_all", return_value=expected_result)
-
-        spy = mocker.spy(role, "fetch_all")
+        mocked_role_fetch_all = mocker.patch(
+            "app.manager.manager_role.role.fetch_all",
+            return_value=expected_result,
+        )
 
         actual_result = endpoints.fetch_roles(get_test_session)
 
-        spy.assert_called_once_with(get_test_session)
+        mocked_role_fetch_all.assert_called_once_with(get_test_session)
         assert actual_result == expected_result
 
     @pytest.mark.xfail(strict=True)
@@ -139,16 +137,14 @@ class TestEndpointGetMultipleRoles:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
 
-        mocker.patch(
+        mocked_role_fetch_all = mocker.patch(
             "app.manager.manager_role.role.fetch_all",
-            return_value=[Role(id=random_integer(), name=random_string()) for _ in range(3)]
+            return_value=[Role(id=random_integer(), name=random_string()) for _ in range(3)],
         )
-
-        spy = mocker.spy(role, "fetch_all")
 
         actual_result = endpoints.fetch_roles()
 
-        spy.assert_called_once()
+        mocked_role_fetch_all.assert_called_once()
         assert not actual_result
 
 
@@ -166,13 +162,14 @@ class TestEndpointSearchRoleByParameter:
         name = random_string()
         parameter = "name"
         expected_role = Role(id=random_integer(), name=name)
-        mocker.patch("app.manager.manager_role.role.search", return_value=[expected_role, ])
-
-        spy = mocker.spy(role, "search")
+        mocked_role_search = mocker.patch(
+            "app.manager.manager_role.role.search",
+            return_value=[expected_role, ],
+        )
 
         actual_result = endpoints.search_roles(parameter, name, 1, get_test_session)
 
-        spy.assert_called_once_with(parameter, name, get_test_session, 1)
+        mocked_role_search.assert_called_once_with(parameter, name, get_test_session, 1)
         assert expected_role in actual_result
 
     @pytest.mark.xfail(strict=True)
@@ -187,16 +184,14 @@ class TestEndpointSearchRoleByParameter:
         reload(endpoints)
 
         parameter = "name"
-        mocker.patch(
+        mocked_role_search = mocker.patch(
             "app.manager.manager_role.role.search",
-            return_value=[Role(id=random_integer(), name=random_string()), ]
+            return_value=[Role(id=random_integer(), name=random_string()), ],
         )
-
-        spy = mocker.spy(role, "search")
 
         actual_result = endpoints.search_roles(parameter, 1, get_test_session)  # noqa
 
-        spy.assert_called_once_with(parameter, get_test_session, 1)
+        mocked_role_search.assert_called_once_with(parameter, get_test_session, 1)
         assert not actual_result
 
 
@@ -214,13 +209,14 @@ class TestEndpointUpdateRole:
         id = random_integer()
         new_name = random_string()
         expected_result = Role(id=id, name=new_name)
-        mocker.patch("app.manager.manager_role.role.update", return_value=expected_result)
-
-        spy = mocker.spy(role, "update")
+        mocked_role_update = mocker.patch(
+            "app.manager.manager_role.role.update",
+            return_value=expected_result,
+        )
 
         actual_result = endpoints.update_role(RoleUpdate(id=id, name=new_name), get_test_session)
 
-        spy.assert_called_once_with(RoleUpdate(id=id, name=new_name), get_test_session)
+        mocked_role_update.assert_called_once_with(RoleUpdate(id=id, name=new_name), get_test_session)
         assert actual_result.name == expected_result.name
 
     @pytest.mark.xfail(strict=True)
@@ -234,16 +230,14 @@ class TestEndpointUpdateRole:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
 
-        mocker.patch(
+        mocked_role_update = mocker.patch(
             "app.manager.manager_role.role.update",
-            return_value=Role(id=random_integer(), name=random_string())
+            return_value=Role(id=random_integer(), name=random_string()),
         )
-
-        spy = mocker.spy(role, "update")
 
         actual_result = endpoints.update_role(get_test_session)
 
-        spy.assert_called_once_with(get_test_session)
+        mocked_role_update.assert_called_once_with(get_test_session)
         assert not actual_result
 
 
@@ -260,13 +254,14 @@ class TestEndpointDeleteRole:
 
         id = random_integer()
         expected_result = Response(status_code=status.HTTP_204_NO_CONTENT)
-        mocker.patch("app.manager.manager_role.role.delete", return_value=expected_result)
-
-        spy = mocker.spy(role, "delete")
+        mocked_role_delete = mocker.patch(
+            "app.manager.manager_role.role.delete",
+            return_value=expected_result,
+        )
 
         actual_result = endpoints.delete_role(id, get_test_session)
 
-        spy.assert_called_once_with(id, get_test_session)
+        mocked_role_delete.assert_called_once_with(id, get_test_session)
         assert actual_result == expected_result
 
     @pytest.mark.xfail(strict=True)
@@ -280,14 +275,12 @@ class TestEndpointDeleteRole:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
 
-        mocker.patch(
+        mocked_role_delete = mocker.patch(
             "app.manager.manager_role.role.delete",
-            return_value=Response(status_code=status.HTTP_204_NO_CONTENT)
+            return_value=Response(status_code=status.HTTP_204_NO_CONTENT),
         )
-
-        spy = mocker.spy(role, "delete")
 
         actual_result = endpoints.delete_role(get_test_session)
 
-        spy.assert_called_once_with(get_test_session)
+        mocked_role_delete.assert_called_once_with(get_test_session)
         assert not actual_result

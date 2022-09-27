@@ -31,9 +31,10 @@ def app() -> FastAPI:
 
 @pytest.fixture(scope="module")
 def db() -> Generator:
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     yield TestingSessionLocal()
-    Base.metadata.drop_all(engine)
+
 
 
 @pytest.fixture(scope="module")
