@@ -6,7 +6,7 @@ from app.schemas.role import RoleCreate, RoleUpdate
 from app.tests.utils.base import random_string
 
 
-class TestCreateRole:
+class TestCRUDCreateRole:
     def test_success_create_role_from_schema(
             self,
             override_crud_role,
@@ -68,7 +68,7 @@ class TestCreateRole:
         assert not role_in_db
 
 
-class TestGetRole:
+class TestCRUDGetRole:
     def test_successful_get_role(
             self,
             override_crud_role,
@@ -99,7 +99,7 @@ class TestGetRole:
         assert not role_in_db
 
 
-class TestGetMultipleRoles:
+class TestCRUDGetMultipleRoles:
     def test_successful_get_multiple_roles(
             self,
             override_crud_role,
@@ -132,7 +132,7 @@ class TestGetMultipleRoles:
             assert role not in roles_in_db
 
 
-class TestGetRoleByAttribute:
+class TestCRUDGetRoleByAttribute:
     def test_successful_get_role_by_attribute(
             self,
             override_crud_role,
@@ -163,7 +163,7 @@ class TestGetRoleByAttribute:
         assert not role_in_db
 
 
-class TestSearchRoleByParameter:
+class TestCRUDSearchRoleByParameter:
     def test_successful_search_roles_by_parameter(
             self,
             override_crud_role,
@@ -193,7 +193,7 @@ class TestSearchRoleByParameter:
         assert not roles_in_db
 
 
-class TestUpdateRole:
+class TestCRUDUpdateRole:
     def test_successful_update_role_from_schema(
             self,
             override_crud_role,
@@ -248,7 +248,7 @@ class TestUpdateRole:
         assert role_in_db.name != new_name
 
 
-class TestDeleteRole:
+class TestCRUDDeleteRole:
     def test_successful_delete_role(
             self,
             override_crud_role,

@@ -10,6 +10,10 @@ def random_string(length: int = 10):
     return "".join(random.choices(string.ascii_letters, k=length))
 
 
+def random_integer():
+    return random.randint(1, 9)
+
+
 def get_su_token_headers(client: TestClient):
     login_data = {
         "username": SUConfig.SU_EMAIL,

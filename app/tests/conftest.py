@@ -50,15 +50,15 @@ def get_test_session(override_crud_session):
 
 
 @pytest.fixture(scope="module")
-def client_as_su(app: FastAPI, db: SQLAlchemySession) -> Generator:
+def client(app: FastAPI, db: SQLAlchemySession) -> Generator:
     with TestClient(app) as client:
         app.dependency_overrides[get_session] = get_test_session
         yield client
 
 
 @pytest.fixture(scope="module")
-def su_token_headers(client_as_su: TestClient) -> Dict[str, str]:
-    return get_su_token_headers(client_as_su)
+def su_token_headers(client: TestClient) -> Dict[str, str]:
+    return get_su_token_headers(client)
 
 
 @pytest.fixture(scope="module")
