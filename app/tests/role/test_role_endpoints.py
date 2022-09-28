@@ -3,24 +3,23 @@ from importlib import reload
 import pytest
 from fastapi import Response, status
 from fastapi.testclient import TestClient
-
 from pytest_mock import MockerFixture
 
 from app.api.routes.role import endpoints
-from app.db.models import Session, Role
+from app.db.models import Role, Session
 from app.schemas.role import RoleCreate, RoleUpdate
 from app.security import permissions
-from app.tests.utils.base import random_string, random_integer
+from app.tests.utils.base import random_integer, random_string
 from app.tests.utils.mocks import mock_permission_decorator
 
 
 class TestEndpointCreateRole:
     def test_successful_create_role(
-            self,
-            client: TestClient,
-            get_test_session: Session,
-            monkeypatch,
-            mocker: MockerFixture,
+        self,
+        client: TestClient,
+        get_test_session: Session,
+        monkeypatch,
+        mocker: MockerFixture,
     ) -> None:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
@@ -34,16 +33,18 @@ class TestEndpointCreateRole:
 
         actual_result = endpoints.create_role(RoleCreate(name=name), get_test_session)
 
-        mocked_role_create.assert_called_once_with(RoleCreate(name=name), get_test_session)
+        mocked_role_create.assert_called_once_with(
+            RoleCreate(name=name), get_test_session
+        )
         assert actual_result.name == expected_result.name
 
     @pytest.mark.xfail(strict=True)
     def test_failed_create_role(
-            self,
-            client: TestClient,
-            get_test_session: Session,
-            monkeypatch,
-            mocker: MockerFixture,
+        self,
+        client: TestClient,
+        get_test_session: Session,
+        monkeypatch,
+        mocker: MockerFixture,
     ) -> None:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
@@ -62,11 +63,11 @@ class TestEndpointCreateRole:
 
 class TestEndpointGetRole:
     def test_successful_get_role(
-            self,
-            client: TestClient,
-            get_test_session: Session,
-            monkeypatch,
-            mocker: MockerFixture,
+        self,
+        client: TestClient,
+        get_test_session: Session,
+        monkeypatch,
+        mocker: MockerFixture,
     ) -> None:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
@@ -85,10 +86,10 @@ class TestEndpointGetRole:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_get_role(
-            self,
-            client: TestClient,
-            monkeypatch,
-            mocker: MockerFixture,
+        self,
+        client: TestClient,
+        monkeypatch,
+        mocker: MockerFixture,
     ) -> None:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
@@ -107,16 +108,18 @@ class TestEndpointGetRole:
 
 class TestEndpointGetMultipleRoles:
     def test_successful_get_multiple_roles(
-            self,
-            client: TestClient,
-            get_test_session: Session,
-            monkeypatch,
-            mocker: MockerFixture,
+        self,
+        client: TestClient,
+        get_test_session: Session,
+        monkeypatch,
+        mocker: MockerFixture,
     ) -> None:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
 
-        expected_result = [Role(id=random_integer(), name=random_string()) for _ in range(3)]
+        expected_result = [
+            Role(id=random_integer(), name=random_string()) for _ in range(3)
+        ]
         mocked_role_fetch_all = mocker.patch(
             "app.manager.manager_role.role.fetch_all",
             return_value=expected_result,
@@ -129,17 +132,19 @@ class TestEndpointGetMultipleRoles:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_get_multiple_roles(
-            self,
-            client: TestClient,
-            monkeypatch,
-            mocker: MockerFixture,
+        self,
+        client: TestClient,
+        monkeypatch,
+        mocker: MockerFixture,
     ) -> None:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
 
         mocked_role_fetch_all = mocker.patch(
             "app.manager.manager_role.role.fetch_all",
-            return_value=[Role(id=random_integer(), name=random_string()) for _ in range(3)],
+            return_value=[
+                Role(id=random_integer(), name=random_string()) for _ in range(3)
+            ],
         )
 
         actual_result = endpoints.fetch_roles()
@@ -150,11 +155,11 @@ class TestEndpointGetMultipleRoles:
 
 class TestEndpointSearchRoleByParameter:
     def test_successful_search_roles_by_parameter(
-            self,
-            client: TestClient,
-            get_test_session: Session,
-            monkeypatch,
-            mocker: MockerFixture,
+        self,
+        client: TestClient,
+        get_test_session: Session,
+        monkeypatch,
+        mocker: MockerFixture,
     ) -> None:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
@@ -164,7 +169,9 @@ class TestEndpointSearchRoleByParameter:
         expected_role = Role(id=random_integer(), name=name)
         mocked_role_search = mocker.patch(
             "app.manager.manager_role.role.search",
-            return_value=[expected_role, ],
+            return_value=[
+                expected_role,
+            ],
         )
 
         actual_result = endpoints.search_roles(parameter, name, 1, get_test_session)
@@ -174,11 +181,11 @@ class TestEndpointSearchRoleByParameter:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_search_roles_by_parameter(
-            self,
-            client: TestClient,
-            get_test_session: Session,
-            monkeypatch,
-            mocker: MockerFixture,
+        self,
+        client: TestClient,
+        get_test_session: Session,
+        monkeypatch,
+        mocker: MockerFixture,
     ) -> None:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
@@ -186,7 +193,9 @@ class TestEndpointSearchRoleByParameter:
         parameter = "name"
         mocked_role_search = mocker.patch(
             "app.manager.manager_role.role.search",
-            return_value=[Role(id=random_integer(), name=random_string()), ],
+            return_value=[
+                Role(id=random_integer(), name=random_string()),
+            ],
         )
 
         actual_result = endpoints.search_roles(parameter, 1, get_test_session)  # noqa
@@ -197,11 +206,11 @@ class TestEndpointSearchRoleByParameter:
 
 class TestEndpointUpdateRole:
     def test_successful_update_role(
-            self,
-            client: TestClient,
-            get_test_session: Session,
-            monkeypatch,
-            mocker: MockerFixture,
+        self,
+        client: TestClient,
+        get_test_session: Session,
+        monkeypatch,
+        mocker: MockerFixture,
     ) -> None:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
@@ -214,18 +223,22 @@ class TestEndpointUpdateRole:
             return_value=expected_result,
         )
 
-        actual_result = endpoints.update_role(RoleUpdate(id=id, name=new_name), get_test_session)
+        actual_result = endpoints.update_role(
+            RoleUpdate(id=id, name=new_name), get_test_session
+        )
 
-        mocked_role_update.assert_called_once_with(RoleUpdate(id=id, name=new_name), get_test_session)
+        mocked_role_update.assert_called_once_with(
+            RoleUpdate(id=id, name=new_name), get_test_session
+        )
         assert actual_result.name == expected_result.name
 
     @pytest.mark.xfail(strict=True)
     def test_failed_update_role(
-            self,
-            client: TestClient,
-            get_test_session: Session,
-            monkeypatch,
-            mocker: MockerFixture,
+        self,
+        client: TestClient,
+        get_test_session: Session,
+        monkeypatch,
+        mocker: MockerFixture,
     ) -> None:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
@@ -243,11 +256,11 @@ class TestEndpointUpdateRole:
 
 class TestEndpointDeleteRole:
     def test_successful_delete_role(
-            self,
-            client: TestClient,
-            get_test_session: Session,
-            monkeypatch,
-            mocker: MockerFixture,
+        self,
+        client: TestClient,
+        get_test_session: Session,
+        monkeypatch,
+        mocker: MockerFixture,
     ):
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
@@ -266,11 +279,11 @@ class TestEndpointDeleteRole:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_delete_role(
-            self,
-            client: TestClient,
-            get_test_session: Session,
-            monkeypatch,
-            mocker: MockerFixture,
+        self,
+        client: TestClient,
+        get_test_session: Session,
+        monkeypatch,
+        mocker: MockerFixture,
     ):
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)

@@ -1,11 +1,12 @@
 from datetime import datetime
-from typing import Generator, Dict
+from typing import Dict, Generator
 
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session as SQLAlchemySession
+from sqlalchemy.orm import Session as SQLAlchemySession
+from sqlalchemy.orm import sessionmaker
 
 from app.api.api_enrollment import router
 from app.api.dependencies import get_session
@@ -31,10 +32,9 @@ def app() -> FastAPI:
 
 @pytest.fixture(scope="module")
 def db() -> Generator:
-    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     yield TestingSessionLocal()
-
+    Base.metadata.drop_all(engine)
 
 
 @pytest.fixture(scope="module")

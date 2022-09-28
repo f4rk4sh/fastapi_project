@@ -6,5 +6,7 @@ def mock_permission_decorator(*args, **kwargs):
         @wraps(func)
         def wrapper(*args, **kwargs):
             return func(*args, **kwargs)
+
         return wrapper
+
     return decorator

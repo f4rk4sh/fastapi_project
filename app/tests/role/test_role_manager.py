@@ -2,18 +2,17 @@ import pytest
 from pytest_mock import MockerFixture
 from sqlalchemy.orm import Session
 
-
 from app.db.models import Role
 from app.manager.manager_role import role
 from app.schemas.role import RoleCreate, RoleUpdate
-from app.tests.utils.base import random_string, random_integer
+from app.tests.utils.base import random_integer, random_string
 
 
 class TestManagerCreateRole:
     def test_successful_create_role(
-            self,
-            get_test_session: Session,
-            mocker: MockerFixture,
+        self,
+        get_test_session: Session,
+        mocker: MockerFixture,
     ) -> None:
         name = random_string()
         expected_result = Role(id=random_integer(), name=name)
@@ -29,9 +28,9 @@ class TestManagerCreateRole:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_create_role(
-            self,
-            get_test_session: Session,
-            mocker: MockerFixture,
+        self,
+        get_test_session: Session,
+        mocker: MockerFixture,
     ) -> None:
         mocked_role_create = mocker.patch(
             "app.manager.manager_role.role.crud.create",
@@ -46,9 +45,9 @@ class TestManagerCreateRole:
 
 class TestManagerGetRole:
     def test_successful_get_role(
-            self,
-            get_test_session: Session,
-            mocker: MockerFixture,
+        self,
+        get_test_session: Session,
+        mocker: MockerFixture,
     ) -> None:
         id = random_integer()
         expected_result = Role(id=id, name=random_string())
@@ -64,9 +63,9 @@ class TestManagerGetRole:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_get_role(
-            self,
-            get_test_session: Session,
-            mocker: MockerFixture,
+        self,
+        get_test_session: Session,
+        mocker: MockerFixture,
     ) -> None:
         id = random_integer()
         mocked_role_get = mocker.patch(
@@ -82,11 +81,13 @@ class TestManagerGetRole:
 
 class TestManagerGetMultipleRoles:
     def test_successful_get_multiple_roles(
-            self,
-            get_test_session: Session,
-            mocker: MockerFixture,
+        self,
+        get_test_session: Session,
+        mocker: MockerFixture,
     ) -> None:
-        expected_result = [Role(id=random_integer(), name=random_string()) for _ in range(3)]
+        expected_result = [
+            Role(id=random_integer(), name=random_string()) for _ in range(3)
+        ]
         mocked_role_get_multi = mocker.patch(
             "app.manager.manager_role.role.crud.get_multi",
             return_value=expected_result,
@@ -99,13 +100,15 @@ class TestManagerGetMultipleRoles:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_get_multiple_roles(
-            self,
-            get_test_session: Session,
-            mocker: MockerFixture,
+        self,
+        get_test_session: Session,
+        mocker: MockerFixture,
     ) -> None:
         mocked_role_get_multi = mocker.patch(
             "app.manager.manager_role.role.crud.get_multi",
-            return_value=[Role(id=random_integer(), name=random_string()) for _ in range(3)],
+            return_value=[
+                Role(id=random_integer(), name=random_string()) for _ in range(3)
+            ],
         )
 
         actual_result = role.fetch_all()  # noqa
@@ -116,16 +119,18 @@ class TestManagerGetMultipleRoles:
 
 class TestManagerSearchRoleByParameter:
     def test_successful_search_roles_by_parameter(
-            self,
-            get_test_session: Session,
-            mocker: MockerFixture,
+        self,
+        get_test_session: Session,
+        mocker: MockerFixture,
     ) -> None:
         name = random_string()
         parameter = "name"
         expected_role = Role(id=random_integer(), name=name)
         mocked_role_search_by_parameter = mocker.patch(
             "app.manager.manager_role.role.crud.search_by_parameter",
-            return_value=[expected_role, ],
+            return_value=[
+                expected_role,
+            ],
         )
 
         actual_result = role.search(parameter, name, get_test_session, 1)
@@ -135,14 +140,16 @@ class TestManagerSearchRoleByParameter:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_search_roles_by_parameter(
-            self,
-            get_test_session: Session,
-            mocker: MockerFixture,
+        self,
+        get_test_session: Session,
+        mocker: MockerFixture,
     ) -> None:
         parameter = "name"
         mocked_role_search_by_parameter = mocker.patch(
             "app.manager.manager_role.role.crud.search_by_parameter",
-            return_value=[Role(id=random_integer(), name=random_string()), ],
+            return_value=[
+                Role(id=random_integer(), name=random_string()),
+            ],
         )
 
         actual_result = role.search(parameter, get_test_session, 100)  # noqa
@@ -153,9 +160,9 @@ class TestManagerSearchRoleByParameter:
 
 class TestManagerUpdateRole:
     def test_successful_update_role(
-            self,
-            get_test_session: Session,
-            mocker: MockerFixture,
+        self,
+        get_test_session: Session,
+        mocker: MockerFixture,
     ) -> None:
         id = random_integer()
         name = random_string()
@@ -175,14 +182,16 @@ class TestManagerUpdateRole:
         actual_result = role.update(RoleUpdate(id=id, name=new_name), get_test_session)
 
         mocked_role_get.assert_called_once_with(id)
-        mocked_role_update.assert_called_once_with(role_in_db, RoleUpdate(id=id, name=new_name))
+        mocked_role_update.assert_called_once_with(
+            role_in_db, RoleUpdate(id=id, name=new_name)
+        )
         assert actual_result.name == expected_result.name
 
     @pytest.mark.xfail(strict=True)
     def test_failed_update_role(
-            self,
-            get_test_session: Session,
-            mocker: MockerFixture,
+        self,
+        get_test_session: Session,
+        mocker: MockerFixture,
     ) -> None:
         id = random_integer()
         name = random_string()
@@ -202,15 +211,17 @@ class TestManagerUpdateRole:
         actual_result = role.update(RoleUpdate(id=id, name=new_name), get_test_session)
 
         mocked_role_get.assert_called_once_with(id)
-        mocked_role_update.assert_called_once_with(role_in_db, RoleUpdate(id=id, name=new_name))
+        mocked_role_update.assert_called_once_with(
+            role_in_db, RoleUpdate(id=id, name=new_name)
+        )
         assert not actual_result
 
 
 class TestManagerDeleteRole:
     def test_successful_delete_role(
-            self,
-            get_test_session: Session,
-            mocker: MockerFixture,
+        self,
+        get_test_session: Session,
+        mocker: MockerFixture,
     ) -> None:
         id = random_integer()
         mocker_role_delete = mocker.patch(
@@ -224,9 +235,9 @@ class TestManagerDeleteRole:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_delete_role(
-            self,
-            get_test_session: Session,
-            mocker: MockerFixture,
+        self,
+        get_test_session: Session,
+        mocker: MockerFixture,
     ) -> None:
         id = random_integer()
         mocker_role_delete = mocker.patch(

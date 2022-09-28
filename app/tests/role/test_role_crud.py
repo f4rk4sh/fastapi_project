@@ -9,10 +9,10 @@ from app.tests.utils.base import random_string
 
 class TestCRUDCreateRole:
     def test_success_create_role_from_schema(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         spy_role_create = mocker.spy(role, "create")
@@ -25,10 +25,10 @@ class TestCRUDCreateRole:
         assert created_role.name == name
 
     def test_successful_create_role_from_dict(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         spy_role_create = mocker.spy(role, "create")
@@ -41,14 +41,16 @@ class TestCRUDCreateRole:
         assert created_role.name == name
 
     def test_successful_create_role_is_flush(
-            self,
-            override_crud_role,
-            db: Session,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        db: Session,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
-        monkeypatch.setattr("app.crud.crud_role.role.get_multi", override_crud_role.get_multi)
+        monkeypatch.setattr(
+            "app.crud.crud_role.role.get_multi", override_crud_role.get_multi
+        )
         spy_role_create = mocker.spy(role, "create")
 
         name = random_string()
@@ -63,10 +65,10 @@ class TestCRUDCreateRole:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_create_role(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         monkeypatch.setattr("app.crud.crud_role.role.get", override_crud_role.get)
@@ -82,10 +84,7 @@ class TestCRUDCreateRole:
 
 class TestCRUDGetRole:
     def test_successful_get_role(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture
+        self, override_crud_role, monkeypatch, mocker: MockFixture
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         monkeypatch.setattr("app.crud.crud_role.role.get", override_crud_role.get)
@@ -101,10 +100,7 @@ class TestCRUDGetRole:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_get_role(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture
+        self, override_crud_role, monkeypatch, mocker: MockFixture
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         monkeypatch.setattr("app.crud.crud_role.role.get", override_crud_role.get)
@@ -119,16 +115,20 @@ class TestCRUDGetRole:
 
 class TestCRUDGetMultipleRoles:
     def test_successful_get_multiple_roles(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
-        monkeypatch.setattr("app.crud.crud_role.role.get_multi", override_crud_role.get_multi)
+        monkeypatch.setattr(
+            "app.crud.crud_role.role.get_multi", override_crud_role.get_multi
+        )
         spy_role_get_multiple = mocker.spy(role, "get_multi")
 
-        created_roles = [role.create(RoleCreate(name=random_string())) for _ in range(3)]
+        created_roles = [
+            role.create(RoleCreate(name=random_string())) for _ in range(3)
+        ]
         roles_in_db = role.get_multi()
 
         spy_role_get_multiple.assert_called_once()
@@ -138,16 +138,20 @@ class TestCRUDGetMultipleRoles:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_get_multiple_roles(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
-        monkeypatch.setattr("app.crud.crud_role.role.get_multi", override_crud_role.get_multi)
+        monkeypatch.setattr(
+            "app.crud.crud_role.role.get_multi", override_crud_role.get_multi
+        )
         spy_role_get_multiple = mocker.spy(role, "get_multi")
 
-        created_roles = [role.create(RoleCreate(name=random_string())) for _ in range(3)]
+        created_roles = [
+            role.create(RoleCreate(name=random_string())) for _ in range(3)
+        ]
         roles_in_db = role.get_multi(limit=-1)
 
         spy_role_get_multiple.assert_called_once_with(limit=-1)
@@ -158,10 +162,10 @@ class TestCRUDGetMultipleRoles:
 
 class TestCRUDGetRoleByAttribute:
     def test_successful_get_role_by_attribute(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         monkeypatch.setattr(
@@ -180,10 +184,10 @@ class TestCRUDGetRoleByAttribute:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_get_role_by_attribute(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         monkeypatch.setattr(
@@ -201,10 +205,10 @@ class TestCRUDGetRoleByAttribute:
 
 class TestCRUDSearchRoleByParameter:
     def test_successful_search_roles_by_parameter(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         monkeypatch.setattr(
@@ -214,18 +218,22 @@ class TestCRUDSearchRoleByParameter:
         spy_role_search_by_parameter = mocker.spy(role, "search_by_parameter")
 
         created_role = role.create(RoleCreate(name=random_string()))
-        roles_in_db = role.search_by_parameter(parameter="name", keyword=created_role.name)
+        roles_in_db = role.search_by_parameter(
+            parameter="name", keyword=created_role.name
+        )
 
-        spy_role_search_by_parameter.assert_called_once_with(parameter="name", keyword=created_role.name)
+        spy_role_search_by_parameter.assert_called_once_with(
+            parameter="name", keyword=created_role.name
+        )
         assert roles_in_db
         assert created_role in roles_in_db
 
     @pytest.mark.xfail(strict=True)
     def test_failed_search_roles_by_parameter(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         monkeypatch.setattr(
@@ -235,7 +243,9 @@ class TestCRUDSearchRoleByParameter:
         spy = mocker.spy(role, "search_by_parameter")
 
         created_role = role.create(RoleCreate(name=random_string()))
-        roles_in_db = role.search_by_parameter(parameter=None, keyword=created_role.name)
+        roles_in_db = role.search_by_parameter(
+            parameter=None, keyword=created_role.name
+        )
 
         spy.assert_called_once_with(parameter=None, keyword=created_role.name)
         assert not roles_in_db
@@ -243,10 +253,10 @@ class TestCRUDSearchRoleByParameter:
 
 class TestCRUDUpdateRole:
     def test_successful_update_role_from_schema(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         monkeypatch.setattr("app.crud.crud_role.role.get", override_crud_role.get)
@@ -257,17 +267,21 @@ class TestCRUDUpdateRole:
         role_in_db = role.get(created_role.id)
 
         new_name = random_string()
-        updated_role = role.update(role_in_db, RoleUpdate(id=created_role.id, name=new_name))
+        updated_role = role.update(
+            role_in_db, RoleUpdate(id=created_role.id, name=new_name)
+        )
 
-        spy_role_update.assert_called_once_with(role_in_db, RoleUpdate(id=created_role.id, name=new_name))
+        spy_role_update.assert_called_once_with(
+            role_in_db, RoleUpdate(id=created_role.id, name=new_name)
+        )
         assert updated_role
         assert updated_role.name == new_name
 
     def test_successful_update_role_from_dict(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         monkeypatch.setattr("app.crud.crud_role.role.get", override_crud_role.get)
@@ -278,18 +292,22 @@ class TestCRUDUpdateRole:
         role_in_db = role.get(created_role.id)
 
         new_name = random_string()
-        updated_role = role.update(role_in_db, {"id": created_role.id, "name": new_name})
+        updated_role = role.update(
+            role_in_db, {"id": created_role.id, "name": new_name}
+        )
 
-        spy_role_update.assert_called_once_with(role_in_db, {"id": created_role.id, "name": new_name})
+        spy_role_update.assert_called_once_with(
+            role_in_db, {"id": created_role.id, "name": new_name}
+        )
         assert updated_role
         assert updated_role.name == new_name
 
     @pytest.mark.xfail(strict=True)
     def test_failed_update_role(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         monkeypatch.setattr("app.crud.crud_role.role.get", override_crud_role.get)
@@ -304,20 +322,25 @@ class TestCRUDUpdateRole:
 
         updated_role_in_db = role.get(created_role.id)
 
-        spy_role_update.assert_called_once_with(role_in_db, RoleUpdate(id=created_role.id, new_name=new_name))
+        spy_role_update.assert_called_once_with(
+            role_in_db, RoleUpdate(id=created_role.id, new_name=new_name)
+        )
         assert updated_role_in_db.name != new_name
 
 
 class TestCRUDDeleteRole:
     def test_successful_delete_role(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         monkeypatch.setattr("app.crud.crud_role.role.delete", override_crud_role.delete)
-        monkeypatch.setattr("app.crud.crud_role.role.get_by_attribute", override_crud_role.get_by_attribute)
+        monkeypatch.setattr(
+            "app.crud.crud_role.role.get_by_attribute",
+            override_crud_role.get_by_attribute,
+        )
         spy_role_delete = mocker.spy(role, "delete")
 
         created_role = role.create(RoleCreate(name=random_string()))
@@ -329,14 +352,17 @@ class TestCRUDDeleteRole:
 
     @pytest.mark.xfail(strict=True)
     def test_failed_delete_role(
-            self,
-            override_crud_role,
-            monkeypatch,
-            mocker: MockFixture,
+        self,
+        override_crud_role,
+        monkeypatch,
+        mocker: MockFixture,
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.create", override_crud_role.create)
         monkeypatch.setattr("app.crud.crud_role.role.delete", override_crud_role.delete)
-        monkeypatch.setattr("app.crud.crud_role.role.get_by_attribute", override_crud_role.get_by_attribute)
+        monkeypatch.setattr(
+            "app.crud.crud_role.role.get_by_attribute",
+            override_crud_role.get_by_attribute,
+        )
         spy_role_delete = mocker.spy(role, "delete")
 
         created_role = role.create(RoleCreate(name=random_string()))
