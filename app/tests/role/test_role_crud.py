@@ -369,5 +369,5 @@ class TestCRUDDeleteRole:
         role.delete(created_role.name)
         role_in_db = role.get_by_attribute(id=created_role.id)
 
-        spy_role_delete.assert_called_once_with(created_role.id)
+        spy_role_delete.assert_called_once_with(id=created_role.id)
         assert role_in_db
