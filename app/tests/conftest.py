@@ -105,6 +105,11 @@ def random_role(override_crud_role: CRUDRole):
 
 
 @pytest.fixture
+def get_random_roles(override_crud_role: CRUDRole):
+    return [override_crud_role.create(RoleCreate(name=random_string())) for _ in range(3)]
+
+
+@pytest.fixture
 def random_status_type(override_crud_status_type: CRUDStatusType):
     return override_crud_status_type.create(StatusTypeCreate(name=random_string()))
 
