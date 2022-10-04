@@ -19,13 +19,19 @@ from app.crud.crud_session import CRUDSession
 from app.crud.crud_status_type import CRUDStatusType
 from app.crud.crud_user import CRUDUser
 from app.db.base import Base
-from app.db.models import Role, Session, Employer, User, EmployerType, StatusType
+from app.db.models import Employer, EmployerType, Role, Session, StatusType, User
 from app.schemas.employer_type import EmployerTypeCreate
 from app.schemas.role import RoleCreate
 from app.schemas.session import SessionCreate
 from app.schemas.status_type import StatusTypeCreate
-from app.tests.utils.base import get_su_token_headers, random_string, random_email, random_password, random_phone, \
-    random_date
+from app.tests.utils.base import (
+    get_su_token_headers,
+    random_date,
+    random_email,
+    random_password,
+    random_phone,
+    random_string,
+)
 
 engine = create_engine(DBConfig.SQLALCHEMY_DATABASE_URL_TEST)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -106,7 +112,9 @@ def random_role(override_crud_role: CRUDRole):
 
 @pytest.fixture
 def get_random_roles(override_crud_role: CRUDRole):
-    return [override_crud_role.create(RoleCreate(name=random_string())) for _ in range(3)]
+    return [
+        override_crud_role.create(RoleCreate(name=random_string())) for _ in range(3)
+    ]
 
 
 @pytest.fixture
@@ -135,7 +143,9 @@ def random_user(override_crud_user: CRUDUser, random_role, random_status_type):
 
 
 @pytest.fixture
-def random_employer(override_crud_employer: CRUDEmployer, random_user, random_employer_type):
+def random_employer(
+    override_crud_employer: CRUDEmployer, random_user, random_employer_type
+):
     return override_crud_employer.create(
         {
             "name": random_string(),

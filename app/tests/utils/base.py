@@ -32,7 +32,11 @@ def random_phone() -> str:
 
 
 def random_date(in_future: bool = False):
-    return date.today() + timedelta(days=1) if in_future else date.today() - timedelta(days=-1)
+    return (
+        date.today() + timedelta(days=1)
+        if in_future
+        else date.today() - timedelta(days=-1)
+    )
 
 
 def get_su_token_headers(client: TestClient) -> dict:

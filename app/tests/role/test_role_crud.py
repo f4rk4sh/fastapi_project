@@ -1,9 +1,6 @@
 import pytest
-from pydantic import ValidationError
-
 from pytest_mock import MockFixture
-from sqlalchemy.exc import SQLAlchemyError, DataError, ProgrammingError
-
+from sqlalchemy.exc import DataError, ProgrammingError
 from sqlalchemy.orm import Session
 
 from app.crud.crud_role import role
@@ -79,11 +76,7 @@ class TestCRUDCreateRole:
 
 class TestCRUDGetRole:
     def test_successful_get_role(
-        self,
-        override_crud_role,
-        random_role,
-        monkeypatch,
-        mocker: MockFixture
+        self, override_crud_role, random_role, monkeypatch, mocker: MockFixture
     ) -> None:
         monkeypatch.setattr("app.crud.crud_role.role.get", override_crud_role.get)
         spy_role_get = mocker.spy(role, "get")
@@ -209,9 +202,7 @@ class TestCRUDSearchRoleByParameter:
         )
 
         with pytest.raises(TypeError):
-            role.search_by_parameter(
-                parameter=None, keyword=random_role.name
-            )
+            role.search_by_parameter(parameter=None, keyword=random_role.name)
 
 
 class TestCRUDUpdateRole:
@@ -252,9 +243,7 @@ class TestCRUDUpdateRole:
         role_in_db = role.get(random_role.id)
 
         new_name = random_string()
-        updated_role = role.update(
-            role_in_db, {"id": random_role.id, "name": new_name}
-        )
+        updated_role = role.update(role_in_db, {"id": random_role.id, "name": new_name})
 
         spy_role_update.assert_called_once_with(
             role_in_db, {"id": random_role.id, "name": new_name}
@@ -270,11 +259,9 @@ class TestCRUDUpdateRole:
         monkeypatch.setattr("app.crud.crud_role.role.get", override_crud_role.get)
         monkeypatch.setattr("app.crud.crud_role.role.update", override_crud_role.update)
 
-        role_in_db = role.get(random_role.id)
-
-        with pytest.raises(ValidationError):
-            new_name = random_string()
-            role.update(role_in_db, RoleUpdate(id=random_role.id, new_name=new_name))
+        with pytest.raises(TypeError):
+            role_in_db = role.get(random_role.id)
+            role.update(role_in_db)
 
 
 class TestCRUDDeleteRole:
