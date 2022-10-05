@@ -48,16 +48,16 @@ class TestEndpointGetRole:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
 
-        id = random_integer()
-        expected_result = Role(id=id, name=random_string())
+        role_id = random_integer()
+        expected_result = Role(id=role_id, name=random_string())
         mocked_role_fetch_one = mocker.patch(
             "app.manager.manager_role.role.fetch_one",
             return_value=expected_result,
         )
 
-        actual_result = endpoints.fetch_role(id, get_test_session)
+        actual_result = endpoints.fetch_role(role_id, get_test_session)
 
-        mocked_role_fetch_one.assert_called_once_with(id, get_test_session)
+        mocked_role_fetch_one.assert_called_once_with(role_id, get_test_session)
         assert actual_result.id == expected_result.id
 
 
@@ -124,20 +124,20 @@ class TestEndpointUpdateRole:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
 
-        id = random_integer()
+        role_id = random_integer()
         new_name = random_string()
-        expected_result = Role(id=id, name=new_name)
+        expected_result = Role(id=role_id, name=new_name)
         mocked_role_update = mocker.patch(
             "app.manager.manager_role.role.update",
             return_value=expected_result,
         )
 
         actual_result = endpoints.update_role(
-            RoleUpdate(id=id, name=new_name), get_test_session
+            RoleUpdate(id=role_id, name=new_name), get_test_session
         )
 
         mocked_role_update.assert_called_once_with(
-            RoleUpdate(id=id, name=new_name), get_test_session
+            RoleUpdate(id=role_id, name=new_name), get_test_session
         )
         assert actual_result.name == expected_result.name
 
@@ -153,14 +153,14 @@ class TestEndpointDeleteRole:
         monkeypatch.setattr(permissions, "permission", mock_permission_decorator)
         reload(endpoints)
 
-        id = random_integer()
+        role_id = random_integer()
         expected_result = Response(status_code=status.HTTP_204_NO_CONTENT)
         mocked_role_delete = mocker.patch(
             "app.manager.manager_role.role.delete",
             return_value=expected_result,
         )
 
-        actual_result = endpoints.delete_role(id, get_test_session)
+        actual_result = endpoints.delete_role(role_id, get_test_session)
 
-        mocked_role_delete.assert_called_once_with(id, get_test_session)
+        mocked_role_delete.assert_called_once_with(role_id, get_test_session)
         assert actual_result == expected_result

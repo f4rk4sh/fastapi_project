@@ -32,16 +32,16 @@ class TestManagerGetRole:
         get_test_session: Session,
         mocker: MockerFixture,
     ) -> None:
-        id = random_integer()
-        expected_result = Role(id=id, name=random_string())
+        role_id = random_integer()
+        expected_result = Role(id=role_id, name=random_string())
         mocked_role_get = mocker.patch(
             "app.manager.manager_role.role.crud.get",
             return_value=expected_result,
         )
 
-        actual_result = role.fetch_one(id, get_test_session)
+        actual_result = role.fetch_one(role_id, get_test_session)
 
-        mocked_role_get.assert_called_once_with(id)
+        mocked_role_get.assert_called_once_with(role_id)
         assert actual_result.name == expected_result.name
 
 
@@ -93,26 +93,26 @@ class TestManagerUpdateRole:
         get_test_session: Session,
         mocker: MockerFixture,
     ) -> None:
-        id = random_integer()
+        role_id = random_integer()
         name = random_string()
-        role_in_db = Role(id=id, name=name)
+        role_in_db = Role(id=role_id, name=name)
         mocked_role_get = mocker.patch(
             "app.manager.manager_role.role.crud.get",
             return_value=role_in_db,
         )
 
         new_name = random_string()
-        expected_result = Role(id=id, name=new_name)
+        expected_result = Role(id=role_id, name=new_name)
         mocked_role_update = mocker.patch(
             "app.manager.manager_role.role.crud.update",
             return_value=expected_result,
         )
 
-        actual_result = role.update(RoleUpdate(id=id, name=new_name), get_test_session)
+        actual_result = role.update(RoleUpdate(id=role_id, name=new_name), get_test_session)
 
-        mocked_role_get.assert_called_once_with(id)
+        mocked_role_get.assert_called_once_with(role_id)
         mocked_role_update.assert_called_once_with(
-            role_in_db, RoleUpdate(id=id, name=new_name)
+            role_in_db, RoleUpdate(id=role_id, name=new_name)
         )
         assert actual_result.name == expected_result.name
 
@@ -123,12 +123,12 @@ class TestManagerDeleteRole:
         get_test_session: Session,
         mocker: MockerFixture,
     ) -> None:
-        id = random_integer()
+        role_id = random_integer()
         mocker_role_delete = mocker.patch(
             "app.manager.manager_role.role.crud.delete",
-            return_value=Role(id=id, name=random_string()),
+            return_value=Role(id=role_id, name=random_string()),
         )
 
-        role.delete(id, get_test_session)
+        role.delete(role_id, get_test_session)
 
-        mocker_role_delete.assert_called_once_with(id)
+        mocker_role_delete.assert_called_once_with(role_id)
