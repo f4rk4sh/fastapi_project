@@ -20,8 +20,8 @@ class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
         obj = (
             self.db.query(self.model)
             .join(User)
-            .filter(and_(*filter_user_args))
-            .filter(and_(*filter_employer_args))
+            .filter(and_(True, *filter_user_args))
+            .filter(and_(True, *filter_employer_args))
             .first()
         )
         if isinstance(obj, User):

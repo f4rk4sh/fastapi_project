@@ -48,10 +48,10 @@ def create_role(
 @router.put("/role", status_code=status.HTTP_200_OK, description=descriptions.update)
 @permission({ConstantRole.admin})
 def update_role(
-    recipe_in: RoleUpdate,
+    role_in: RoleUpdate,
     session: Session = Depends(get_session),
 ) -> RoleResponse:
-    return role.update(recipe_in, session)
+    return role.update(role_in, session)
 
 
 @router.get("/role/{role_id}", status_code=status.HTTP_200_OK, description=descriptions.fetch_one)
