@@ -4,10 +4,11 @@ from fastapi import Response, status
 from pytest_mock import MockerFixture
 
 from app.api.routes.employer import endpoints
-from app.db.models import Session, Employer
+from app.db.models import Employer, Session
 from app.schemas.employer import EmployerCreate, EmployerUpdate
 from app.security import permissions
-from app.tests.utils.base import random_string, random_integer, random_date, random_email, random_phone, random_password
+from app.tests.utils.base import (random_date, random_email, random_integer,
+                                  random_password, random_phone, random_string)
 from app.tests.utils.mocks import mock_permission_decorator
 
 
@@ -110,7 +111,8 @@ class TestEndpointGetMultipleEmployers:
                 salary_date=random_date(),
                 prepayment_date=random_date(),
                 employer_type_id=random_integer(),
-            ) for _ in range(3)
+            )
+            for _ in range(3)
         ]
 
         mocked_employer_fetch_all = mocker.patch(
@@ -155,7 +157,9 @@ class TestEndpointSearchEmployerByParameter:
             ],
         )
 
-        actual_result = endpoints.search_employers(parameter, edrpou, 1, get_test_session)
+        actual_result = endpoints.search_employers(
+            parameter, edrpou, 1, get_test_session
+        )
 
         mocked_employer_search.assert_called_once_with(
             parameter, edrpou, get_test_session, 1
@@ -185,10 +189,7 @@ class TestEndpointUpdateEmployer:
             "employer_type_id": random_integer(),
         }
 
-        expected_result = Employer(
-            user_id=random_integer(),
-            **employer_data
-        )
+        expected_result = Employer(user_id=random_integer(), **employer_data)
 
         mocked_employer_update = mocker.patch(
             "app.manager.manager_employer.employer.update",
