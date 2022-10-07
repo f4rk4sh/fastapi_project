@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Date, DateTime, ForeignKey, Integer, String
+from sqlalchemy import BigInteger, Boolean, Column, Date, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.db.base import Base
@@ -92,6 +92,9 @@ class Employee(Base):
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
     employer_id = Column(Integer, ForeignKey("employer.id"))
 
+    payment_methods = relationship("PaymentMethod", backref="employee")
+    payments = relationship("Payment", backref="employee")
+
 
 class Session(Base):
     __tablename__ = "session"
@@ -100,5 +103,60 @@ class Session(Base):
     token = Column(String(400))
     creation_date = Column(DateTime)
     status = Column(String(50))
-
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
+
+
+class PaymentMethod(Base):
+    __tablename__ = "payment_method"
+
+    id = Column(Integer, primary_key=True, index=True)
+    is_default = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=False)
+    employee_id = Column(Integer, ForeignKey("employee.id", ondelete="CASCADE"))
+    bank_id = Column(Integer, ForeignKey("bank.id", ondelete="CASCADE"))
+
+    payments = relationship("Payment", backref="payment_method")
+
+
+class Bank(Base):
+    __tablename__ = "bank"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50))
+    edrpou = Column(String(50))
+    mfo = Column(String(50))
+    iban = Column(String(50))
+    card = Column(String(50))
+    account_type_id = Column(Integer, ForeignKey("account_type.id", ondelete="CASCADE"))
+
+    payment_methods = relationship("PaymentMethod", backref="bank")
+
+
+class AccountType(Base):
+    __tablename__ = "account_type"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50))
+
+    banks = relationship("Bank", backref="account_type")
+
+
+class Payment(Base):
+    __tablename__ = "payment"
+
+    id = Column(Integer, primary_key=True, index=True)
+    amount = Column(BigInteger)
+    creation_date = Column(DateTime)
+    execution_date = Column(DateTime)
+    employee_id = Column(Integer, ForeignKey("employee.id", ondelete="CASCADE"))
+    payment_status_id = Column(Integer, ForeignKey("payment_status.id", ondelete="CASCADE"))
+    payment_method_id = Column(Integer, ForeignKey("payment_method.id", ondelete="CASCADE"))
+
+
+class PaymentStatus(Base):
+    __tablename__ = "payment_status"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50))
+
+    payments = relationship("Payment", backref="payment_status")
