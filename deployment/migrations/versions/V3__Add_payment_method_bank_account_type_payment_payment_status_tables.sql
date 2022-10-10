@@ -35,7 +35,7 @@ ALTER TABLE [dbo].[bank] ADD CONSTRAINT [PK__bank__id] PRIMARY KEY CLUSTERED ([i
 GO
 CREATE NONCLUSTERED INDEX [ix_bank_id] ON [dbo].[bank] ([id])
 GO
-ALTER TABLE [dbo].[bank] ADD CONSTRAINT [FK__bank__account_type__id] FOREIGN KEY ([account_type_id]) REFERENCES [dbo].[account_type] ([id])
+ALTER TABLE [dbo].[bank] ADD CONSTRAINT [FK__bank__account_type__id] FOREIGN KEY ([account_type_id]) REFERENCES [dbo].[account_type] ([id]) ON DELETE CASCADE
 GO
 
 CREATE TABLE [dbo].[payment_method]
@@ -51,9 +51,9 @@ ALTER TABLE [dbo].[payment_method] ADD CONSTRAINT [PK__payment_method__id] PRIMA
 GO
 CREATE NONCLUSTERED INDEX [ix_payment_method_id] ON [dbo].[payment_method] ([id])
 GO
-ALTER TABLE [dbo].[payment_method] ADD CONSTRAINT [FK__payment_method__employee__id] FOREIGN KEY ([employee_id]) REFERENCES [dbo].[employee] ([id])
+ALTER TABLE [dbo].[payment_method] ADD CONSTRAINT [FK__payment_method__employee__id] FOREIGN KEY ([employee_id]) REFERENCES [dbo].[employee] ([id]) ON DELETE CASCADE
 GO
-ALTER TABLE [dbo].[payment_method] ADD CONSTRAINT [FK__payment_method__bank__id] FOREIGN KEY ([bank_id]) REFERENCES [dbo].[bank] ([id])
+ALTER TABLE [dbo].[payment_method] ADD CONSTRAINT [FK__payment_method__bank__id] FOREIGN KEY ([bank_id]) REFERENCES [dbo].[bank] ([id]) ON DELETE CASCADE
 GO
 
 CREATE TABLE [dbo].[payment]
@@ -73,7 +73,7 @@ CREATE NONCLUSTERED INDEX [ix_payment_id] ON [dbo].[payment] ([id])
 GO
 ALTER TABLE [dbo].[payment] ADD CONSTRAINT [FK__payment__employee__id] FOREIGN KEY ([employee_id]) REFERENCES [dbo].[employee] ([id])
 GO
-ALTER TABLE [dbo].[payment] ADD CONSTRAINT [FK__payment__payment_status__id] FOREIGN KEY ([payment_status_id]) REFERENCES [dbo].[payment_status] ([id])
+ALTER TABLE [dbo].[payment] ADD CONSTRAINT [FK__payment__payment_status__id] FOREIGN KEY ([payment_status_id]) REFERENCES [dbo].[payment_status] ([id]) ON DELETE CASCADE
 GO
-ALTER TABLE [dbo].[payment] ADD CONSTRAINT [FK__payment__payment_method__id] FOREIGN KEY ([payment_method_id]) REFERENCES [dbo].[payment_method] ([id])
+ALTER TABLE [dbo].[payment] ADD CONSTRAINT [FK__payment__payment_method__id] FOREIGN KEY ([payment_method_id]) REFERENCES [dbo].[payment_method] ([id]) ON DELETE CASCADE
 GO
