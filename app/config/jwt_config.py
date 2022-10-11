@@ -1,11 +1,13 @@
-import os
-
 from dotenv import load_dotenv
+from pydantic import BaseSettings, Field
 
 load_dotenv()
 
 
-class JWTConfig:
-    JWT_SECRET_KEY = os.getenv("SECRET_KEY")
-    JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
-    JWT_TOKEN_EXPIRE_TIME = os.getenv("JWT_TOKEN_EXPIRE_TIME")
+class JWTConfig(BaseSettings):
+    JWT_SECRET_KEY: str = Field(..., env="SECRET_KEY")
+    JWT_ALGORITHM: str
+    JWT_TOKEN_EXPIRE_TIME: str
+
+
+jwt_cfg = JWTConfig()

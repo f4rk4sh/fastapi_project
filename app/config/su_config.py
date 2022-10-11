@@ -1,11 +1,13 @@
-import os
-
 from dotenv import load_dotenv
+from pydantic import BaseSettings
 
 load_dotenv()
 
 
-class SUConfig:
-    SU_EMAIL = os.getenv("SU_EMAIL")
-    SU_PHONE = os.getenv("SU_PHONE")
-    SU_PASSWORD = os.getenv("SU_PASSWORD")
+class SUConfig(BaseSettings):
+    SU_EMAIL: str
+    SU_PHONE: str
+    SU_PASSWORD: str
+
+
+su_cfg = SUConfig()
