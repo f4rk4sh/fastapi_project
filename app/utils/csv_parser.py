@@ -6,18 +6,30 @@ from sqlalchemy import Boolean, Date, DateTime
 from sqlalchemy.orm import Session
 
 from app.db.get_database import get_db
-from app.db.models import Employee, Employer, EmployerType, Role, StatusType, User
+from app.db.models import (AccountType, Bank, Employee, Employer, EmployerType,
+                           Payment, PaymentMethod, PaymentStatus, Role,
+                           StatusType, User)
 
 
-def parsing(db: Session = next(get_db())):
-    for model in [Role, StatusType, EmployerType, User, Employer, Employee]:
-        file_path = f"/src/app/db/data/{model.__name__}.csv"
-        with open(file_path, "r") as csv_file:
-            csv_reader = csv.DictReader(csv_file)
+def parsing(db: Session = next(get_db())) -> None:
+    for model in [
+        Role,
+        StatusType,
+        EmployerType,
+        User,
+        Employer,
+        Employee,
+        AccountType,
+        Bank,
+        PaymentMethod,
+        PaymentStatus,
+        Payment,
+    ]:
+        with open(f"app/db/data/{model.__name__}.csv", "r") as csv_file:
             column_types = {
                 column.key: column.type for column in model.__table__.columns
             }
-            for data in csv_reader:
+            for data in csv.DictReader(csv_file):
                 converted_data = convert_data_types(column_types, data)
                 obj = model(**converted_data)
                 db.add(obj)
@@ -28,7 +40,7 @@ def parsing(db: Session = next(get_db())):
                     db.rollback()
 
 
-def convert_data_types(column_types: dict, data: dict):
+def convert_data_types(column_types: dict, data: dict) -> dict:
     for key, value in data.items():
         if isinstance(column_types[key], Date):
             data[key] = datetime.strptime(value, "%Y-%m-%d").date()
@@ -37,7 +49,7 @@ def convert_data_types(column_types: dict, data: dict):
             data[key] = datetime.strptime(value, "%Y-%m-%d %H:%M:%S.%f")
             continue
         if isinstance(column_types[key], Boolean):
-            data[key] = True if value == "true" else False
+            data[key] = True if value == 1 else False
             continue
     return data
 
