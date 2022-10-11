@@ -92,8 +92,16 @@ class Employee(Base):
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
     employer_id = Column(Integer, ForeignKey("employer.id"))
 
-    payment_methods = relationship("PaymentMethod", backref="employee")
-    payments = relationship("Payment", backref="employee")
+    payment_methods = relationship(
+        "PaymentMethod",
+        backref="employee",
+        passive_deletes=True,
+    )
+    payments = relationship(
+        "Payment",
+        backref="employee",
+        passive_deletes=True,
+    )
 
 
 class Session(Base):
@@ -115,7 +123,11 @@ class PaymentMethod(Base):
     employee_id = Column(Integer, ForeignKey("employee.id", ondelete="CASCADE"))
     bank_id = Column(Integer, ForeignKey("bank.id", ondelete="CASCADE"))
 
-    payments = relationship("Payment", backref="payment_method")
+    payments = relationship(
+        "Payment",
+        backref="payment_method",
+        passive_deletes=True,
+    )
 
 
 class Bank(Base):
@@ -129,7 +141,11 @@ class Bank(Base):
     card = Column(String(50))
     account_type_id = Column(Integer, ForeignKey("account_type.id", ondelete="CASCADE"))
 
-    payment_methods = relationship("PaymentMethod", backref="bank")
+    payment_methods = relationship(
+        "PaymentMethod",
+        backref="bank",
+        passive_deletes=True,
+    )
 
 
 class AccountType(Base):
@@ -138,7 +154,11 @@ class AccountType(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50))
 
-    banks = relationship("Bank", backref="account_type")
+    banks = relationship(
+        "Bank",
+        backref="account_type",
+        passive_deletes=True,
+    )
 
 
 class Payment(Base):
@@ -159,4 +179,8 @@ class PaymentStatus(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50))
 
-    payments = relationship("Payment", backref="payment_status")
+    payments = relationship(
+        "Payment",
+        backref="payment_status",
+        passive_deletes=True,
+    )
