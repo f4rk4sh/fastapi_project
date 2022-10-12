@@ -4,7 +4,7 @@ from sqlalchemy.exc import DataError, ProgrammingError
 from sqlalchemy.orm import Session
 
 from app.crud.crud_employer import employer
-from app.tests.utils.base import random_date, random_string
+from app.tests.utils.base import random_string
 from app.utils.exceptions.common_exceptions import HTTPNotFoundException
 
 
@@ -12,8 +12,7 @@ class TestCRUDCreateEmployer:
     def test_success_create_employer(
         self,
         override_crud_employer,
-        get_random_user,
-        get_random_employer_type,
+        get_employer_data,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -22,34 +21,15 @@ class TestCRUDCreateEmployer:
         )
         spy_employer_create = mocker.spy(employer, "create")
 
-        employer_data = {
-            "name": random_string(),
-            "address": random_string(),
-            "edrpou": random_string(),
-            "expire_contract_date": random_date(in_future=True),
-            "salary_date": random_date(),
-            "prepayment_date": random_date(),
-            "user_id": get_random_user.id,
-            "employer_type_id": get_random_employer_type.id,
-        }
+        created_employer = employer.create(get_employer_data)
 
-        created_employer = employer.create(employer_data)
-
-        spy_employer_create.assert_called_once_with(employer_data)
-        assert created_employer.name == employer_data["name"]
-        assert created_employer.address == employer_data["address"]
-        assert created_employer.edrpou == employer_data["edrpou"]
-        assert created_employer.expire_contract_date == employer_data["expire_contract_date"]
-        assert created_employer.salary_date == employer_data["salary_date"]
-        assert created_employer.prepayment_date == employer_data["prepayment_date"]
-        assert created_employer.user_id == employer_data["user_id"]
-        assert created_employer.employer_type_id == employer_data["employer_type_id"]
+        spy_employer_create.assert_called_once_with(get_employer_data)
+        assert created_employer.name == get_employer_data["name"]
 
     def test_success_create_employer_is_flush(
         self,
         override_crud_employer,
-        get_random_user,
-        get_random_employer_type,
+        get_employer_data,
         db: Session,
         monkeypatch,
         mocker: MockFixture,
@@ -63,50 +43,28 @@ class TestCRUDCreateEmployer:
         )
         spy_employer_create = mocker.spy(employer, "create")
 
-        employer_data = {
-            "name": random_string(),
-            "address": random_string(),
-            "edrpou": random_string(),
-            "expire_contract_date": random_date(in_future=True),
-            "salary_date": random_date(),
-            "prepayment_date": random_date(),
-            "user_id": get_random_user.id,
-            "employer_type_id": get_random_employer_type.id,
-        }
-
-        created_employer = employer.create(employer_data, is_flush=True)
+        created_employer = employer.create(get_employer_data, is_flush=True)
 
         db.rollback()
 
         employers_in_db = employer.get_multi()
 
-        spy_employer_create.assert_called_once_with(employer_data, is_flush=True)
+        spy_employer_create.assert_called_once_with(get_employer_data, is_flush=True)
         assert created_employer not in employers_in_db
 
     def test_failed_create_employer(
         self,
         override_crud_employer,
-        get_random_user,
-        get_random_employer_type,
+        get_employer_data,
         monkeypatch,
     ) -> None:
         monkeypatch.setattr(
             "app.crud.crud_employer.employer.create", override_crud_employer.create
         )
 
+        get_employer_data["fullname"] = get_employer_data.pop("name")
         with pytest.raises(TypeError):
-            employer.create(
-                {
-                    "fullname": random_string(),
-                    "address": random_string(),
-                    "edrpou": random_string(),
-                    "expire_contract_date": random_date(in_future=True),
-                    "salary_date": random_date(),
-                    "prepayment_date": random_date(),
-                    "user_id": get_random_user.id,
-                    "employer_type_id": get_random_employer_type.id,
-                }
-            )
+            employer.create(get_employer_data)
 
 
 class TestCRUDGetEmployer:
@@ -146,8 +104,7 @@ class TestCRUDGetMultipleEmployers:
     def test_successful_get_multiple_employers(
         self,
         override_crud_employer,
-        get_random_user,
-        get_random_employer_type,
+        get_employer_data,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -160,21 +117,7 @@ class TestCRUDGetMultipleEmployers:
         )
         spy_employer_get_multi = mocker.spy(employer, "get_multi")
 
-        created_employers = [
-            employer.create(
-                {
-                    "name": random_string(),
-                    "address": random_string(),
-                    "edrpou": random_string(),
-                    "expire_contract_date": random_date(in_future=True),
-                    "salary_date": random_date(),
-                    "prepayment_date": random_date(),
-                    "user_id": get_random_user.id,
-                    "employer_type_id": get_random_employer_type.id,
-                }
-            )
-            for _ in range(3)
-        ]
+        created_employers = [employer.create(get_employer_data) for _ in range(3)]
 
         employers_in_db = employer.get_multi()
 
@@ -212,7 +155,9 @@ class TestCRUDGetEmployerByAttribute:
 
         employer_in_db = employer.get_by_attribute(name=get_random_employer.name)
 
-        spy_employer_get_by_attribute.assert_called_once_with(name=get_random_employer.name)
+        spy_employer_get_by_attribute.assert_called_once_with(
+            name=get_random_employer.name
+        )
         assert get_random_employer == employer_in_db
 
     def test_successful_get_employer_by_user_attribute(

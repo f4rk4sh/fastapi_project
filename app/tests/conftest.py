@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Generator, List
+from typing import Dict, Generator, List, Any
 
 import pytest
 from fastapi import FastAPI, Response, status
@@ -129,6 +129,11 @@ def get_random_status_type(override_crud_status_type: CRUDStatusType) -> StatusT
 
 
 @pytest.fixture
+def get_expected_status_type():
+    return StatusType(id=random_integer(), name=random_string())
+
+
+@pytest.fixture
 def get_random_employer_type(
     override_crud_employer_type: CRUDEmployerType,
 ) -> EmployerType:
@@ -172,6 +177,55 @@ def get_random_employer(
             "employer_type_id": get_random_employer_type.id,
         }
     )
+
+
+@pytest.fixture
+def get_employer_data(
+    get_random_user: User,
+    get_random_employer_type: StatusType,
+) -> dict[str, Any]:
+    return {
+        "name": random_string(),
+        "address": random_string(),
+        "edrpou": random_string(),
+        "expire_contract_date": random_date(in_future=True),
+        "salary_date": random_date(),
+        "prepayment_date": random_date(),
+        "user_id": get_random_user.id,
+        "employer_type_id": get_random_employer_type.id,
+    }
+
+
+@pytest.fixture
+def get_expected_employer() -> Employer:
+    return Employer(
+        id=random_integer(),
+        user_id=random_integer(),
+        name=random_string(),
+        address=random_string(),
+        edrpou=random_string(),
+        expire_contract_date=random_date(in_future=True),
+        salary_date=random_date(),
+        prepayment_date=random_date(),
+        employer_type_id=random_integer(),
+    )
+
+
+@pytest.fixture
+def get_expected_employers() -> List[Employer]:
+    return [
+        Employer(
+            id=random_integer(),
+            user_id=random_integer(),
+            name=random_string(),
+            address=random_string(),
+            edrpou=random_string(),
+            expire_contract_date=random_date(in_future=True),
+            salary_date=random_date(),
+            prepayment_date=random_date(),
+            employer_type_id=random_integer(),
+        ) for _ in range(3)
+    ]
 
 
 @pytest.fixture

@@ -18,13 +18,10 @@ class TestManagerCreateRole:
             return_value=get_expected_role,
         )
 
-        actual_result = role.create(
-            RoleCreate(name=get_expected_role.name), get_test_session
-        )
+        role_in = RoleCreate(name=get_expected_role.name)
+        actual_result = role.create(role_in, get_test_session)
 
-        mocked_role_create.assert_called_once_with(
-            RoleCreate(name=get_expected_role.name)
-        )
+        mocked_role_create.assert_called_once_with(role_in)
         assert actual_result.name == get_expected_role.name
 
 
@@ -112,15 +109,11 @@ class TestManagerUpdateRole:
             return_value=get_expected_role,
         )
 
-        actual_result = role.update(
-            RoleUpdate(id=get_expected_role.id, name=get_expected_role.name),
-            get_test_session,
-        )
+        role_in = RoleUpdate(id=get_expected_role.id, name=get_expected_role.name)
+        actual_result = role.update(role_in, get_test_session)
 
         mocked_role_get.assert_called_once_with(get_expected_role.id)
-        mocked_role_update.assert_called_once_with(
-            role_in_db, RoleUpdate(id=get_expected_role.id, name=get_expected_role.name)
-        )
+        mocked_role_update.assert_called_once_with(role_in_db, role_in)
         assert actual_result.name == get_expected_role.name
 
 

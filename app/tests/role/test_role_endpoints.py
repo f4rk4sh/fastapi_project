@@ -24,13 +24,11 @@ class TestEndpointCreateRole:
             "app.manager.manager_role.role.create",
             return_value=get_expected_role,
         )
-        actual_result = endpoints.create_role(
-            RoleCreate(name=get_expected_role.name), get_test_session
-        )
 
-        mocked_role_create.assert_called_once_with(
-            RoleCreate(name=get_expected_role.name), get_test_session
-        )
+        role_in = RoleCreate(name=get_expected_role.name)
+        actual_result = endpoints.create_role(role_in, get_test_session)
+
+        mocked_role_create.assert_called_once_with(role_in, get_test_session)
         assert actual_result.name == get_expected_role.name
 
 
@@ -125,15 +123,10 @@ class TestEndpointUpdateRole:
             return_value=get_expected_role,
         )
 
-        actual_result = endpoints.update_role(
-            RoleUpdate(id=get_expected_role.id, name=get_expected_role.name),
-            get_test_session,
-        )
+        role_in = RoleUpdate(id=get_expected_role.id, name=get_expected_role.name)
+        actual_result = endpoints.update_role(role_in, get_test_session)
 
-        mocked_role_update.assert_called_once_with(
-            RoleUpdate(id=get_expected_role.id, name=get_expected_role.name),
-            get_test_session,
-        )
+        mocked_role_update.assert_called_once_with(role_in, get_test_session)
         assert actual_result.name == get_expected_role.name
 
 
