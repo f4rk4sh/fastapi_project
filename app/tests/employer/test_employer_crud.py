@@ -39,10 +39,7 @@ class TestCRUDCreateEmployer:
         assert created_employer.name == employer_data["name"]
         assert created_employer.address == employer_data["address"]
         assert created_employer.edrpou == employer_data["edrpou"]
-        assert (
-            created_employer.expire_contract_date
-            == employer_data["expire_contract_date"]
-        )
+        assert created_employer.expire_contract_date == employer_data["expire_contract_date"]
         assert created_employer.salary_date == employer_data["salary_date"]
         assert created_employer.prepayment_date == employer_data["prepayment_date"]
         assert created_employer.user_id == employer_data["user_id"]
@@ -216,16 +213,7 @@ class TestCRUDGetEmployerByAttribute:
         employer_in_db = employer.get_by_attribute(name=random_employer.name)
 
         spy_employer_get_by_attribute.assert_called_once_with(name=random_employer.name)
-        assert random_employer.name == employer_in_db.name
-        assert random_employer.address == employer_in_db.address
-        assert random_employer.edrpou == employer_in_db.edrpou
-        assert (
-            random_employer.expire_contract_date == employer_in_db.expire_contract_date
-        )
-        assert random_employer.salary_date == employer_in_db.salary_date
-        assert random_employer.prepayment_date == employer_in_db.prepayment_date
-        assert random_employer.user_id == employer_in_db.user_id
-        assert random_employer.employer_type_id == employer_in_db.employer_type_id
+        assert random_employer == employer_in_db
 
     def test_successful_get_employer_by_user_attribute(
         self,
@@ -245,16 +233,7 @@ class TestCRUDGetEmployerByAttribute:
         spy_employer_get_by_attribute.assert_called_once_with(
             email=random_employer.user.email
         )
-        assert random_employer.name == employer_in_db.name
-        assert random_employer.address == employer_in_db.address
-        assert random_employer.edrpou == employer_in_db.edrpou
-        assert (
-            random_employer.expire_contract_date == employer_in_db.expire_contract_date
-        )
-        assert random_employer.salary_date == employer_in_db.salary_date
-        assert random_employer.prepayment_date == employer_in_db.prepayment_date
-        assert random_employer.user_id == employer_in_db.user_id
-        assert random_employer.employer_type_id == employer_in_db.employer_type_id
+        assert random_employer == employer_in_db
 
     def test_successful_get_employer_by_employer_and_user_attributes(
         self,
@@ -276,16 +255,7 @@ class TestCRUDGetEmployerByAttribute:
         spy_employer_get_by_attribute.assert_called_once_with(
             email=random_employer.user.email, name=random_employer.name
         )
-        assert random_employer.name == employer_in_db.name
-        assert random_employer.address == employer_in_db.address
-        assert random_employer.edrpou == employer_in_db.edrpou
-        assert (
-            random_employer.expire_contract_date == employer_in_db.expire_contract_date
-        )
-        assert random_employer.salary_date == employer_in_db.salary_date
-        assert random_employer.prepayment_date == employer_in_db.prepayment_date
-        assert random_employer.user_id == employer_in_db.user_id
-        assert random_employer.employer_type_id == employer_in_db.employer_type_id
+        assert random_employer == employer_in_db
 
     def test_failed_get_employer_by_employer_attribute(
         self,

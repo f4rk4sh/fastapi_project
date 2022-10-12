@@ -1,7 +1,6 @@
 from importlib import reload
 
 from fastapi import Response, status
-from fastapi.testclient import TestClient
 from pytest_mock import MockerFixture
 
 from app.api.routes.role import endpoints
@@ -15,7 +14,6 @@ from app.tests.utils.mocks import mock_permission_decorator
 class TestEndpointCreateRole:
     def test_successful_create_role(
         self,
-        client: TestClient,
         get_test_session: Session,
         monkeypatch,
         mocker: MockerFixture,
@@ -40,7 +38,6 @@ class TestEndpointCreateRole:
 class TestEndpointGetRole:
     def test_successful_get_role(
         self,
-        client: TestClient,
         get_test_session: Session,
         monkeypatch,
         mocker: MockerFixture,
@@ -64,7 +61,6 @@ class TestEndpointGetRole:
 class TestEndpointGetMultipleRoles:
     def test_successful_get_multiple_roles(
         self,
-        client: TestClient,
         get_test_session: Session,
         monkeypatch,
         mocker: MockerFixture,
@@ -89,7 +85,6 @@ class TestEndpointGetMultipleRoles:
 class TestEndpointSearchRoleByParameter:
     def test_successful_search_roles_by_parameter(
         self,
-        client: TestClient,
         get_test_session: Session,
         monkeypatch,
         mocker: MockerFixture,
@@ -116,7 +111,6 @@ class TestEndpointSearchRoleByParameter:
 class TestEndpointUpdateRole:
     def test_successful_update_role(
         self,
-        client: TestClient,
         get_test_session: Session,
         monkeypatch,
         mocker: MockerFixture,
@@ -145,7 +139,6 @@ class TestEndpointUpdateRole:
 class TestEndpointDeleteRole:
     def test_successful_delete_role(
         self,
-        client: TestClient,
         get_test_session: Session,
         monkeypatch,
         mocker: MockerFixture,
