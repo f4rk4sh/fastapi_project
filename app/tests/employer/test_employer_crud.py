@@ -12,8 +12,8 @@ class TestCRUDCreateEmployer:
     def test_success_create_employer(
         self,
         override_crud_employer,
-        random_user,
-        random_employer_type,
+        get_random_user,
+        get_random_employer_type,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -29,8 +29,8 @@ class TestCRUDCreateEmployer:
             "expire_contract_date": random_date(in_future=True),
             "salary_date": random_date(),
             "prepayment_date": random_date(),
-            "user_id": random_user.id,
-            "employer_type_id": random_employer_type.id,
+            "user_id": get_random_user.id,
+            "employer_type_id": get_random_employer_type.id,
         }
 
         created_employer = employer.create(employer_data)
@@ -48,8 +48,8 @@ class TestCRUDCreateEmployer:
     def test_success_create_employer_is_flush(
         self,
         override_crud_employer,
-        random_user,
-        random_employer_type,
+        get_random_user,
+        get_random_employer_type,
         db: Session,
         monkeypatch,
         mocker: MockFixture,
@@ -70,8 +70,8 @@ class TestCRUDCreateEmployer:
             "expire_contract_date": random_date(in_future=True),
             "salary_date": random_date(),
             "prepayment_date": random_date(),
-            "user_id": random_user.id,
-            "employer_type_id": random_employer_type.id,
+            "user_id": get_random_user.id,
+            "employer_type_id": get_random_employer_type.id,
         }
 
         created_employer = employer.create(employer_data, is_flush=True)
@@ -86,8 +86,8 @@ class TestCRUDCreateEmployer:
     def test_failed_create_employer(
         self,
         override_crud_employer,
-        random_user,
-        random_employer_type,
+        get_random_user,
+        get_random_employer_type,
         monkeypatch,
     ) -> None:
         monkeypatch.setattr(
@@ -103,8 +103,8 @@ class TestCRUDCreateEmployer:
                     "expire_contract_date": random_date(in_future=True),
                     "salary_date": random_date(),
                     "prepayment_date": random_date(),
-                    "user_id": random_user.id,
-                    "employer_type_id": random_employer_type.id,
+                    "user_id": get_random_user.id,
+                    "employer_type_id": get_random_employer_type.id,
                 }
             )
 
@@ -113,7 +113,7 @@ class TestCRUDGetEmployer:
     def test_successful_get_employer(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -122,16 +122,16 @@ class TestCRUDGetEmployer:
         )
         spy_employer_get = mocker.spy(employer, "get")
 
-        employer_in_db = employer.get(random_employer.id)
+        employer_in_db = employer.get(get_random_employer.id)
 
-        spy_employer_get.assert_called_once_with(random_employer.id)
-        assert employer_in_db.id == random_employer.id
-        assert employer_in_db.name == random_employer.name
+        spy_employer_get.assert_called_once_with(get_random_employer.id)
+        assert employer_in_db.id == get_random_employer.id
+        assert employer_in_db.name == get_random_employer.name
 
     def test_failed_get_employer(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
     ) -> None:
         monkeypatch.setattr(
@@ -139,15 +139,15 @@ class TestCRUDGetEmployer:
         )
 
         with pytest.raises(DataError):
-            employer.get(random_employer.name)
+            employer.get(get_random_employer.name)
 
 
 class TestCRUDGetMultipleEmployers:
     def test_successful_get_multiple_employers(
         self,
         override_crud_employer,
-        random_user,
-        random_employer_type,
+        get_random_user,
+        get_random_employer_type,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -169,8 +169,8 @@ class TestCRUDGetMultipleEmployers:
                     "expire_contract_date": random_date(in_future=True),
                     "salary_date": random_date(),
                     "prepayment_date": random_date(),
-                    "user_id": random_user.id,
-                    "employer_type_id": random_employer_type.id,
+                    "user_id": get_random_user.id,
+                    "employer_type_id": get_random_employer_type.id,
                 }
             )
             for _ in range(3)
@@ -200,7 +200,7 @@ class TestCRUDGetEmployerByAttribute:
     def test_successful_get_employer_by_employer_attribute(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -210,15 +210,15 @@ class TestCRUDGetEmployerByAttribute:
         )
         spy_employer_get_by_attribute = mocker.spy(employer, "get_by_attribute")
 
-        employer_in_db = employer.get_by_attribute(name=random_employer.name)
+        employer_in_db = employer.get_by_attribute(name=get_random_employer.name)
 
-        spy_employer_get_by_attribute.assert_called_once_with(name=random_employer.name)
-        assert random_employer == employer_in_db
+        spy_employer_get_by_attribute.assert_called_once_with(name=get_random_employer.name)
+        assert get_random_employer == employer_in_db
 
     def test_successful_get_employer_by_user_attribute(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -228,17 +228,17 @@ class TestCRUDGetEmployerByAttribute:
         )
         spy_employer_get_by_attribute = mocker.spy(employer, "get_by_attribute")
 
-        employer_in_db = employer.get_by_attribute(email=random_employer.user.email)
+        employer_in_db = employer.get_by_attribute(email=get_random_employer.user.email)
 
         spy_employer_get_by_attribute.assert_called_once_with(
-            email=random_employer.user.email
+            email=get_random_employer.user.email
         )
-        assert random_employer == employer_in_db
+        assert get_random_employer == employer_in_db
 
     def test_successful_get_employer_by_employer_and_user_attributes(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -249,18 +249,18 @@ class TestCRUDGetEmployerByAttribute:
         spy_employer_get_by_attribute = mocker.spy(employer, "get_by_attribute")
 
         employer_in_db = employer.get_by_attribute(
-            email=random_employer.user.email, name=random_employer.name
+            email=get_random_employer.user.email, name=get_random_employer.name
         )
 
         spy_employer_get_by_attribute.assert_called_once_with(
-            email=random_employer.user.email, name=random_employer.name
+            email=get_random_employer.user.email, name=get_random_employer.name
         )
-        assert random_employer == employer_in_db
+        assert get_random_employer == employer_in_db
 
     def test_failed_get_employer_by_employer_attribute(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
     ) -> None:
         monkeypatch.setattr(
@@ -268,14 +268,14 @@ class TestCRUDGetEmployerByAttribute:
             override_crud_employer.get_by_attribute,
         )
         with pytest.raises(DataError):
-            employer.get_by_attribute(name=random_employer.id)
+            employer.get_by_attribute(name=get_random_employer.id)
 
 
 class TestCRUDSearchEmployerByParameter:
     def test_successful_search_employers_by_employer_parameter(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -286,18 +286,18 @@ class TestCRUDSearchEmployerByParameter:
         spy_employer_search_by_parameter = mocker.spy(employer, "search_by_parameter")
 
         employers_in_db = employer.search_by_parameter(
-            parameter="address", keyword=random_employer.address
+            parameter="address", keyword=get_random_employer.address
         )
 
         spy_employer_search_by_parameter.assert_called_once_with(
-            parameter="address", keyword=random_employer.address
+            parameter="address", keyword=get_random_employer.address
         )
-        assert random_employer in employers_in_db
+        assert get_random_employer in employers_in_db
 
     def test_successful_search_employers_by_user_parameter(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -308,18 +308,18 @@ class TestCRUDSearchEmployerByParameter:
         spy_employer_search_by_parameter = mocker.spy(employer, "search_by_parameter")
 
         employers_in_db = employer.search_by_parameter(
-            parameter="phone", keyword=random_employer.user.phone
+            parameter="phone", keyword=get_random_employer.user.phone
         )
 
         spy_employer_search_by_parameter.assert_called_once_with(
-            parameter="phone", keyword=random_employer.user.phone
+            parameter="phone", keyword=get_random_employer.user.phone
         )
-        assert random_employer in employers_in_db
+        assert get_random_employer in employers_in_db
 
     def test_failed_search_employers_by_employer_parameter(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
     ) -> None:
         monkeypatch.setattr(
@@ -329,7 +329,7 @@ class TestCRUDSearchEmployerByParameter:
 
         with pytest.raises(HTTPNotFoundException):
             employer.search_by_parameter(
-                parameter="name", keyword=random_employer.address
+                parameter="name", keyword=get_random_employer.address
             )
 
 
@@ -337,7 +337,7 @@ class TestCRUDUpdateEmployer:
     def test_successful_update_employer(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -349,22 +349,22 @@ class TestCRUDUpdateEmployer:
         )
         spy_employer_update = mocker.spy(employer, "update")
 
-        employer_in_db = employer.get(random_employer.id)
+        employer_in_db = employer.get(get_random_employer.id)
 
         new_name = random_string()
         updated_employer = employer.update(
-            employer_in_db, {"id": random_employer.id, "name": new_name}
+            employer_in_db, {"id": get_random_employer.id, "name": new_name}
         )
 
         spy_employer_update.assert_called_once_with(
-            employer_in_db, {"id": random_employer.id, "name": new_name}
+            employer_in_db, {"id": get_random_employer.id, "name": new_name}
         )
         assert updated_employer.name == new_name
 
     def test_failed_update_employer(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
     ) -> None:
         monkeypatch.setattr(
@@ -373,7 +373,7 @@ class TestCRUDUpdateEmployer:
 
         with pytest.raises(TypeError):
             employer.update(
-                {"id": random_employer.id, "new_address": random_string()}
+                {"id": get_random_employer.id, "new_address": random_string()}
             )  # noqa
 
 
@@ -381,7 +381,7 @@ class TestCRUDDeleteEmployer:
     def test_successful_delete_employer(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -395,16 +395,16 @@ class TestCRUDDeleteEmployer:
         )
         spy_employer_delete = mocker.spy(employer, "delete")
 
-        employer.delete(random_employer.id)
-        employer_in_db = employer.get_by_attribute(id=random_employer.id)
+        employer.delete(get_random_employer.id)
+        employer_in_db = employer.get_by_attribute(id=get_random_employer.id)
 
-        spy_employer_delete.assert_called_once_with(id=random_employer.id)
+        spy_employer_delete.assert_called_once_with(id=get_random_employer.id)
         assert not employer_in_db
 
     def test_failed_delete_employer(
         self,
         override_crud_employer,
-        random_employer,
+        get_random_employer,
         monkeypatch,
     ) -> None:
         monkeypatch.setattr(
@@ -413,4 +413,4 @@ class TestCRUDDeleteEmployer:
         )
 
         with pytest.raises(DataError):
-            employer.delete(random_employer.name)
+            employer.delete(get_random_employer.name)

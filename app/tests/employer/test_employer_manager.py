@@ -70,7 +70,7 @@ class TestManagerCreateEmployer:
     def test_failed_create_employer(
         self,
         override_crud_user,
-        random_user,
+        get_random_user,
         get_test_session: Session,
         monkeypatch,
     ) -> None:
@@ -84,7 +84,7 @@ class TestManagerCreateEmployer:
                 EmployerCreate(
                     **{
                         "user": {
-                            "email": random_user.email,
+                            "email": get_random_user.email,
                             "phone": random_phone(),
                             "password": random_password(),
                         },
@@ -268,7 +268,7 @@ class TestManagerUpdateEmployer:
     def test_failed_update_employer(
         self,
         override_crud_user,
-        random_user,
+        get_random_user,
         get_test_session: Session,
         mocker,
         monkeypatch,
@@ -297,7 +297,7 @@ class TestManagerUpdateEmployer:
                 EmployerUpdate(
                     **{
                         "user": {
-                            "email": random_user.email,
+                            "email": get_random_user.email,
                             "phone": random_phone(),
                             "password": random_password(),
                             "role_id": random_integer(),

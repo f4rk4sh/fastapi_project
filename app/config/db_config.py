@@ -22,7 +22,7 @@ class DBConfig:
     SQLALCHEMY_DATABASE_URL_LOCAL = \
         f"mssql+pyodbc://{DB_USER}:{MSSQL_SA_PASSWORD}@{DB_HOST_LOCAL}:{DB_PORT_LOCAL}/db?driver={DB_DRIVER}"
 
-    DB_NAME_TEST = os.getenv("DB_TEST_NAME")
+    DB_NAME_TEST = os.getenv("DB_NAME_TEST")
 
     SQLALCHEMY_DATABASE_URL_TEST = \
         f"mssql+pyodbc://{DB_USER}:{MSSQL_SA_PASSWORD}@{DB_HOST}:{MSSQL_TCP_PORT}/{DB_NAME_TEST}?driver={DB_DRIVER}"
