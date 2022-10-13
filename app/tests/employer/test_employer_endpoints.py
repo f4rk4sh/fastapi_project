@@ -71,7 +71,7 @@ class TestEndpointGetEmployer:
         mocked_employer_fetch_one.assert_called_once_with(
             get_expected_employer.id, get_test_session
         )
-        assert actual_result.id == get_expected_employer.id
+        assert actual_result == get_expected_employer
 
 
 class TestEndpointGetMultipleEmployers:
@@ -109,9 +109,7 @@ class TestEndpointSearchEmployerByParameter:
 
         mocked_employer_search = mocker.patch(
             "app.manager.manager_employer.employer.search",
-            return_value=[
-                get_expected_employer,
-            ],
+            return_value=[get_expected_employer],
         )
 
         parameter = "edrpou"

@@ -130,9 +130,7 @@ class TestManagerSearchEmployerByParameter:
     ) -> None:
         mocked_employer_search = mocker.patch(
             "app.manager.manager_employer.employer.crud.search_by_parameter",
-            return_value=[
-                get_expected_employer,
-            ],
+            return_value=[get_expected_employer],
         )
 
         parameter = "name"

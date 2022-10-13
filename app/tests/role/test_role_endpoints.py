@@ -29,7 +29,7 @@ class TestEndpointCreateRole:
         actual_result = endpoints.create_role(role_in, get_test_session)
 
         mocked_role_create.assert_called_once_with(role_in, get_test_session)
-        assert actual_result.name == get_expected_role.name
+        assert actual_result == get_expected_role
 
 
 class TestEndpointGetRole:
@@ -53,7 +53,7 @@ class TestEndpointGetRole:
         mocked_role_fetch_one.assert_called_once_with(
             get_expected_role.id, get_test_session
         )
-        assert actual_result.id == get_expected_role.id
+        assert actual_result == get_expected_role
 
 
 class TestEndpointGetMultipleRoles:
@@ -127,7 +127,7 @@ class TestEndpointUpdateRole:
         actual_result = endpoints.update_role(role_in, get_test_session)
 
         mocked_role_update.assert_called_once_with(role_in, get_test_session)
-        assert actual_result.name == get_expected_role.name
+        assert actual_result == get_expected_role
 
 
 class TestEndpointDeleteRole:

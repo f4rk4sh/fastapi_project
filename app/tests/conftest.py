@@ -42,9 +42,9 @@ def app() -> FastAPI:
 
 @pytest.fixture(scope="module")
 def db() -> Generator:
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     yield TestingSessionLocal()
-    Base.metadata.drop_all(engine)
 
 
 @pytest.fixture(scope="module")
@@ -129,7 +129,7 @@ def get_random_status_type(override_crud_status_type: CRUDStatusType) -> StatusT
 
 
 @pytest.fixture
-def get_expected_status_type():
+def get_expected_status_type() -> StatusType:
     return StatusType(id=random_integer(), name=random_string())
 
 
@@ -160,29 +160,9 @@ def get_random_user(
 
 
 @pytest.fixture
-def get_random_employer(
-    override_crud_employer: CRUDEmployer,
-    get_random_user: User,
-    get_random_employer_type: StatusType,
-) -> Employer:
-    return override_crud_employer.create(
-        {
-            "name": random_string(),
-            "address": random_string(),
-            "edrpou": random_string(),
-            "expire_contract_date": random_date(in_future=True),
-            "salary_date": random_date(),
-            "prepayment_date": random_date(),
-            "user_id": get_random_user.id,
-            "employer_type_id": get_random_employer_type.id,
-        }
-    )
-
-
-@pytest.fixture
 def get_employer_data(
     get_random_user: User,
-    get_random_employer_type: StatusType,
+    get_random_employer_type: EmployerType,
 ) -> dict[str, Any]:
     return {
         "name": random_string(),
@@ -194,6 +174,36 @@ def get_employer_data(
         "user_id": get_random_user.id,
         "employer_type_id": get_random_employer_type.id,
     }
+
+
+@pytest.fixture
+def get_random_employer(
+    override_crud_employer: CRUDEmployer,
+    get_employer_data: dict,
+) -> Employer:
+    return override_crud_employer.create(get_employer_data)
+
+
+@pytest.fixture
+def get_random_employers(
+    override_crud_employer: CRUDEmployer,
+    get_random_user: User,
+    get_random_employer_type: EmployerType,
+) -> List[Employer]:
+    return [
+        override_crud_employer.create(
+            {
+                "name": random_string(),
+                "address": random_string(),
+                "edrpou": random_string(),
+                "expire_contract_date": random_date(in_future=True),
+                "salary_date": random_date(),
+                "prepayment_date": random_date(),
+                "user_id": get_random_user.id,
+                "employer_type_id": get_random_employer_type.id,
+            }
+        ) for _ in range(3)
+    ]
 
 
 @pytest.fixture

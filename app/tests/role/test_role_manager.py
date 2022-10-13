@@ -22,7 +22,7 @@ class TestManagerCreateRole:
         actual_result = role.create(role_in, get_test_session)
 
         mocked_role_create.assert_called_once_with(role_in)
-        assert actual_result.name == get_expected_role.name
+        assert actual_result == get_expected_role
 
 
 class TestManagerGetRole:
@@ -40,7 +40,7 @@ class TestManagerGetRole:
         actual_result = role.fetch_one(get_expected_role.id, get_test_session)
 
         mocked_role_get.assert_called_once_with(get_expected_role.id)
-        assert actual_result.name == get_expected_role.name
+        assert actual_result == get_expected_role
 
 
 class TestManagerGetMultipleRoles:
@@ -114,7 +114,7 @@ class TestManagerUpdateRole:
 
         mocked_role_get.assert_called_once_with(get_expected_role.id)
         mocked_role_update.assert_called_once_with(role_in_db, role_in)
-        assert actual_result.name == get_expected_role.name
+        assert actual_result == get_expected_role
 
 
 class TestManagerDeleteRole:

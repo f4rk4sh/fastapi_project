@@ -83,8 +83,7 @@ class TestCRUDGetEmployer:
         employer_in_db = employer.get(get_random_employer.id)
 
         spy_employer_get.assert_called_once_with(get_random_employer.id)
-        assert employer_in_db.id == get_random_employer.id
-        assert employer_in_db.name == get_random_employer.name
+        assert get_random_employer == employer_in_db
 
     def test_failed_get_employer(
         self,
@@ -104,7 +103,7 @@ class TestCRUDGetMultipleEmployers:
     def test_successful_get_multiple_employers(
         self,
         override_crud_employer,
-        get_employer_data,
+        get_random_employers,
         monkeypatch,
         mocker: MockFixture,
     ) -> None:
@@ -117,12 +116,10 @@ class TestCRUDGetMultipleEmployers:
         )
         spy_employer_get_multi = mocker.spy(employer, "get_multi")
 
-        created_employers = [employer.create(get_employer_data) for _ in range(3)]
-
         employers_in_db = employer.get_multi()
 
         spy_employer_get_multi.assert_called_once()
-        for created_employer in created_employers:
+        for created_employer in get_random_employers:
             assert created_employer in employers_in_db
 
     def test_failed_get_multiple_employers(
@@ -297,13 +294,10 @@ class TestCRUDUpdateEmployer:
         employer_in_db = employer.get(get_random_employer.id)
 
         new_name = random_string()
-        updated_employer = employer.update(
-            employer_in_db, {"id": get_random_employer.id, "name": new_name}
-        )
+        employer_update_data = {"id": get_random_employer.id, "name": new_name}
+        updated_employer = employer.update(employer_in_db, employer_update_data)
 
-        spy_employer_update.assert_called_once_with(
-            employer_in_db, {"id": get_random_employer.id, "name": new_name}
-        )
+        spy_employer_update.assert_called_once_with(employer_in_db, employer_update_data)
         assert updated_employer.name == new_name
 
     def test_failed_update_employer(
