@@ -9,96 +9,96 @@ from app.tests.utils.base import random_string
 class TestManagerCreateRole:
     def test_successful_create_role(
         self,
-        get_test_session,
-        get_expected_role,
+        session,
+        expected_role,
         mocker: MockerFixture,
     ) -> None:
         mocked_role_create = mocker.patch(
             "app.manager.manager_role.role.crud.create",
-            return_value=get_expected_role,
+            return_value=expected_role,
         )
 
-        role_in = RoleCreate(name=get_expected_role.name)
-        actual_result = role.create(role_in, get_test_session)
+        role_in = RoleCreate(name=expected_role.name)
+        actual_result = role.create(role_in, session)
 
         mocked_role_create.assert_called_once_with(role_in)
-        assert actual_result == get_expected_role
+        assert actual_result == expected_role
 
 
 class TestManagerGetRole:
     def test_successful_get_role(
         self,
-        get_test_session,
-        get_expected_role,
+        session,
+        expected_role,
         mocker: MockerFixture,
     ) -> None:
         mocked_role_get = mocker.patch(
             "app.manager.manager_role.role.crud.get",
-            return_value=get_expected_role,
+            return_value=expected_role,
         )
 
-        actual_result = role.fetch_one(get_expected_role.id, get_test_session)
+        actual_result = role.fetch_one(expected_role.id, session)
 
-        mocked_role_get.assert_called_once_with(get_expected_role.id)
-        assert actual_result == get_expected_role
+        mocked_role_get.assert_called_once_with(expected_role.id)
+        assert actual_result == expected_role
 
 
 class TestManagerGetMultipleRoles:
     def test_successful_get_multiple_roles(
         self,
-        get_test_session,
-        get_expected_roles,
+        session,
+        expected_roles,
         mocker: MockerFixture,
     ) -> None:
         mocked_role_get_multi = mocker.patch(
             "app.manager.manager_role.role.crud.get_multi",
-            return_value=get_expected_roles,
+            return_value=expected_roles,
         )
 
-        actual_result = role.fetch_all(get_test_session)
+        actual_result = role.fetch_all(session)
 
         mocked_role_get_multi.assert_called_once()
-        assert actual_result == get_expected_roles
+        assert actual_result == expected_roles
 
 
 class TestManagerSearchRoleByParameter:
     def test_successful_search_roles_by_parameter(
         self,
-        get_test_session,
-        get_expected_role,
+        session,
+        expected_role,
         mocker: MockerFixture,
     ) -> None:
         mocked_role_search_by_parameter = mocker.patch(
             "app.manager.manager_role.role.crud.search_by_parameter",
             return_value=[
-                get_expected_role,
+                expected_role,
             ],
         )
 
         parameter = "name"
         actual_result = role.search(
             parameter,
-            get_expected_role.name,
-            get_test_session,
+            expected_role.name,
+            session,
             1,
         )
 
         mocked_role_search_by_parameter.assert_called_once_with(
             parameter,
-            get_expected_role.name,
+            expected_role.name,
             1,
         )
-        assert get_expected_role in actual_result
+        assert expected_role in actual_result
 
 
 class TestManagerUpdateRole:
     def test_successful_update_role(
         self,
-        get_test_session,
-        get_expected_role,
+        session,
+        expected_role,
         mocker: MockerFixture,
     ) -> None:
-        role_in_db = Role(id=get_expected_role.id, name=random_string())
+        role_in_db = Role(id=expected_role.id, name=random_string())
         mocked_role_get = mocker.patch(
             "app.manager.manager_role.role.crud.get",
             return_value=role_in_db,
@@ -106,29 +106,29 @@ class TestManagerUpdateRole:
 
         mocked_role_update = mocker.patch(
             "app.manager.manager_role.role.crud.update",
-            return_value=get_expected_role,
+            return_value=expected_role,
         )
 
-        role_in = RoleUpdate(id=get_expected_role.id, name=get_expected_role.name)
-        actual_result = role.update(role_in, get_test_session)
+        role_in = RoleUpdate(id=expected_role.id, name=expected_role.name)
+        actual_result = role.update(role_in, session)
 
-        mocked_role_get.assert_called_once_with(get_expected_role.id)
+        mocked_role_get.assert_called_once_with(expected_role.id)
         mocked_role_update.assert_called_once_with(role_in_db, role_in)
-        assert actual_result == get_expected_role
+        assert actual_result == expected_role
 
 
 class TestManagerDeleteRole:
     def test_successful_delete_role(
         self,
-        get_test_session,
-        get_expected_role,
+        session,
+        expected_role,
         mocker: MockerFixture,
     ) -> None:
         mocker_role_delete = mocker.patch(
             "app.manager.manager_role.role.crud.delete",
-            return_value=get_expected_role,
+            return_value=expected_role,
         )
 
-        role.delete(get_expected_role.id, get_test_session)
+        role.delete(expected_role.id, session)
 
-        mocker_role_delete.assert_called_once_with(get_expected_role.id)
+        mocker_role_delete.assert_called_once_with(expected_role.id)

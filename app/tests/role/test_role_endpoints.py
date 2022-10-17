@@ -12,8 +12,8 @@ from app.tests.utils.mocks import mock_permission_decorator
 class TestEndpointCreateRole:
     def test_successful_create_role(
         self,
-        get_test_session,
-        get_expected_role,
+        session,
+        expected_role,
         monkeypatch,
         mocker: MockerFixture,
     ) -> None:
@@ -22,21 +22,21 @@ class TestEndpointCreateRole:
 
         mocked_role_create = mocker.patch(
             "app.manager.manager_role.role.create",
-            return_value=get_expected_role,
+            return_value=expected_role,
         )
 
-        role_in = RoleCreate(name=get_expected_role.name)
-        actual_result = endpoints.create_role(role_in, get_test_session)
+        role_in = RoleCreate(name=expected_role.name)
+        actual_result = endpoints.create_role(role_in, session)
 
-        mocked_role_create.assert_called_once_with(role_in, get_test_session)
-        assert actual_result == get_expected_role
+        mocked_role_create.assert_called_once_with(role_in, session)
+        assert actual_result == expected_role
 
 
 class TestEndpointGetRole:
     def test_successful_get_role(
         self,
-        get_test_session,
-        get_expected_role,
+        session,
+        expected_role,
         monkeypatch,
         mocker: MockerFixture,
     ) -> None:
@@ -45,22 +45,22 @@ class TestEndpointGetRole:
 
         mocked_role_fetch_one = mocker.patch(
             "app.manager.manager_role.role.fetch_one",
-            return_value=get_expected_role,
+            return_value=expected_role,
         )
 
-        actual_result = endpoints.fetch_role(get_expected_role.id, get_test_session)
+        actual_result = endpoints.fetch_role(expected_role.id, session)
 
         mocked_role_fetch_one.assert_called_once_with(
-            get_expected_role.id, get_test_session
+            expected_role.id, session
         )
-        assert actual_result == get_expected_role
+        assert actual_result == expected_role
 
 
 class TestEndpointGetMultipleRoles:
     def test_successful_get_multiple_roles(
         self,
-        get_test_session,
-        get_expected_roles,
+        session,
+        expected_roles,
         monkeypatch,
         mocker: MockerFixture,
     ) -> None:
@@ -69,20 +69,20 @@ class TestEndpointGetMultipleRoles:
 
         mocked_role_fetch_all = mocker.patch(
             "app.manager.manager_role.role.fetch_all",
-            return_value=get_expected_roles,
+            return_value=expected_roles,
         )
 
-        actual_result = endpoints.fetch_roles(get_test_session)
+        actual_result = endpoints.fetch_roles(session)
 
-        mocked_role_fetch_all.assert_called_once_with(get_test_session)
-        assert actual_result == get_expected_roles
+        mocked_role_fetch_all.assert_called_once_with(session)
+        assert actual_result == expected_roles
 
 
 class TestEndpointSearchRoleByParameter:
     def test_successful_search_roles_by_parameter(
         self,
-        get_test_session,
-        get_expected_role,
+        session,
+        expected_role,
         monkeypatch,
         mocker: MockerFixture,
     ) -> None:
@@ -92,26 +92,26 @@ class TestEndpointSearchRoleByParameter:
         mocked_role_search = mocker.patch(
             "app.manager.manager_role.role.search",
             return_value=[
-                get_expected_role,
+                expected_role,
             ],
         )
 
         parameter = "name"
         actual_result = endpoints.search_roles(
-            parameter, get_expected_role.name, 1, get_test_session
+            parameter, expected_role.name, 1, session
         )
 
         mocked_role_search.assert_called_once_with(
-            parameter, get_expected_role.name, get_test_session, 1
+            parameter, expected_role.name, session, 1
         )
-        assert get_expected_role in actual_result
+        assert expected_role in actual_result
 
 
 class TestEndpointUpdateRole:
     def test_successful_update_role(
         self,
-        get_test_session,
-        get_expected_role,
+        session,
+        expected_role,
         monkeypatch,
         mocker: MockerFixture,
     ) -> None:
@@ -120,21 +120,21 @@ class TestEndpointUpdateRole:
 
         mocked_role_update = mocker.patch(
             "app.manager.manager_role.role.update",
-            return_value=get_expected_role,
+            return_value=expected_role,
         )
 
-        role_in = RoleUpdate(id=get_expected_role.id, name=get_expected_role.name)
-        actual_result = endpoints.update_role(role_in, get_test_session)
+        role_in = RoleUpdate(id=expected_role.id, name=expected_role.name)
+        actual_result = endpoints.update_role(role_in, session)
 
-        mocked_role_update.assert_called_once_with(role_in, get_test_session)
-        assert actual_result == get_expected_role
+        mocked_role_update.assert_called_once_with(role_in, session)
+        assert actual_result == expected_role
 
 
 class TestEndpointDeleteRole:
     def test_successful_delete_role(
         self,
-        get_test_session,
-        get_expected_response_no_content,
+        session,
+        expected_response_no_content,
         monkeypatch,
         mocker: MockerFixture,
     ):
@@ -143,11 +143,11 @@ class TestEndpointDeleteRole:
 
         mocked_role_delete = mocker.patch(
             "app.manager.manager_role.role.delete",
-            return_value=get_expected_response_no_content,
+            return_value=expected_response_no_content,
         )
 
         role_id = random_integer()
-        actual_result = endpoints.delete_role(role_id, get_test_session)
+        actual_result = endpoints.delete_role(role_id, session)
 
-        mocked_role_delete.assert_called_once_with(role_id, get_test_session)
-        assert actual_result == get_expected_response_no_content
+        mocked_role_delete.assert_called_once_with(role_id, session)
+        assert actual_result == expected_response_no_content
