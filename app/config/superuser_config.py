@@ -4,10 +4,10 @@ from pydantic import BaseSettings
 load_dotenv()
 
 
-class SUConfig(BaseSettings):
+class SuperUserConfig(BaseSettings):
     SU_EMAIL: str
     SU_PHONE: str
     SU_PASSWORD: str
 
 
-su_cfg = SUConfig()
+superuser_cfg = SuperUserConfig()
