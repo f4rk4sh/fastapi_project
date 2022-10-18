@@ -1,3 +1,0 @@
-id,amount,creation_date,execution_date,employee_id,payment_status_id,payment_method_id
-1,100500,2022-10-12 10:00:00.000000,2022-10-12 10:00:00.000000,1,1,1
-2,999999,2022-10-12 10:00:00.000000,2022-10-12 10:00:00.000000,2,2,2

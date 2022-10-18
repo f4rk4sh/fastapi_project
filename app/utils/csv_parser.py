@@ -6,24 +6,25 @@ from sqlalchemy import Boolean, Date, DateTime
 from sqlalchemy.orm import Session
 
 from app.db.get_database import get_db
-from app.db.models import (AccountType, Bank, Employee, Employer, EmployerType,
-                           Payment, PaymentMethod, PaymentStatus, Role,
-                           StatusType, User)
+from app.db.models import (AccountType, Bank, Employee, EmployeeAccount, Employer,
+                           EmployerType, EmployerPaymentMethod, PaymentHistory,
+                           PaymentStatusType, Role, StatusType, User)
 
 
 def parsing(db: Session = next(get_db())) -> None:
     for model in [
         Role,
         StatusType,
-        EmployerType,
         User,
+        EmployerType,
         Employer,
+        Bank,
+        EmployerPaymentMethod,
         Employee,
         AccountType,
-        Bank,
-        PaymentMethod,
-        PaymentStatus,
-        Payment,
+        EmployeeAccount,
+        PaymentStatusType,
+        PaymentHistory,
     ]:
         with open(f"app/db/data/{model.__name__}.csv", "r") as csv_file:
             column_types = {
@@ -49,7 +50,7 @@ def convert_data_types(column_types: dict, data: dict) -> dict:
             data[key] = datetime.strptime(value, "%Y-%m-%d %H:%M:%S.%f")
             continue
         if isinstance(column_types[key], Boolean):
-            data[key] = True if value == 1 else False
+            data[key] = True if value == 'true' else False
             continue
     return data
 
