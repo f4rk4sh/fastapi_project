@@ -57,6 +57,16 @@ class Role(Base):
     users = relationship("User", backref="role")
 
 
+class Session(Base):
+    __tablename__ = "session"
+
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(String(400))
+    creation_date = Column(DateTime)
+    status = Column(String(50))
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
+
+
 class Employer(Base):
     __tablename__ = "employer"
 
@@ -90,34 +100,6 @@ class EmployerType(Base):
     employers = relationship("Employer", backref="employer_type")
 
 
-class Employee(Base):
-    __tablename__ = "employee"
-
-    id = Column(Integer, primary_key=True, index=True)
-    fullname = Column(String(100))
-    passport = Column(String(50), index=True, nullable=True)
-    tax_id = Column(String(50), index=True, nullable=True)
-    birth_date = Column(Date, nullable=True)
-    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
-    employer_id = Column(Integer, ForeignKey("employer.id"))
-
-    employee_accounts = relationship(
-        "EmployeeAccount",
-        backref="employee",
-        passive_deletes=True,
-    )
-
-
-class Session(Base):
-    __tablename__ = "session"
-
-    id = Column(Integer, primary_key=True, index=True)
-    token = Column(String(400))
-    creation_date = Column(DateTime)
-    status = Column(String(50))
-    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
-
-
 class EmployerPaymentMethod(Base):
     __tablename__ = "employer_payment_method"
 
@@ -145,16 +127,28 @@ class Bank(Base):
     creation_date = Column(DateTime)
     deactivation_date = Column(DateTime)
 
+    employer_payment_method = relationship(
+        "EmployerPaymentMethod",
+        backref="bank",
+        passive_deletes=True,
+    )
 
-class AccountType(Base):
-    __tablename__ = "account_type"
+
+class Employee(Base):
+    __tablename__ = "employee"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50))
+    fullname = Column(String(100))
+    passport = Column(String(50), index=True, nullable=True)
+    tax_id = Column(String(50), index=True, nullable=True)
+    birth_date = Column(Date, nullable=True)
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
+    employer_id = Column(Integer, ForeignKey("employer.id"))
 
     employee_accounts = relationship(
         "EmployeeAccount",
-        backref="account_type",
+        backref="employee",
+        passive_deletes=True,
     )
 
 
@@ -175,6 +169,18 @@ class EmployeeAccount(Base):
     payment_histories = relationship(
         "PaymentHistory",
         backref="employee_account",
+    )
+
+
+class AccountType(Base):
+    __tablename__ = "account_type"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50))
+
+    employee_accounts = relationship(
+        "EmployeeAccount",
+        backref="account_type",
     )
 
 
