@@ -1,4 +1,5 @@
-from sqlalchemy import BigInteger, Boolean, Column, Date, DateTime, ForeignKey, Integer, String
+from sqlalchemy import (BigInteger, Boolean, Column, Date, DateTime,
+                        ForeignKey, Integer, String)
 from sqlalchemy.orm import relationship
 
 from app.db.base import Base
@@ -56,6 +57,16 @@ class Role(Base):
     users = relationship("User", backref="role")
 
 
+class Session(Base):
+    __tablename__ = "session"
+
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(String(400))
+    creation_date = Column(DateTime)
+    status = Column(String(50))
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
+
+
 class Employer(Base):
     __tablename__ = "employer"
 
@@ -69,7 +80,15 @@ class Employer(Base):
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
     employer_type_id = Column(Integer, ForeignKey("employer_type.id"))
 
-    employees = relationship("Employee", backref="employer")
+    employees = relationship(
+        "Employee",
+        backref="employer",
+    )
+    employer_payment_methods = relationship(
+        "EmployerPaymentMethod",
+        backref="employer",
+        passive_deletes=True,
+    )
 
 
 class EmployerType(Base):
@@ -79,6 +98,40 @@ class EmployerType(Base):
     name = Column(String(50), unique=True)
 
     employers = relationship("Employer", backref="employer_type")
+
+
+class EmployerPaymentMethod(Base):
+    __tablename__ = "employer_payment_method"
+
+    id = Column(Integer, primary_key=True, index=True)
+    iban = Column(String(50))
+    is_active = Column(Boolean, default=False)
+    creation_date = Column(DateTime)
+    deactivation_date = Column(DateTime)
+    employer_id = Column(Integer, ForeignKey("employer.id", ondelete="CASCADE"))
+    bank_id = Column(Integer, ForeignKey("bank.id", ondelete="CASCADE"))
+
+    payment_histories = relationship(
+        "PaymentHistory",
+        backref="employer_payment_method",
+    )
+
+
+class Bank(Base):
+    __tablename__ = "bank"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50))
+    mfo = Column(String(50))
+    is_active = Column(Boolean, default=False)
+    creation_date = Column(DateTime)
+    deactivation_date = Column(DateTime)
+
+    employer_payment_method = relationship(
+        "EmployerPaymentMethod",
+        backref="bank",
+        passive_deletes=True,
+    )
 
 
 class Employee(Base):
@@ -92,44 +145,31 @@ class Employee(Base):
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
     employer_id = Column(Integer, ForeignKey("employer.id"))
 
-    payment_methods = relationship("PaymentMethod", backref="employee")
-    payments = relationship("Payment", backref="employee")
+    employee_accounts = relationship(
+        "EmployeeAccount",
+        backref="employee",
+        passive_deletes=True,
+    )
 
 
-class Session(Base):
-    __tablename__ = "session"
-
-    id = Column(Integer, primary_key=True, index=True)
-    token = Column(String(400))
-    creation_date = Column(DateTime)
-    status = Column(String(50))
-    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
-
-
-class PaymentMethod(Base):
-    __tablename__ = "payment_method"
+class EmployeeAccount(Base):
+    __tablename__ = "employee_account"
 
     id = Column(Integer, primary_key=True, index=True)
-    is_default = Column(Boolean, default=False)
+    name = Column(String(100))
+    number = Column(String(50))
     is_active = Column(Boolean, default=False)
+    is_default = Column(Boolean, default=False)
+    card_issuer = Column(String(100))
+    creation_date = Column(DateTime)
+    deactivation_date = Column(DateTime)
     employee_id = Column(Integer, ForeignKey("employee.id", ondelete="CASCADE"))
-    bank_id = Column(Integer, ForeignKey("bank.id", ondelete="CASCADE"))
+    account_type_id = Column(Integer, ForeignKey("account_type.id"))
 
-    payments = relationship("Payment", backref="payment_method")
-
-
-class Bank(Base):
-    __tablename__ = "bank"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50))
-    edrpou = Column(String(50))
-    mfo = Column(String(50))
-    iban = Column(String(50))
-    card = Column(String(50))
-    account_type_id = Column(Integer, ForeignKey("account_type.id", ondelete="CASCADE"))
-
-    payment_methods = relationship("PaymentMethod", backref="bank")
+    payment_histories = relationship(
+        "PaymentHistory",
+        backref="employee_account",
+    )
 
 
 class AccountType(Base):
@@ -138,25 +178,36 @@ class AccountType(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50))
 
-    banks = relationship("Bank", backref="account_type")
+    employee_accounts = relationship(
+        "EmployeeAccount",
+        backref="account_type",
+    )
 
 
-class Payment(Base):
-    __tablename__ = "payment"
+class PaymentHistory(Base):
+    __tablename__ = "payment_history"
 
     id = Column(Integer, primary_key=True, index=True)
     amount = Column(BigInteger)
     creation_date = Column(DateTime)
-    execution_date = Column(DateTime)
-    employee_id = Column(Integer, ForeignKey("employee.id", ondelete="CASCADE"))
-    payment_status_id = Column(Integer, ForeignKey("payment_status.id", ondelete="CASCADE"))
-    payment_method_id = Column(Integer, ForeignKey("payment_method.id", ondelete="CASCADE"))
+    employee_account_id = Column(
+        Integer, ForeignKey("employee_account.id")
+    )
+    employer_payment_method_id = Column(
+        Integer, ForeignKey("employer_payment_method.id")
+    )
+    payment_status_type_id = Column(
+        Integer, ForeignKey("payment_status_type.id")
+    )
 
 
-class PaymentStatus(Base):
-    __tablename__ = "payment_status"
+class PaymentStatusType(Base):
+    __tablename__ = "payment_status_type"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50))
 
-    payments = relationship("Payment", backref="payment_status")
+    payment_histories = relationship(
+        "PaymentHistory",
+        backref="payment_status_type",
+    )
