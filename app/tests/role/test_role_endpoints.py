@@ -3,7 +3,7 @@ from importlib import reload
 from pytest_mock import MockerFixture
 
 from app.api.routes.role import endpoints
-from app.schemas.role import RoleCreate, RoleUpdate
+from app.schemas.schema_role import RoleCreate, RoleUpdate
 from app.security import permissions
 from app.tests.utils.base import random_integer
 from app.tests.utils.mocks import mock_permission_decorator

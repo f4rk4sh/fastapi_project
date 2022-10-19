@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, FutureDate, PositiveInt
 
-from app.schemas.user import UserBase, UserCreate, UserResponse, UserUpdate
+from app.schemas.schema_user import UserBase, UserCreate, UserResponse, UserUpdate
 
 
 class EmployerBase(BaseModel):

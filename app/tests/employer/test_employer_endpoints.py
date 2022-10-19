@@ -3,7 +3,7 @@ from importlib import reload
 from pytest_mock import MockerFixture
 
 from app.api.routes.employer import endpoints
-from app.schemas.employer import EmployerCreate, EmployerUpdate
+from app.schemas.schema_employer import EmployerCreate, EmployerUpdate
 from app.security import permissions
 from app.tests.utils.base import (random_email, random_integer,
                                   random_password, random_phone)

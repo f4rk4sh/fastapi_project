@@ -8,7 +8,7 @@ from app.constansts.constants_status_type import ConstantStatusType
 from app.crud.crud_employee import CRUDEmployee, employee as employee_crud
 from app.db.models import Employee, Session
 from app.manager.manager_base import ManagerBase, ModelType
-from app.schemas.employee import EmployeeCreate, EmployeeUpdate
+from app.schemas.schema_employee import EmployeeCreate, EmployeeUpdate
 from app.utils.exceptions.common_exceptions import HTTPBadRequestException
 from app.security.passwords import hash_password
 

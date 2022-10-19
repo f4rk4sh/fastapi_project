@@ -2,7 +2,7 @@ from pytest_mock import MockerFixture
 
 from app.db.models import Role
 from app.manager.manager_role import role
-from app.schemas.role import RoleCreate, RoleUpdate
+from app.schemas.schema_role import RoleCreate, RoleUpdate
 from app.tests.utils.base import random_string
 
 

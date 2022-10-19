@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 
 from app.db.models import Base, Employee, Employer, EmployerType, Role, StatusType
 
-from app.schemas.tag import MetadataTag
+from app.schemas.schema_tag import MetadataTag
 
 
 def generate_metadata_tags() -> List[Dict[str, Any]]:

@@ -12,7 +12,7 @@ from app.db.models import Session
 from app.manager.manager_employee import employee
 from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
-from app.schemas.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate
+from app.schemas.schema_employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate
 
 router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Employees"])
 descriptions = CRUDEndpointsDescriptions(

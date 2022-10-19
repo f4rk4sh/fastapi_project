@@ -10,7 +10,7 @@ from app.api.docs.api_params import CRUDParamsDescriptions
 from app.constansts.constants_role import ConstantRole
 from app.db.models import Session
 from app.manager.manager_status_type import status_type
-from app.schemas.status_type import StatusTypeCreate, StatusTypeResponse, StatusTypeUpdate
+from app.schemas.schema_status_type import StatusTypeCreate, StatusTypeResponse, StatusTypeUpdate
 from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
