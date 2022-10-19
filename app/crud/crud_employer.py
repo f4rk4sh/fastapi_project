@@ -4,7 +4,7 @@ from sqlalchemy import and_
 
 from app.crud.crud_base import CRUDBase, ModelType
 from app.db.models import Employer, User
-from app.schemas.employer import EmployerCreate, EmployerUpdate
+from app.schemas.schema_employer import EmployerCreate, EmployerUpdate
 from app.utils.exceptions.common_exceptions import HTTPBadRequestException, HTTPNotFoundException
 
 

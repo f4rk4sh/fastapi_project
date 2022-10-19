@@ -4,7 +4,7 @@ from fastapi_utils.inferring_router import InferringRouter
 
 from app.api.dependencies import get_session
 from app.manager.manager_auth import AuthManager
-from app.schemas.token import Token
+from app.schemas.schema_token import Token
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
 router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Authentication"])

@@ -5,7 +5,7 @@ from pytest_mock import MockerFixture
 
 from app.db.models import Employer, User
 from app.manager.manager_employer import employer
-from app.schemas.employer import EmployerCreate, EmployerUpdate
+from app.schemas.schema_employer import EmployerCreate, EmployerUpdate
 from app.tests.utils.base import (random_email, random_integer,
                                   random_password, random_phone)
 from app.utils.exceptions.common_exceptions import HTTPBadRequestException

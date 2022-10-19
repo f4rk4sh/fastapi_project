@@ -21,10 +21,10 @@ from app.crud.crud_user import CRUDUser
 from app.db.base import Base
 from app.db.models import (Employer, EmployerType, Role, Session, StatusType,
                            User)
-from app.schemas.employer_type import EmployerTypeCreate
-from app.schemas.role import RoleCreate
-from app.schemas.session import SessionCreate
-from app.schemas.status_type import StatusTypeCreate
+from app.schemas.schema_employer_type import EmployerTypeCreate
+from app.schemas.schema_role import RoleCreate
+from app.schemas.schema_session import SessionCreate
+from app.schemas.schema_status_type import StatusTypeCreate
 from app.tests.utils.base import (get_su_token_headers, random_date,
                                   random_email, random_integer,
                                   random_password, random_phone, random_string)

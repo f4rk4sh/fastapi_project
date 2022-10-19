@@ -1,6 +1,6 @@
 from app.crud.crud_base import CRUDBase
 from app.db.models import Session
-from app.schemas.session import SessionCreate, SessionUpdate
+from app.schemas.schema_session import SessionCreate, SessionUpdate
 
 
 class CRUDSession(CRUDBase[Session, SessionCreate, SessionUpdate]):

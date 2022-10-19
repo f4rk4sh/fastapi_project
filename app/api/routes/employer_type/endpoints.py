@@ -10,7 +10,7 @@ from app.api.docs.api_params import CRUDParamsDescriptions
 from app.constansts.constants_role import ConstantRole
 from app.db.models import Session
 from app.manager.manager_employer_type import employer_type
-from app.schemas.employer_type import EmployerTypeCreate, EmployerTypeResponse, EmployerTypeUpdate
+from app.schemas.schema_employer_type import EmployerTypeCreate, EmployerTypeResponse, EmployerTypeUpdate
 from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 

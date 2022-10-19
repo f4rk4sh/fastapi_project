@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from app import crud
 from app.constansts.constants_session import ConstantSessionStatus
-from app.schemas.session import SessionCreate, SessionUpdate
+from app.schemas.schema_session import SessionCreate, SessionUpdate
 from app.security.tokens import create_jwt
 
 

@@ -4,7 +4,7 @@ from sqlalchemy.exc import DataError, ProgrammingError
 from sqlalchemy.orm import Session
 
 from app.crud.crud_role import role
-from app.schemas.role import RoleCreate, RoleUpdate
+from app.schemas.schema_role import RoleCreate, RoleUpdate
 from app.tests.utils.base import random_string
 
 
