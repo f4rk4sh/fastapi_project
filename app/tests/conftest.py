@@ -129,6 +129,15 @@ def random_status_type(crud_status_type) -> StatusType:
 
 
 @pytest.fixture
+def random_status_types(crud_status_type) -> List[StatusType]:
+    return [
+        crud_status_type.create(
+            StatusTypeCreate(name=random_string())
+        ) for _ in range(3)
+    ]
+
+
+@pytest.fixture
 def expected_status_type() -> StatusType:
     return StatusType(id=random_integer(), name=random_string())
 
