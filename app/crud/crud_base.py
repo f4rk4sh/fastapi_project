@@ -8,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.db.base import Base
-from app.db.get_database import get_db
+from app.db.session import get_session
 from app.utils.exceptions.common_exceptions import HTTPBadRequestException, HTTPNotFoundException
 
 ModelType = TypeVar("ModelType", bound=Base)
@@ -17,26 +17,26 @@ UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 
 class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
-    def __init__(self, model: Type[ModelType], db: Session = next(get_db())):
+    def __init__(self, model: Type[ModelType], session: Session = next(get_session())):
         """
         CRUD object with default methods to Create, Read, Update, Delete (CRUD).
         **Parameters**
         * `model`: A SQLAlchemy model class
         * `schema`: A Pydantic model (schema) class
-        * `db`: A database session
+        * `session`: A database session
         """
         self.model = model
-        self.db = db
+        self.session = session
 
     def get(self, id: Any) -> Optional[ModelType]:
-        obj = self.db.query(self.model).filter(self.model.id == id).first()
+        obj = self.session.query(self.model).filter(self.model.id == id).first()
         if not obj:
             raise HTTPNotFoundException(self.model.__name__, id)
         return obj
 
     def get_multi(self, skip: int = 0, limit: int = 100) -> List[ModelType]:
         obj_list = (
-            self.db.query(self.model)
+            self.session.query(self.model)
             .order_by(self.model.id)
             .offset(skip)
             .limit(limit)
@@ -53,7 +53,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         order_by_arg = getattr(self.model, order_by) if order_by else self.model.id
         if desc:
             order_by_arg = order_by_arg.desc()
-        return self.db.query(self.model).filter(and_(*filter_args)).order_by(order_by_arg).first()
+        return self.session.query(self.model).filter(and_(*filter_args)).order_by(order_by_arg).first()
 
     def search_by_parameter(
         self, parameter: str, keyword: str, skip: int = 0, limit: int = 100
@@ -61,7 +61,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         if not hasattr(self.model, parameter):
             raise HTTPBadRequestException(detail="Invalid search parameter")
         results = (
-            self.db.query(self.model)
+            self.session.query(self.model)
             .filter(getattr(self.model, parameter).contains(keyword))
             .order_by(self.model.id)
             .offset(skip)
@@ -80,15 +80,15 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         else:
             obj_in_data = obj_in.dict(exclude_unset=True)
         db_obj = self.model(**obj_in_data)
-        self.db.add(db_obj)
+        self.session.add(db_obj)
         try:
             if is_flush:
-                self.db.flush()
+                self.session.flush()
             else:
-                self.db.commit()
+                self.session.commit()
         except SQLAlchemyError as err:
             logging.exception(err)
-            self.db.rollback()
+            self.session.rollback()
         return db_obj
 
     def update(
@@ -105,28 +105,28 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         for field in obj_data:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
-        self.db.add(db_obj)
+        self.session.add(db_obj)
         try:
             if is_flush:
-                self.db.flush()
+                self.session.flush()
             else:
-                self.db.commit()
+                self.session.commit()
         except SQLAlchemyError as err:
             logging.exception(err)
-            self.db.rollback()
+            self.session.rollback()
         return db_obj
 
     def delete(self, id: int, is_flush: bool = False) -> ModelType:
-        obj = self.db.query(self.model).get(id)
+        obj = self.session.query(self.model).get(id)
         if not obj:
             raise HTTPNotFoundException(self.model.__name__, id)
-        self.db.delete(obj)
+        self.session.delete(obj)
         try:
             if is_flush:
-                self.db.flush()
+                self.session.flush()
             else:
-                self.db.commit()
+                self.session.commit()
         except SQLAlchemyError as err:
             logging.exception(err)
-            self.db.rollback()
+            self.session.rollback()
         return obj
