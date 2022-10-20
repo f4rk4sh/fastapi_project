@@ -159,6 +159,31 @@ def random_employer_type(
 
 
 @pytest.fixture
+def random_employer_types(
+    crud_employer_type,
+) -> List[EmployerType]:
+    return [
+        crud_employer_type.create(
+            EmployerTypeCreate(name=random_string())
+        ) for _ in range(3)
+    ]
+
+
+@pytest.fixture
+def expected_employer_type() -> EmployerType:
+    return EmployerType(id=random_integer(), name=random_string())
+
+
+@pytest.fixture
+def expected_employer_types() -> List[EmployerType]:
+    return [
+        EmployerType(
+            id=random_integer(), name=random_string()
+        ) for _ in range(3)
+    ]
+
+
+@pytest.fixture
 def random_user(
     crud_user,
     random_role,
