@@ -91,9 +91,7 @@ class TestManagerUpdateStatusType:
         expected_status_type,
         mocker: MockerFixture,
     ) -> None:
-        status_type_in_db = StatusType(
-            id=expected_status_type.id, name=random_string()
-        )
+        status_type_in_db = StatusType(id=expected_status_type.id, name=random_string())
         mocked_status_type_get = mocker.patch(
             "app.manager.manager_status_type.status_type.crud.get",
             return_value=status_type_in_db,

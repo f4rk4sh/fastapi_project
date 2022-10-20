@@ -1,6 +1,6 @@
 import pytest
 from pytest_mock import MockFixture
-from sqlalchemy.exc import ProgrammingError, DataError
+from sqlalchemy.exc import DataError, ProgrammingError
 from sqlalchemy.orm import Session
 
 from app.crud.crud_status_type import status_type
@@ -335,9 +335,7 @@ class TestCRUDDeleteStatusType:
             "app.crud.crud_status_type.status_type.get_by_attribute",
             crud_status_type.get_by_attribute,
         )
-        spy_status_type_delete = mocker.spy(
-            status_type, "delete"
-        )
+        spy_status_type_delete = mocker.spy(status_type, "delete")
 
         status_type.delete(random_status_type.id)
         status_type_in_db = status_type.get_by_attribute(id=random_status_type.id)

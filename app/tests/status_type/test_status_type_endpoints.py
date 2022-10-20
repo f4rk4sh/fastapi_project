@@ -48,9 +48,7 @@ class TestEndpointGetStatusType:
             return_value=expected_status_type,
         )
 
-        actual_result = endpoints.fetch_status_type(
-            expected_status_type.id, session
-        )
+        actual_result = endpoints.fetch_status_type(expected_status_type.id, session)
 
         mocked_status_type_fetch_one.assert_called_once_with(
             expected_status_type.id, session
