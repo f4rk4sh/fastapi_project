@@ -129,13 +129,31 @@ def random_status_type(crud_status_type) -> StatusType:
 
 
 @pytest.fixture
+def random_status_types(crud_status_type) -> List[StatusType]:
+    return [
+        crud_status_type.create(
+            StatusTypeCreate(name=random_string())
+        ) for _ in range(3)
+    ]
+
+
+@pytest.fixture
 def expected_status_type() -> StatusType:
     return StatusType(id=random_integer(), name=random_string())
 
 
 @pytest.fixture
+def expected_status_types() -> List[StatusType]:
+    return [
+        StatusType(
+            id=random_integer(), name=random_string()
+        ) for _ in range(3)
+    ]
+
+
+@pytest.fixture
 def random_employer_type(
-        crud_employer_type,
+    crud_employer_type,
 ) -> EmployerType:
     return crud_employer_type.create(EmployerTypeCreate(name=random_string()))
 
