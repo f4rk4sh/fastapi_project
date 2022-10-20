@@ -184,22 +184,62 @@ def expected_employer_types() -> List[EmployerType]:
 
 
 @pytest.fixture
-def random_user(
-    crud_user,
+def user_create_data() -> dict[str, Any]:
+    return {
+        "email": random_email(),
+        "password": random_password(),
+        "phone": random_phone(),
+    }
+
+
+@pytest.fixture
+def user_update_data(
+    user_create_data,
     random_role,
     random_status_type,
-) -> User:
-    return crud_user.create(
+) -> dict[str, Any]:
+    user_create_data.update(
         {
-            "email": random_email(),
-            "password": random_password(),
-            "phone": random_phone(),
-            "creation_date": datetime.utcnow(),
-            "activation_date": datetime.utcnow(),
             "role_id": random_role.id,
             "status_type_id": random_status_type.id,
         }
     )
+    return user_create_data
+
+
+@pytest.fixture
+def random_user(
+    crud_user,
+    user_update_data,
+) -> User:
+    user_update_data.update(
+        {
+            "creation_date": datetime.utcnow(),
+            "activation_date": datetime.utcnow(),
+        }
+    )
+    return crud_user.create(user_update_data)
+
+
+@pytest.fixture
+def random_users(
+    crud_user,
+    random_role,
+    random_status_type,
+) -> List[User]:
+    return [
+        crud_user.create(
+            {
+                "email": random_email(),
+                "password": random_password(),
+                "phone": random_phone(),
+                "creation_date": datetime.utcnow(),
+                "activation_date": datetime.utcnow(),
+                "role_id": random_role.id,
+                "status_type_id": random_status_type.id,
+            }
+        ) for _ in range(3)
+    ]
 
 
 @pytest.fixture

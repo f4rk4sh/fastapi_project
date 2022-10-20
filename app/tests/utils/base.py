@@ -20,7 +20,7 @@ def random_special_symbol() -> str:
 
 
 def random_email() -> str:
-    return f"{random_string()}@{random_string()}.com"
+    return f"{random_string()}@{random_string().lower()}.com"
 
 
 def random_password() -> str:
