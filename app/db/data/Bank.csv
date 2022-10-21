@@ -1,0 +1,3 @@
+id,name,mfo,is_active,creation_date,deactivation_date
+1,OneDollar,12345678,true,2022-11-12 10:00:00.000000,2022-11-12 10:00:00.000000
+2,PayDay,12345678,false,2022-11-12 10:00:00.000000,2022-11-12 10:00:00.000000
