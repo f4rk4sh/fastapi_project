@@ -5,7 +5,7 @@ from sqlalchemy import and_
 from app.utils.exceptions.common_exceptions import HTTPBadRequestException, HTTPNotFoundException
 from app.crud.crud_base import CRUDBase, ModelType
 from app.db.models import Employee, User
-from app.schemas.employee import EmployeeCreate, EmployeeUpdate
+from app.schemas.schema_employee import EmployeeCreate, EmployeeUpdate
 
 
 class CRUDEmployee(CRUDBase[Employee, EmployeeCreate, EmployeeUpdate]):
@@ -18,7 +18,7 @@ class CRUDEmployee(CRUDBase[Employee, EmployeeCreate, EmployeeUpdate]):
             else:
                 filter_employee_args.append(getattr(self.model, key) == value)
         obj = (
-            self.db.query(self.model)
+            self.session.query(self.model)
             .join(User)
             .filter(and_(*filter_user_args))
             .filter(and_(*filter_employee_args))
@@ -35,7 +35,7 @@ class CRUDEmployee(CRUDBase[Employee, EmployeeCreate, EmployeeUpdate]):
         if hasattr(User, parameter):
             filter_arg = getattr(User, parameter)
             users = (
-                self.db.query(User)
+                self.session.query(User)
                 .filter(filter_arg.contains(keyword))
                 .order_by(User.id)
                 .offset(skip)
@@ -46,7 +46,7 @@ class CRUDEmployee(CRUDBase[Employee, EmployeeCreate, EmployeeUpdate]):
         elif hasattr(self.model, parameter):
             filter_arg = getattr(self.model, parameter)
             results = (
-                self.db.query(self.model)
+                self.session.query(self.model)
                 .filter(filter_arg.contains(keyword))
                 .order_by(self.model.id)
                 .offset(skip)

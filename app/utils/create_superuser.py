@@ -6,14 +6,14 @@ from sqlalchemy.orm import Session
 from app.config.su_config import SUConfig
 from app.constansts.constants_role import ConstantRole
 from app.constansts.constants_status_type import ConstantStatusType
-from app.db.get_database import get_db
+from app.db.session import get_session
 from app.db.models import Role, StatusType, User
 from app.security.passwords import hash_password
 
 
-def create_superuser(db: Session = next(get_db())):
-    role_su = db.query(Role).filter(Role.name == ConstantRole.su).first()
-    status_active = db.query(StatusType).filter(StatusType.name == ConstantStatusType.active).first()
+def create_superuser(session: Session = next(get_session())):
+    role_su = session.query(Role).filter(Role.name == ConstantRole.su).first()
+    status_active = session.query(StatusType).filter(StatusType.name == ConstantStatusType.active).first()
     su = User(
         email=SUConfig.SU_EMAIL,
         phone=SUConfig.SU_PHONE,
@@ -23,12 +23,12 @@ def create_superuser(db: Session = next(get_db())):
         role_id=role_su.id,
         status_type_id=status_active.id,
     )
-    db.add(su)
+    session.add(su)
     try:
-        db.commit()
+        session.commit()
     except Exception as exc:
         logging.exception(exc)
-        db.rollback()
+        session.rollback()
 
 
 if __name__ == '__main__':

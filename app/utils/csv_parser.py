@@ -5,13 +5,13 @@ from datetime import datetime
 from sqlalchemy import Boolean, Date, DateTime
 from sqlalchemy.orm import Session
 
-from app.db.get_database import get_db
+from app.db.session import get_session
 from app.db.models import (AccountType, Bank, Employee, EmployeeAccount, Employer,
                            EmployerType, EmployerPaymentMethod, PaymentHistory,
                            PaymentStatusType, Role, StatusType, User)
 
 
-def parsing(db: Session = next(get_db())) -> None:
+def parsing(session: Session = next(get_session())) -> None:
     for model in [
         Role,
         StatusType,
@@ -33,12 +33,12 @@ def parsing(db: Session = next(get_db())) -> None:
             for data in csv.DictReader(csv_file):
                 converted_data = convert_data_types(column_types, data)
                 obj = model(**converted_data)
-                db.add(obj)
+                session.add(obj)
                 try:
-                    db.commit()
+                    session.commit()
                 except Exception as exc:
                     logging.exception(exc)
-                    db.rollback()
+                    session.rollback()
 
 
 def convert_data_types(column_types: dict, data: dict) -> dict:

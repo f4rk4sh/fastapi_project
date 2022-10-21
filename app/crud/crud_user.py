@@ -2,7 +2,7 @@ from typing import Optional
 
 from app.crud.crud_base import CRUDBase, ModelType
 from app.db.models import User
-from app.schemas.user import UserCreate, UserUpdate
+from app.schemas.schema_user import UserCreate, UserUpdate
 from app.utils.exceptions.common_exceptions import HTTPBadRequestException
 from app.security.passwords import verify_password
 

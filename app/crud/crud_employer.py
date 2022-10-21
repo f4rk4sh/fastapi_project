@@ -4,7 +4,7 @@ from sqlalchemy import and_
 
 from app.crud.crud_base import CRUDBase, ModelType
 from app.db.models import Employer, User
-from app.schemas.employer import EmployerCreate, EmployerUpdate
+from app.schemas.schema_employer import EmployerCreate, EmployerUpdate
 from app.utils.exceptions.common_exceptions import HTTPBadRequestException, HTTPNotFoundException
 
 
@@ -18,7 +18,7 @@ class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
             else:
                 filter_employer_args.append(getattr(self.model, key) == value)
         obj = (
-            self.db.query(self.model)
+            self.session.query(self.model)
             .join(User)
             .filter(and_(True, *filter_user_args))
             .filter(and_(True, *filter_employer_args))
@@ -35,7 +35,7 @@ class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
         if hasattr(User, parameter):
             filter_arg = getattr(User, parameter)
             users = (
-                self.db.query(User)
+                self.session.query(User)
                 .filter(filter_arg.contains(keyword))
                 .order_by(User.id)
                 .offset(skip)
@@ -46,7 +46,7 @@ class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
         elif hasattr(self.model, parameter):
             filter_arg = getattr(self.model, parameter)
             results = (
-                self.db.query(self.model)
+                self.session.query(self.model)
                 .filter(filter_arg.contains(keyword))
                 .order_by(self.model.id)
                 .offset(skip)

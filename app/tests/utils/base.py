@@ -16,11 +16,11 @@ def random_integer() -> int:
 
 
 def random_special_symbol() -> str:
-    return "".join(random.choices(string.punctuation, k=1))
+    return "".join(random.choices("!@#$%^&*()-_=+||\\", k=1))
 
 
 def random_email() -> str:
-    return f"{random_string()}@{random_string()}.com"
+    return f"{random_string()}@{random_string().lower()}.com"
 
 
 def random_password() -> str:

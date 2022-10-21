@@ -1,7 +1,7 @@
 from app.crud.crud_employer_type import CRUDEmployerType, employer_type as employer_type_crud
 from app.db.models import EmployerType
 from app.manager.manager_base import ManagerBase
-from app.schemas.employer_type import EmployerTypeCreate, EmployerTypeUpdate
+from app.schemas.schema_employer_type import EmployerTypeCreate, EmployerTypeUpdate
 
 
 class EmployerTypeManager(ManagerBase[EmployerType, CRUDEmployerType, EmployerTypeCreate, EmployerTypeUpdate]):
