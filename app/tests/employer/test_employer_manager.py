@@ -6,8 +6,7 @@ from pytest_mock import MockerFixture
 from app.db.models import Employer, User
 from app.manager.manager_employer import employer
 from app.schemas.schema_employer import EmployerCreate, EmployerUpdate
-from app.tests.utils.base import (random_email, random_integer,
-                                  random_password, random_phone)
+from app.tests.utils.base import random_integer
 from app.utils.exceptions.common_exceptions import HTTPBadRequestException
 
 
@@ -18,6 +17,7 @@ class TestManagerCreateEmployer:
         expected_role,
         expected_status_type,
         expected_employer,
+        user_create_data,
         mocker: MockerFixture,
     ) -> None:
         mocker.patch("app.crud.crud_user.user.get_by_attribute", return_value=False)
@@ -49,11 +49,7 @@ class TestManagerCreateEmployer:
         }
 
         employer_in_data = copy(employer_data)
-        employer_in_data["user"] = {
-            "email": random_email(),
-            "phone": random_phone(),
-            "password": random_password(),
-        }
+        employer_in_data["user"] = user_create_data
         actual_result = employer.create(
             EmployerCreate(**employer_in_data), session
         )
@@ -66,6 +62,7 @@ class TestManagerCreateEmployer:
         self,
         crud_user,
         employer_data,
+        user_create_data,
         random_user,
         session,
         monkeypatch,
@@ -76,11 +73,7 @@ class TestManagerCreateEmployer:
         )
 
         employer_data.pop("user_id")
-        employer_data["user"] = {
-            "email": random_user.email,
-            "phone": random_phone(),
-            "password": random_password(),
-        }
+        employer_data["user"] = user_create_data
         with pytest.raises(HTTPBadRequestException):
             employer.create(EmployerCreate(**employer_data), session)
 
@@ -150,6 +143,7 @@ class TestManagerUpdateEmployer:
         session,
         expected_employer,
         employer_data,
+        user_update_data,
         mocker: MockerFixture,
     ) -> None:
         employer_in_db = Employer(id=expected_employer.id)
@@ -178,13 +172,7 @@ class TestManagerUpdateEmployer:
         )
 
         employer_in_data = copy(employer_data)
-        employer_in_data["user"] = {
-            "email": random_email(),
-            "phone": random_phone(),
-            "password": random_password(),
-            "role_id": random_integer(),
-            "status_type_id": random_integer(),
-        }
+        employer_in_data["user"] = user_update_data
         employer_in = EmployerUpdate(**employer_in_data)
         actual_result = employer.update(employer_in, session)
 
@@ -196,6 +184,7 @@ class TestManagerUpdateEmployer:
         session,
         expected_employer,
         employer_data,
+        user_update_data,
         crud_user,
         random_user,
         mocker,
@@ -211,14 +200,12 @@ class TestManagerUpdateEmployer:
         )
 
         employer_data.pop("user_id")
-        employer_data["id"] = random_integer()
-        employer_data["user"] = {
-            "email": random_user.email,
-            "phone": random_phone(),
-            "password": random_password(),
-            "role_id": random_integer(),
-            "status_type_id": random_integer(),
-        }
+        employer_data.update(
+            {
+                "id": random_integer(),
+                "user": user_update_data
+            }
+        )
         with pytest.raises(HTTPBadRequestException):
             employer.update(EmployerUpdate(**employer_data), session)
 
