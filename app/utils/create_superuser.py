@@ -3,7 +3,7 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-from app.config.su_config import SUConfig
+from app.config.superuser_config import superuser_cfg
 from app.constansts.constants_role import ConstantRole
 from app.constansts.constants_status_type import ConstantStatusType
 from app.db.session import get_session
@@ -15,9 +15,9 @@ def create_superuser(session: Session = next(get_session())):
     role_su = session.query(Role).filter(Role.name == ConstantRole.su).first()
     status_active = session.query(StatusType).filter(StatusType.name == ConstantStatusType.active).first()
     su = User(
-        email=SUConfig.SU_EMAIL,
-        phone=SUConfig.SU_PHONE,
-        password=hash_password(SUConfig.SU_PASSWORD),
+        email=superuser_cfg.SU_EMAIL,
+        phone=superuser_cfg.SU_PHONE,
+        password=hash_password(superuser_cfg.SU_PASSWORD),
         creation_date=datetime.utcnow(),
         activation_date=datetime.utcnow(),
         role_id=role_su.id,

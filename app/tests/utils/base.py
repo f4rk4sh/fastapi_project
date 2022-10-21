@@ -4,7 +4,7 @@ from datetime import date, timedelta
 
 from fastapi.testclient import TestClient
 
-from app.config.su_config import SUConfig
+from app.config.superuser_config import superuser_cfg
 
 
 def random_string(length: int = 10) -> str:
@@ -41,8 +41,8 @@ def random_date(in_future: bool = False):
 
 def get_su_token_headers(client: TestClient) -> dict:
     login_data = {
-        "username": SUConfig.SU_EMAIL,
-        "password": SUConfig.SU_PASSWORD,
+        "username": superuser_cfg.SU_EMAIL,
+        "password": superuser_cfg.SU_PASSWORD,
     }
     response = client.post("/auth/login", data=login_data).json()
     access_token = response["access_token"]

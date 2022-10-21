@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.api.api_enrollment import router
 from app.api.dependencies import get_session
-from app.config.db_config import DBConfig
+from app.config.db_config import db_cfg
 from app.constansts.constants_session import ConstantSessionStatus
 from app.crud.crud_employer import CRUDEmployer
 from app.crud.crud_employer_type import CRUDEmployerType
@@ -29,7 +29,9 @@ from app.tests.utils.base import (get_su_token_headers, random_date,
                                   random_email, random_integer,
                                   random_password, random_phone, random_string)
 
-engine = create_engine(DBConfig.SQLALCHEMY_DATABASE_URL_TEST)
+SQLALCHEMY_DATABASE_URL_TEST = \
+    f"mssql+pyodbc://{db_cfg.DB_USER}:{db_cfg.DB_PASSWORD}@{db_cfg.DB_HOST}:{db_cfg.DB_PORT}/{db_cfg.DB_NAME_TEST}?driver={db_cfg.DB_DRIVER}"
+engine = create_engine(SQLALCHEMY_DATABASE_URL_TEST)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
