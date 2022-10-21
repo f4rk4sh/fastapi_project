@@ -195,15 +195,11 @@ def user_create_data() -> dict[str, Any]:
 
 
 @pytest.fixture
-def user_update_data(
-    user_create_data,
-    random_role,
-    random_status_type,
-) -> dict[str, Any]:
+def user_update_data(user_create_data) -> dict[str, Any]:
     user_create_data.update(
         {
-            "role_id": random_role.id,
-            "status_type_id": random_status_type.id,
+            "role_id": random_integer(),
+            "status_type_id": random_integer(),
         }
     )
     return user_create_data
@@ -213,11 +209,15 @@ def user_update_data(
 def random_user(
     crud_user,
     user_update_data,
+    random_role,
+    random_status_type,
 ) -> User:
     user_update_data.update(
         {
             "creation_date": datetime.utcnow(),
             "activation_date": datetime.utcnow(),
+            "role_id": random_role.id,
+            "status_type_id": random_status_type.id,
         }
     )
     return crud_user.create(user_update_data)

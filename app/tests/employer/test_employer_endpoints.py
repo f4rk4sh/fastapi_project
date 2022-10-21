@@ -5,8 +5,7 @@ from pytest_mock import MockerFixture
 from app.api.routes.employer import endpoints
 from app.schemas.schema_employer import EmployerCreate, EmployerUpdate
 from app.security import permissions
-from app.tests.utils.base import (random_email, random_integer,
-                                  random_password, random_phone)
+from app.tests.utils.base import random_integer
 from app.tests.utils.mocks import mock_permission_decorator
 
 
@@ -15,6 +14,7 @@ class TestEndpointCreateEmployer:
         self,
         session,
         expected_employer,
+        user_create_data,
         monkeypatch,
         mocker: MockerFixture,
     ) -> None:
@@ -28,11 +28,7 @@ class TestEndpointCreateEmployer:
 
         employer_in = EmployerCreate(
             **{
-                "user": {
-                    "email": random_email(),
-                    "phone": random_phone(),
-                    "password": random_password(),
-                },
+                "user": user_create_data,
                 "name": expected_employer.name,
                 "address": expected_employer.address,
                 "edrpou": expected_employer.edrpou,
@@ -128,6 +124,7 @@ class TestEndpointUpdateEmployer:
         self,
         session,
         expected_employer,
+        user_update_data,
         monkeypatch,
         mocker: MockerFixture,
     ) -> None:
@@ -141,13 +138,7 @@ class TestEndpointUpdateEmployer:
 
         employer_in = EmployerUpdate(
             **{
-                "user": {
-                    "email": random_email(),
-                    "phone": random_phone(),
-                    "password": random_password(),
-                    "role_id": random_integer(),
-                    "status_type_id": random_integer(),
-                },
+                "user": user_update_data,
                 "id": expected_employer.id,
                 "name": expected_employer.name,
                 "address": expected_employer.address,
