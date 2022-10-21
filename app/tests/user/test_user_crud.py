@@ -5,7 +5,9 @@ from sqlalchemy.orm import Session
 
 from app.crud.crud_user import user
 from app.schemas.schema_user import UserCreate, UserUpdate
-from app.tests.utils.base import random_string
+from app.security.passwords import hash_password
+from app.tests.utils.base import random_string, random_password, random_email
+from app.utils.exceptions.common_exceptions import HTTPBadRequestException
 
 
 class TestCRUDCreateUser:
@@ -208,6 +210,63 @@ class TestCRUDSearchUserByParameter:
 
         with pytest.raises(TypeError):
             user.search_by_parameter(parameter=None, keyword=random_user.email)  # noqa
+
+
+class TestCRUDAuthenticateUser:
+    def test_successful_authenticate_user(
+        self,
+        crud_user,
+        monkeypatch,
+        mocker: MockFixture,
+    ) -> None:
+        monkeypatch.setattr(
+            "app.crud.crud_user.user.create",
+            crud_user.create,
+        )
+        monkeypatch.setattr(
+            "app.crud.crud_user.user.get_by_attribute",
+            crud_user.get_by_attribute,
+        )
+        spy_user_authenticate = mocker.spy(user, "authenticate")
+
+        password = random_password()
+        email = random_email()
+        user_in_db = user.create(
+            {
+                "email": email,
+                "password": hash_password(password)
+            }
+        )
+
+        authenticated_user = user.authenticate(email, password)
+
+        spy_user_authenticate.assert_called_once_with(email, password)
+        assert authenticated_user == user_in_db
+
+    def test_failed_authenticate_user(
+        self,
+        crud_user,
+        monkeypatch,
+    ) -> None:
+        monkeypatch.setattr(
+            "app.crud.crud_user.user.create",
+            crud_user.create,
+        )
+        monkeypatch.setattr(
+            "app.crud.crud_user.user.get_by_attribute",
+            crud_user.get_by_attribute,
+        )
+
+        email = random_email()
+        user.create(
+            {
+                "email": email,
+                "password": hash_password(random_password())
+            }
+        )
+
+        with pytest.raises(HTTPBadRequestException):
+            user.authenticate(email, random_password())
 
 
 class TestCRUDUpdateUser:
