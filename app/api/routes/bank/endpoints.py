@@ -47,7 +47,7 @@ def create_bank(
 
 @router.put("/bank", status_code=status.HTTP_200_OK, description=descriptions.update)
 @permission({ConstantRole.employer})
-def create_bank(
+def update_bank(
     bank_in: BankUpdate,
     session: Session = Depends(get_session)
 ) -> BankResponse:
