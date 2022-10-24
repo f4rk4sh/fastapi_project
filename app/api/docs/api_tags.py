@@ -1,7 +1,7 @@
 import re
 from typing import Any, Dict, List
 
-from app.db.models import Base, Employee, Employer, EmployerType, Role, StatusType
+from app.db.models import Base, Employee, Employer, EmployerType, Role, StatusType, AccountType
 
 from app.schemas.schema_tag import MetadataTag
 
@@ -13,7 +13,9 @@ def generate_metadata_tags() -> List[Dict[str, Any]]:
     return [
         tag.dict(by_alias=True)
         for tag in [
-            get_crud_tag(model) for model in [Employee, Employer, EmployerType, Role, StatusType]
+            get_crud_tag(model) for model in [
+                AccountType, Employee, Employer, EmployerType, Role, StatusType
+            ]
         ]
     ]
 
