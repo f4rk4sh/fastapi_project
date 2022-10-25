@@ -8,8 +8,8 @@ from app.api.dependencies import get_session
 from app.api.docs.api_endpoints import CRUDEndpointsDescriptions
 from app.api.docs.api_params import CRUDParamsDescriptions
 from app.constansts.constants_role import ConstantRole
-from app.crud.crud_employer_payment_method import employer_payment_method
 from app.db.models import Session
+from app.manager.manager_employer_payment_method import employer_payment_method
 from app.schemas.schema_employer_payment_method import (
     EmployerPaymentMethodCreate, EmployerPaymentMethodResponse,
     EmployerPaymentMethodUpdate)

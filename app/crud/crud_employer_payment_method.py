@@ -8,7 +8,7 @@ class CRUDEmployerPaymentMethod(
     CRUDBase[
         EmployerPaymentMethod,
         EmployerPaymentMethodCreate,
-        EmployerPaymentMethodUpdate
+        EmployerPaymentMethodUpdate,
     ]
 ):
     pass
