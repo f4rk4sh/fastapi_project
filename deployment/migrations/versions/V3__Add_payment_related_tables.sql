@@ -27,7 +27,7 @@ CREATE TABLE [dbo].[bank]
 [mfo] [varchar] (50) NULL,
 [is_active] [BIT] NULL DEFAULT 0,
 [creation_date] [datetime] NULL,
-[deactivation_date] [datetime] NULL
+[deactivation_date] [date] NULL
 )
 GO
 ALTER TABLE [dbo].[bank] ADD CONSTRAINT [PK__bank__id] PRIMARY KEY CLUSTERED ([id])
@@ -41,7 +41,7 @@ CREATE TABLE [dbo].[employer_payment_method]
 [iban] [varchar] (50) NULL,
 [is_active] [BIT] NULL DEFAULT 0,
 [creation_date] [datetime] NULL,
-[deactivation_date] [datetime] NULL,
+[deactivation_date] [date] NULL,
 [employer_id] [int] NULL,
 [bank_id] [int] NULL
 )
@@ -65,7 +65,7 @@ CREATE TABLE [dbo].[employee_account]
 [is_default] [BIT] NULL DEFAULT 0,
 [card_issuer] [varchar] (100) NULL,
 [creation_date] [datetime] NULL,
-[deactivation_date] [datetime] NULL,
+[deactivation_date] [date] NULL,
 [employee_id] [int] NULL,
 [account_type_id] [int] NULL
 )

@@ -4,7 +4,7 @@ CREATE TABLE [dbo].[employer_payment_method]
 [iban] [varchar] (50) NULL,
 [is_active] [BIT] NULL DEFAULT 0,
 [creation_date] [datetime] NULL,
-[deactivation_date] [datetime] NULL,
+[deactivation_date] [date] NULL,
 [employer_id] [int] NULL,
 [bank_id] [int] NULL
 )
