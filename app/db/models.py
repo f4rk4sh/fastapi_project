@@ -160,7 +160,7 @@ class EmployeeAccount(Base):
     number = Column(String(50))
     is_active = Column(Boolean, default=False)
     is_default = Column(Boolean, default=False)
-    card_issuer = Column(String(100))
+    issuer = Column(String(100))
     creation_date = Column(DateTime)
     deactivation_date = Column(Date)
     employee_id = Column(Integer, ForeignKey("employee.id", ondelete="CASCADE"))

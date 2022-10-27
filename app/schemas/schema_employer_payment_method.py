@@ -51,7 +51,7 @@ class EmployerPaymentMethodResponse(EmployerPaymentMethodBase):
         example=True,
     )
     creation_date: date = Field(
-        title="The CREATION DATETIME of the payment method",
+        title="The CREATION DATE of the payment method",
         description="Note: must be a date with format: yyyy-mm-dd",
         example="2022-01-01",
     )
