@@ -7,7 +7,7 @@ CREATE TABLE [dbo].[employee_account]
 [is_default] [BIT] NULL DEFAULT 0,
 [card_issuer] [varchar] (100) NULL,
 [creation_date] [datetime] NULL,
-[deactivation_date] [datetime] NULL,
+[deactivation_date] [date] NULL,
 [employee_id] [int] NULL,
 [account_type_id] [int] NULL
 )

@@ -5,7 +5,7 @@ CREATE TABLE [dbo].[bank]
 [mfo] [varchar] (50) NULL,
 [is_active] [BIT] NULL DEFAULT 0,
 [creation_date] [datetime] NULL,
-[deactivation_date] [datetime] NULL
+[deactivation_date] [date] NULL
 )
 GO
 
