@@ -13,6 +13,6 @@ def permission(allowed_roles: Set[str]):
             if user_role != ConstantRole.su:
                 if user_role not in allowed_roles:
                     raise HTTPForbiddenException()
-            return func(*args, **kwargs)
+            return func(*args, session=session, **kwargs)
         return wrapper
     return inner

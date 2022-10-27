@@ -107,7 +107,7 @@ class EmployerPaymentMethod(Base):
     iban = Column(String(50))
     is_active = Column(Boolean, default=False)
     creation_date = Column(DateTime)
-    deactivation_date = Column(DateTime)
+    deactivation_date = Column(Date)
     employer_id = Column(Integer, ForeignKey("employer.id", ondelete="CASCADE"))
     bank_id = Column(Integer, ForeignKey("bank.id", ondelete="CASCADE"))
 
@@ -125,7 +125,7 @@ class Bank(Base):
     mfo = Column(String(50))
     is_active = Column(Boolean, default=False)
     creation_date = Column(DateTime)
-    deactivation_date = Column(DateTime)
+    deactivation_date = Column(Date)
 
     employer_payment_method = relationship(
         "EmployerPaymentMethod",
@@ -162,7 +162,7 @@ class EmployeeAccount(Base):
     is_default = Column(Boolean, default=False)
     card_issuer = Column(String(100))
     creation_date = Column(DateTime)
-    deactivation_date = Column(DateTime)
+    deactivation_date = Column(Date)
     employee_id = Column(Integer, ForeignKey("employee.id", ondelete="CASCADE"))
     account_type_id = Column(Integer, ForeignKey("account_type.id"))
 
