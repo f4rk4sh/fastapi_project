@@ -17,7 +17,7 @@ class BankBase(BaseModel):
         max_length=50,
     )
     deactivation_date: FutureDate = Field(
-        title="The DATE of the contract expiration",
+        title="The DATE of the payment method deactivation",
         description="Note: must be a date in future with format: yyyy-mm-dd",
         example="2023-01-01",
     )
@@ -52,7 +52,7 @@ class BankResponse(BankBase):
         example=True,
     )
     creation_date: date = Field(
-        title="The CREATION DATETIME of the bank",
+        title="The CREATION DATE of the bank",
         description="Note: must be a date with format: yyyy-mm-dd",
         example="2022-01-01",
     )

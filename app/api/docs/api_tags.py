@@ -1,7 +1,7 @@
 import re
 from typing import Any, Dict, List
 
-from app.db.models import (AccountType, Bank, Base, Employee, Employer,
+from app.db.models import (AccountType, Bank, Base, Employee, EmployeeAccount, Employer,
                            EmployerPaymentMethod, EmployerType, PaymentStatusType,
                            Role, StatusType)
 
@@ -19,6 +19,7 @@ def generate_metadata_tags() -> List[Dict[str, Any]]:
                 AccountType,
                 Bank,
                 Employee,
+                EmployeeAccount,
                 Employer,
                 EmployerPaymentMethod,
                 EmployerType,
