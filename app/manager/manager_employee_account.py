@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from app import crud
 from app.crud.crud_employee_account import CRUDEmployeeAccount, employee_account as crud_employee_account
 from app.db.models import EmployeeAccount, Session
 from app.manager.manager_base import ManagerBase, ModelType
