@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from app import crud
 from app.crud.crud_employer_payment_method import CRUDEmployerPaymentMethod,\
     employer_payment_method as crud_employer_payment_method
 from app.db.models import EmployerPaymentMethod, Session
@@ -23,9 +22,7 @@ class EmployerPaymentMethodManager(
             {
                 "creation_date": datetime.utcnow(),
                 "is_active": True,
-                "employer_id": crud.employer.get_by_attribute(
-                    user_id=session.user_id
-                ),
+                "employer_id": session.user.employer.id,
             }
         )
         return self.crud.create(obj_in_data)
