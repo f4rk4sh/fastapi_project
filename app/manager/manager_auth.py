@@ -1,17 +1,19 @@
 from datetime import datetime
+from typing import Dict
 
 from fastapi import Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app import crud
 from app.constansts.constants_session import ConstantSessionStatus
+from app.db.models import Session
 from app.schemas.schema_session import SessionCreate, SessionUpdate
 from app.security.tokens import create_jwt
 
 
 class AuthManager:
     @classmethod
-    def login(cls, data: OAuth2PasswordRequestForm):
+    def login(cls, data: OAuth2PasswordRequestForm) -> Dict[str, str]:
         user = crud.user.authenticate(data.username, data.password)
         access_token = create_jwt(data={"user_id": user.id}, set_expire=True)
         crud.session.create(
@@ -25,6 +27,9 @@ class AuthManager:
         return {"access_token": access_token, "token_type": "bearer"}
 
     @classmethod
-    def logout(cls, session):
-        crud.session.update(session, SessionUpdate(id=session.id, status=ConstantSessionStatus.logged_out))
+    def logout(cls, session: Session) -> Response:
+        crud.session.update(
+            session,
+            SessionUpdate(id=session.id, status=ConstantSessionStatus.logged_out),
+        )
         return Response(status_code=status.HTTP_200_OK)

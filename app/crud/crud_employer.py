@@ -30,7 +30,7 @@ class CRUDEmployer(CRUDBase[Employer, EmployerCreate, EmployerUpdate]):
         return obj
 
     def search_by_parameter(
-        self, parameter: str, keyword: str, skip: int = 0, limit: int = 100
+        self, parameter: str, keyword: str, limit: int = 100, skip: int = 0
     ) -> List[ModelType]:
         if hasattr(User, parameter):
             filter_arg = getattr(User, parameter)

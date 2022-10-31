@@ -1,4 +1,5 @@
-from app.crud.crud_role import CRUDRole, role as role_crud
+from app.crud.crud_role import CRUDRole
+from app.crud.crud_role import role as role_crud
 from app.db.models import Role
 from app.manager.manager_base import ManagerBase
 from app.schemas.schema_role import RoleCreate, RoleUpdate

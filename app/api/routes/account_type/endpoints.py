@@ -35,7 +35,7 @@ def search_account_types(
     max_results: Optional[PositiveInt] = parameters.max_results_search,
     session: Session = Depends(get_session),
 ) -> List[AccountTypeResponse]:
-    return account_type.search(parameter, keyword, session, max_results)
+    return account_type.search(parameter, keyword, max_results, session)
 
 
 @router.post("/account_type", status_code=status.HTTP_201_CREATED, description=descriptions.create)
