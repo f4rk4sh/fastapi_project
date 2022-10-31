@@ -1,5 +1,5 @@
-from abc import ABC, abstractmethod
-from typing import List, TypeVar, Generic
+from abc import ABC
+from typing import TypeVar, Generic, List
 
 from fastapi import Response
 from pydantic import BaseModel
@@ -16,20 +16,23 @@ UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 class ManagerAbstract(
     ABC, Generic[ModelType, CRUDType, CreateSchemaType, UpdateSchemaType]
 ):
+    def __init__(self, crud: CRUDType):
+        self.crud = crud
+
     def fetch_one(self, *args, **kwargs) -> ModelType:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def fetch_all(self, *args, **kwargs) -> List[ModelType]:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def search(self, *args, **kwargs) -> List[ModelType]:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def create(self, *args, **kwargs) -> ModelType:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def update(self, *args, **kwargs) -> ModelType:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def delete(self, *args, **kwargs) -> Response:
-        raise NotImplementedError
+        raise NotImplementedError()
