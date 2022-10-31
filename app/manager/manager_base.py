@@ -11,6 +11,9 @@ from app.manager.manager_abstract import (CreateSchemaType, CRUDType,
 class ManagerBase(
     ManagerAbstract[ModelType, CRUDType, CreateSchemaType, UpdateSchemaType]
 ):
+    def __init__(self, crud: CRUDType):
+        self.crud = crud
+
     def fetch_one(self, obj_id: int, session: Session) -> ModelType:
         return self.crud.get(obj_id)
 

@@ -1,12 +1,11 @@
-from abc import ABC
-from typing import Generic, List, TypeVar
+from abc import ABC, abstractmethod
+from typing import List, TypeVar, Generic
 
 from fastapi import Response
 from pydantic import BaseModel
 
 from app.crud.crud_base import CRUDBase
 from app.db.base import Base
-from app.db.models import Session
 
 ModelType = TypeVar("ModelType", bound=Base)
 CRUDType = TypeVar("CRUDType", bound=CRUDBase)
@@ -17,25 +16,20 @@ UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 class ManagerAbstract(
     ABC, Generic[ModelType, CRUDType, CreateSchemaType, UpdateSchemaType]
 ):
-    def __init__(self, crud: CRUDType):
-        self.crud = crud
-
-    def fetch_one(self, obj_id: int, session: Session) -> ModelType:
+    def fetch_one(self, *args, **kwargs) -> ModelType:
         raise NotImplementedError
 
-    def fetch_all(self, session: Session) -> List[ModelType]:
+    def fetch_all(self, *args, **kwargs) -> List[ModelType]:
         raise NotImplementedError
 
-    def search(
-        self, parameter: str, keyword: str, max_results: int, session: Session
-    ) -> List[ModelType]:
+    def search(self, *args, **kwargs) -> List[ModelType]:
         raise NotImplementedError
 
-    def create(self, obj_in: CreateSchemaType, session: Session) -> ModelType:
+    def create(self, *args, **kwargs) -> ModelType:
         raise NotImplementedError
 
-    def update(self, obj_in: UpdateSchemaType, session: Session) -> ModelType:
+    def update(self, *args, **kwargs) -> ModelType:
         raise NotImplementedError
 
-    def delete(self, obj_id: int, session: Session) -> Response:
+    def delete(self, *args, **kwargs) -> Response:
         raise NotImplementedError
