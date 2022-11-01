@@ -22,7 +22,6 @@ class EmployerPaymentMethodManager(
             {
                 "creation_date": datetime.utcnow(),
                 "is_active": True,
-                "employer_id": session.user.employer.id,
             }
         )
         return self.crud.create(obj_in_data)

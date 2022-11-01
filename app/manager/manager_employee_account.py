@@ -24,7 +24,6 @@ class EmployeeAccountManager(
             {
                 "creation_date": datetime.utcnow(),
                 "is_active": True,
-                "employee_id": session.user.employee.id,
             }
         )
         return self.crud.create(obj_in_data)

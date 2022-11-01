@@ -40,7 +40,11 @@ class EmployeeAccountBase(BaseModel):
 
 
 class EmployeeAccountCreate(EmployeeAccountBase):
-    pass
+    employee_id: PositiveInt = Field(
+        title="The ID of the employee",
+        description="Note: must be a positive integer",
+        example=1,
+    )
 
 
 class EmployeeAccountUpdate(EmployeeAccountBase):

@@ -23,7 +23,11 @@ class EmployerPaymentMethodBase(BaseModel):
 
 
 class EmployerPaymentMethodCreate(EmployerPaymentMethodBase):
-    pass
+    employer_id: PositiveInt = Field(
+        title="The ID of the employer",
+        description="Note: must be a positive integer",
+        example=1,
+    )
 
 
 class EmployerPaymentMethodUpdate(EmployerPaymentMethodBase):
