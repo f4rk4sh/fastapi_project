@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import TypeVar, Generic, List
 
 from fastapi import Response
@@ -16,9 +16,6 @@ UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 class ManagerAbstract(
     ABC, Generic[ModelType, CRUDType, CreateSchemaType, UpdateSchemaType]
 ):
-    def __init__(self, crud: CRUDType):
-        self.crud = crud
-
     def fetch_one(self, *args, **kwargs) -> ModelType:
         raise NotImplementedError()
 
