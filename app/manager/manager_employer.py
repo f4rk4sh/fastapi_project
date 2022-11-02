@@ -5,12 +5,14 @@ from fastapi import Response, status
 from app import crud
 from app.constansts.constants_role import ConstantRole
 from app.constansts.constants_status_type import ConstantStatusType
-from app.crud.crud_employer import CRUDEmployer, employer as employer_crud
+from app.crud.crud_employer import CRUDEmployer
+from app.crud.crud_employer import employer as employer_crud
 from app.db.models import Employer, Session
-from app.manager.manager_base import ManagerBase, ModelType
+from app.manager.manager_abstract import ModelType
+from app.manager.manager_base import ManagerBase
 from app.schemas.schema_employer import EmployerCreate, EmployerUpdate
-from app.utils.exceptions.common_exceptions import HTTPBadRequestException
 from app.security.passwords import hash_password
+from app.utils.exceptions.common_exceptions import HTTPBadRequestException
 
 
 class EmployerManager(
@@ -22,7 +24,9 @@ class EmployerManager(
                 detail="Account with this email already exists"
             )
         role_employer = crud.role.get_by_attribute(name=ConstantRole.employer)
-        status_inactive = crud.status_type.get_by_attribute(name=ConstantStatusType.inactive)
+        status_inactive = crud.status_type.get_by_attribute(
+            name=ConstantStatusType.inactive
+        )
         obj_in_data = obj_in.dict()
         user_data = obj_in_data.pop("user")
         user_data.update(
@@ -49,8 +53,8 @@ class EmployerManager(
         crud.user.update(user, obj_in.user, is_flush=True)
         return self.crud.update(obj, obj_in)
 
-    def delete(self, id: int, session: Session) -> Response:
-        obj = self.crud.get(id)
+    def delete(self, obj_id: int, session: Session) -> Response:
+        obj = self.crud.get(obj_id)
         crud.user.delete(obj.user_id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
 

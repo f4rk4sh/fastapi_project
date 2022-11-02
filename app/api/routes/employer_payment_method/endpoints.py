@@ -49,7 +49,7 @@ def search_employer_payment_methods(
     max_results: Optional[PositiveInt] = parameters.max_results_search,
     session: Session = Depends(get_session),
 ) -> List[EmployerPaymentMethodResponse]:
-    return employer_payment_method.search(parameter, keyword, session, max_results)
+    return employer_payment_method.search(parameter, keyword, max_results, session)
 
 
 @router.post(

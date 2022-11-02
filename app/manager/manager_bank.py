@@ -1,8 +1,10 @@
 from datetime import datetime
 
-from app.crud.crud_bank import CRUDBank, bank as bank_crud
+from app.crud.crud_bank import CRUDBank
+from app.crud.crud_bank import bank as bank_crud
 from app.db.models import Bank, Session
-from app.manager.manager_base import ManagerBase, ModelType
+from app.manager.manager_abstract import ModelType
+from app.manager.manager_base import ManagerBase
 from app.schemas.schema_bank import BankCreate, BankUpdate
 
 

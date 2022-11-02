@@ -47,7 +47,7 @@ def search_employee_accounts(
     max_results: Optional[PositiveInt] = parameters.max_results_search,
     session: Session = Depends(get_session),
 ) -> List[EmployeeAccountResponse]:
-    return employee_account.search(parameter, keyword, session, max_results)
+    return employee_account.search(parameter, keyword, max_results, session)
 
 
 @router.post(

@@ -49,7 +49,7 @@ def search_payment_status_types(
     max_results: Optional[PositiveInt] = parameters.max_results_search,
     session: Session = Depends(get_session),
 ) -> List[PaymentStatusTypeResponse]:
-    return payment_status_type.search(parameter, keyword, session, max_results)
+    return payment_status_type.search(parameter, keyword, max_results, session)
 
 
 @router.post(

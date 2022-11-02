@@ -35,7 +35,7 @@ def search_banks(
     max_results: Optional[PositiveInt] = parameters.max_results_search,
     session: Session = Depends(get_session),
 ) -> List[BankResponse]:
-    return bank.search(parameter, keyword, session, max_results)
+    return bank.search(parameter, keyword, max_results, session)
 
 
 @router.post("/bank", status_code=status.HTTP_201_CREATED, description=descriptions.create)
