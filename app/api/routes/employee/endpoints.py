@@ -36,7 +36,7 @@ def search_employees(
     max_results: Optional[PositiveInt] = params.max_results_search,
     session: Session = Depends(get_session),
 ) -> List[EmployeeResponse]:
-    return employee.search(parameter, keyword, session, max_results)
+    return employee.search(parameter, keyword, max_results, session)
 
 
 @router.post("/employee", status_code=status.HTTP_201_CREATED, description=descriptions.create)

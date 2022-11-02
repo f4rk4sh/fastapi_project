@@ -56,7 +56,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return self.session.query(self.model).filter(and_(*filter_args)).order_by(order_by_arg).first()
 
     def search_by_parameter(
-        self, parameter: str, keyword: str, skip: int = 0, limit: int = 100
+        self, parameter: str, keyword: str, limit: int = 100, skip: int = 0
     ) -> List[ModelType]:
         if not hasattr(self.model, parameter):
             raise HTTPBadRequestException(detail="Invalid search parameter")
