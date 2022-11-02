@@ -1,5 +1,5 @@
-from abc import ABC, abstractmethod
-from typing import TypeVar, Generic, List
+from abc import ABC
+from typing import Generic, List, TypeVar
 
 from fastapi import Response
 from pydantic import BaseModel
