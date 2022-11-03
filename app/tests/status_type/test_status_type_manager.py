@@ -75,7 +75,7 @@ class TestManagerSearchStatusTypeByParameter:
 
         parameter = "name"
         actual_result = status_type.search(
-            parameter, expected_status_type.name, session, 1
+            parameter, expected_status_type.name, 1,  session
         )
 
         mocked_status_type_search.assert_called_once_with(

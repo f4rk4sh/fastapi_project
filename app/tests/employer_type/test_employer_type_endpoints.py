@@ -100,7 +100,7 @@ class TestEndpointSearchEmployerTypeByParameter:
         )
 
         mocked_employer_type_search.assert_called_once_with(
-            parameter, expected_employer_type.name, session, 1
+            parameter, expected_employer_type.name, 1, session
         )
         assert expected_employer_type in actual_result
 
@@ -131,7 +131,7 @@ class TestEndpointUpdateEmployerType:
 
 
 class TestEndpointDeleteEmployerType:
-    def test_successful_update_employer_type(
+    def test_successful_delete_employer_type(
         self,
         session,
         expected_response_no_content,

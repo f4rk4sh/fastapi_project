@@ -102,7 +102,7 @@ class TestEndpointSearchRoleByParameter:
         )
 
         mocked_role_search.assert_called_once_with(
-            parameter, expected_role.name, session, 1
+            parameter, expected_role.name, 1, session
         )
         assert expected_role in actual_result
 

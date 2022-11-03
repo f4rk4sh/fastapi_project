@@ -128,7 +128,7 @@ class TestManagerSearchEmployerByParameter:
 
         parameter = "name"
         actual_result = employer.search(
-            parameter, expected_employer.name, session, 1
+            parameter, expected_employer.name, 1, session
         )
 
         mocked_employer_search.assert_called_once_with(

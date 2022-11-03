@@ -79,8 +79,8 @@ class TestManagerSearchRoleByParameter:
         actual_result = role.search(
             parameter,
             expected_role.name,
-            session,
             1,
+            session,
         )
 
         mocked_role_search_by_parameter.assert_called_once_with(

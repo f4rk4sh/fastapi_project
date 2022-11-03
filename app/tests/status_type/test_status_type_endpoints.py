@@ -100,7 +100,7 @@ class TestEndpointSearchStatusTypeByParameter:
         )
 
         mocked_status_type_search.assert_called_once_with(
-            parameter, expected_status_type.name, session, 1
+            parameter, expected_status_type.name, 1, session
         )
         assert expected_status_type in actual_result
 
@@ -131,7 +131,7 @@ class TestEndpointUpdateStatusType:
 
 
 class TestEndpointDeleteStatusType:
-    def test_successful_update_status_type(
+    def test_successful_delete_status_type(
         self,
         session,
         expected_response_no_content,
