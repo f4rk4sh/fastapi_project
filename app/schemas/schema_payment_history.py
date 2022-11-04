@@ -54,3 +54,6 @@ class PaymentHistoryResponse(PaymentHistoryBase):
         description="Note: must be a positive integer",
         example=1,
     )
+
+    class Config:
+        orm_mode = True
