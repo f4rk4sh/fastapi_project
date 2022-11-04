@@ -14,7 +14,7 @@ from app.schemas.schema_employer import EmployerCreate, EmployerResponse, Employ
 from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
-router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Employers"])
+router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Employer"])
 descriptions = CRUDEndpointsDescriptions(
     model_name="Employer",
     search_parameters=["email", "phone", "name", "address", "edrpou"]

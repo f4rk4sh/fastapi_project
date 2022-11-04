@@ -14,7 +14,7 @@ from app.schemas.schema_role import RoleCreate, RoleResponse, RoleUpdate
 from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
-router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Roles"])
+router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Role"])
 descriptions = CRUDEndpointsDescriptions(model_name="Role", search_parameters=["name"])
 parameters = CRUDParamsDescriptions(obj_name="Role")
 
