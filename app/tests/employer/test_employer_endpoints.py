@@ -114,7 +114,7 @@ class TestEndpointSearchEmployerByParameter:
         )
 
         mocked_employer_search.assert_called_once_with(
-            parameter, expected_employer.edrpou, session, 1
+            parameter, expected_employer.edrpou, 1, session
         )
         assert expected_employer in actual_result
 
