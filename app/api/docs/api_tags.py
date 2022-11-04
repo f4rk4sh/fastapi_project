@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 
 from app.db.models import (AccountType, Bank, Base, Employee, EmployeeAccount, Employer,
                            EmployerPaymentMethod, EmployerType, PaymentStatusType,
-                           Role, StatusType)
+                           Role, StatusType, PaymentHistory)
 
 from app.schemas.schema_tag import MetadataTag
 
@@ -23,6 +23,7 @@ def generate_metadata_tags() -> List[Dict[str, Any]]:
                 Employer,
                 EmployerPaymentMethod,
                 EmployerType,
+                PaymentHistory,
                 PaymentStatusType,
                 Role,
                 StatusType
