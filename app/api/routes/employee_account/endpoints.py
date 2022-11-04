@@ -16,7 +16,7 @@ from app.schemas.schema_employee_account import (EmployeeAccountCreate,
 from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
-router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Employee Accounts"])
+router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Employee Account"])
 descriptions = CRUDEndpointsDescriptions(
     model_name="Employee Account", search_parameters=["name", "number", "issuer"]
 )

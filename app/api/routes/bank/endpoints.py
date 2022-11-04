@@ -14,7 +14,7 @@ from app.schemas.schema_bank import BankCreate, BankResponse, BankUpdate
 from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
-router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Banks"])
+router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Bank"])
 descriptions = CRUDEndpointsDescriptions(
     model_name="Bank", search_parameters=["name", "mfo"]
 )

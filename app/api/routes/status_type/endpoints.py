@@ -14,7 +14,7 @@ from app.schemas.schema_status_type import StatusTypeCreate, StatusTypeResponse,
 from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
-router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Status Types"])
+router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Status Type"])
 descriptions = CRUDEndpointsDescriptions(model_name="Status Type", search_parameters=["name"])
 parameters = CRUDParamsDescriptions(obj_name="Status Type")
 

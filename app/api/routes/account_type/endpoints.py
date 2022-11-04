@@ -14,7 +14,7 @@ from app.schemas.schema_account_type import AccountTypeResponse, AccountTypeCrea
 from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
-router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Account Types"])
+router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Account Type"])
 descriptions = CRUDEndpointsDescriptions(model_name="AccountType", search_parameters=["name"])
 parameters = CRUDParamsDescriptions(obj_name="AccountType")
 

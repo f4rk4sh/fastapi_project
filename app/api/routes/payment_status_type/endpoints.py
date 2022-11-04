@@ -17,7 +17,7 @@ from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
 router = InferringRouter(
-    route_class=ExceptionRouteHandler, tags=["Payment Status Types"]
+    route_class=ExceptionRouteHandler, tags=["Payment Status Type"]
 )
 descriptions = CRUDEndpointsDescriptions(
     model_name="Payment Status Type", search_parameters=["name"]

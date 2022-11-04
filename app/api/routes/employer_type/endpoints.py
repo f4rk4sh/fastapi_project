@@ -14,7 +14,7 @@ from app.schemas.schema_employer_type import EmployerTypeCreate, EmployerTypeRes
 from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
-router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Employer Types"])
+router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Employer Type"])
 descriptions = CRUDEndpointsDescriptions(model_name="Employer Type", search_parameters=["name"])
 parameters = CRUDParamsDescriptions(obj_name="Employer Type")
 

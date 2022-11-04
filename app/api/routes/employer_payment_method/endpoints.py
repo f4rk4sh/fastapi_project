@@ -17,7 +17,7 @@ from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
 router = InferringRouter(
-    route_class=ExceptionRouteHandler, tags=["Employer Payment Methods"]
+    route_class=ExceptionRouteHandler, tags=["Employer Payment Method"]
 )
 descriptions = CRUDEndpointsDescriptions(
     model_name="Employer Payment Method", search_parameters=["iban"]

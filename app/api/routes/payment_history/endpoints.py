@@ -14,7 +14,7 @@ from app.schemas.schema_payment_history import PaymentHistoryResponse
 from app.security.permissions import permission
 from app.utils.exceptions.exception_route_handler import ExceptionRouteHandler
 
-router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Payment Historys"])
+router = InferringRouter(route_class=ExceptionRouteHandler, tags=["Payment History"])
 descriptions = CRUDEndpointsDescriptions(
     model_name="PaymentHistory", search_parameters=["amount", "creation_date"]
 )
